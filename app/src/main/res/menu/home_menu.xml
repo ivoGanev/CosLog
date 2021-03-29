@@ -5,5 +5,5 @@
         android:id="@+id/archiveFragment"
         android:title="Archive"
         app:showAsAction="always"
-        android:icon="@drawable/ic_archive"/>
+        android:icon="@drawable/ic_outline_archive"/>
 </menu>
