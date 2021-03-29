@@ -7,14 +7,9 @@
         android:orientation="vertical"
         tools:context=".ElementFragment">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/elements_tab_layout"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/elements_view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:text="To Buy"/>
     </LinearLayout>
 </layout>
