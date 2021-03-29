@@ -29,4 +29,12 @@
         android:name="com.ifyezedev.coslog.OrganizerFragment"
         android:label="fragment_organizer"
         tools:layout="@layout/fragment_organizer" />
+    <fragment
+        android:id="@+id/summaryFragment"
+        android:name="com.ifyezedev.coslog.SummaryFragment"
+        android:label="fragment_summary"
+        tools:layout="@layout/fragment_summary" />
+    <action
+        android:id="@+id/action_global_summaryFragment"
+        app:destination="@id/summaryFragment" />
 </navigation>

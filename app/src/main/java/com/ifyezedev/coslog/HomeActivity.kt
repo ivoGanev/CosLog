@@ -2,10 +2,9 @@ package com.ifyezedev.coslog
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.findNavController
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -16,6 +15,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeBinding
     lateinit var drawerLayout: DrawerLayout
     lateinit var appBarConfiguration: AppBarConfiguration
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class HomeActivity : AppCompatActivity() {
 
         //find NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         //initialize drawerLayout variable
         drawerLayout = binding.drawerLayout
@@ -38,17 +38,18 @@ class HomeActivity : AppCompatActivity() {
         //hook up the navigation UI up to the navigation view
         binding.navView.setupWithNavController(navController)
 
+        //use the go button to navigate to CosplayActivity
+        binding.goBttn.setOnClickListener {
+            goToCosplayActivity()
+        }
+    }
 
-
-
-
-
+    private fun goToCosplayActivity() {
+        navController.navigate(R.id.action_cosplayFragment_to_cosplayActivity)
     }
 
     //let activity handle Up navigation
     override fun onSupportNavigateUp(): Boolean {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
-        val navController = navHostFragment.navController
         return NavigationUI.navigateUp(navController, drawerLayout)
     }
 
