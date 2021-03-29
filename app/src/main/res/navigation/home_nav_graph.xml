@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/cosplayFragment">
+
+    <fragment
+        android:id="@+id/cosplayFragment"
+        android:name="com.ifyezedev.coslog.CosplayFragment"
+        android:label="CosLog"
+        tools:layout="@layout/fragment_cosplay">
+        <action
+            android:id="@+id/action_cosplayFragment_to_archiveFragment"
+            app:destination="@id/archiveFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/archiveFragment"
+        android:name="com.ifyezedev.coslog.ArchiveFragment"
+        android:label="@string/archive"
+        tools:layout="@layout/fragment_archive" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.ifyezedev.coslog.AboutFragment"
+        android:label="@string/about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ifyezedev.coslog.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/rateFragment"
+        android:name="com.ifyezedev.coslog.RateFragment"
+        android:label="@string/rate_and_review"
+        tools:layout="@layout/fragment_rate" />
+    <fragment
+        android:id="@+id/supportFragment"
+        android:name="com.ifyezedev.coslog.SupportFragment"
+        android:label="@string/support_development"
+        tools:layout="@layout/fragment_support" />
+</navigation>
