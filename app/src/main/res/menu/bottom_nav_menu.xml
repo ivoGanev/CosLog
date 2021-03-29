@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/elementFragment"
+        android:title="@string/elements"
+        android:icon="@drawable/ic_element"/>
+    <item
+        android:id="@+id/picturesFragment"
+        android:title="@string/pictures"
+        android:icon="@drawable/ic_pictures"/>
+
+    <item
+        android:id="@+id/organizerFragment"
+        android:title="@string/organizer"
+        android:icon="@drawable/ic_organizer"/>
+
+    <item
+        android:id="@+id/processFragment"
+        android:title="@string/process"
+        android:icon="@drawable/ic_process"/>
+
+    <item
+        android:id="@+id/eventFragment"
+        android:title="@string/events"
+        android:icon="@drawable/ic_event"/>
+</menu>

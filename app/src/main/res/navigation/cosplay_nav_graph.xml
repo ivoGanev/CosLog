@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cosplay_nav_graph"
+    app:startDestination="@id/elementFragment">
+    <fragment
+        android:id="@+id/elementFragment"
+        android:name="com.ifyezedev.coslog.ElementFragment"
+        android:label="fragment_element"
+        tools:layout="@layout/fragment_element" />
+    <fragment
+        android:id="@+id/processFragment"
+        android:name="com.ifyezedev.coslog.ProcessFragment"
+        android:label="fragment_process"
+        tools:layout="@layout/fragment_process" />
+    <fragment
+        android:id="@+id/picturesFragment"
+        android:name="com.ifyezedev.coslog.PicturesFragment"
+        android:label="fragment_pictures"
+        tools:layout="@layout/fragment_pictures" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.ifyezedev.coslog.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" />
+    <fragment
+        android:id="@+id/organizerFragment"
+        android:name="com.ifyezedev.coslog.OrganizerFragment"
+        android:label="fragment_organizer"
+        tools:layout="@layout/fragment_organizer" />
+</navigation>
