@@ -22,6 +22,7 @@ class HomeActivity : AppCompatActivity() {
         //initialize binding variable
         binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
 
+        //Set up ActionBar and Navigation Drawer
         //find NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         navController = navHostFragment.navController
