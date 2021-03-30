@@ -16,6 +16,13 @@ abstract class BindingFragment<T: ViewDataBinding?> : Fragment() {
 
     abstract fun bindingLayoutId() : Int
 
+    /**
+     * Use this callback method to ensure the binding of the fragment
+     * is initialized and doesn't return null when the view gets created
+     * for the first time.
+     * */
+    open fun onBindingCreated() {}
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,6 +38,7 @@ abstract class BindingFragment<T: ViewDataBinding?> : Fragment() {
             throw NullPointerException("\n Unable to initialize binding. " +
                     "\n - The binding type  $bindingType might not be referencing the layout $resourceName ")
         }
+        onBindingCreated()
         return _binding?.root
     }
 

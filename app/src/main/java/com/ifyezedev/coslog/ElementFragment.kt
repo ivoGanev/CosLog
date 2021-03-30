@@ -1,13 +1,9 @@
 package com.ifyezedev.coslog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
-import com.ifyezedev.coslog.databinding.FragmentElementToBuyBinding
-import com.ifyezedev.coslog.databinding.FragmentElementToMakeBinding
 import java.lang.IllegalArgumentException
 
 
@@ -30,10 +26,4 @@ class ElementFragment : BindingFragment<FragmentElementBinding>() {
     }
 }
 
-class ElementsToBuyFragment : BindingFragment<FragmentElementToBuyBinding>() {
-    override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_buy
-}
 
-class ElementsToMakeFragment : BindingFragment<FragmentElementToMakeBinding>() {
-    override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_make
-}
