@@ -30,19 +30,6 @@ class ElementFragment : BindingFragment<FragmentElementBinding>() {
     }
 }
 
-class ElementsFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-    override fun getItemCount(): Int = 2
-
-    override fun createFragment(position: Int): Fragment {
-        val fragment = when (position) {
-            0 -> ElementsToBuyFragment()
-            1 -> ElementsToMakeFragment()
-            else -> throw IllegalArgumentException("Unsupported fragment page")
-        }
-        return fragment
-    }
-}
-
 class ElementsToBuyFragment : BindingFragment<FragmentElementToBuyBinding>() {
     override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_buy
 }
