@@ -15,4 +15,7 @@
     <string name="edit_cosplay">Edit cosplay</string>
     <string name="view_summary">View summary</string>
     <string name="mark_as_completed">Mark as completed</string>
+    <string name="add_cosplay">add cosplay</string>
+    <string name="cosplay">Cosplay</string>
+    <string name="cosplay_details">Cosplay Details</string>
 </resources>

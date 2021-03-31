@@ -1,10 +1,17 @@
 package com.ifyezedev.coslog
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 
 class CosplayFragment : Fragment() {
 
@@ -12,14 +19,23 @@ class CosplayFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         //let android know this fragment has a menu
         setHasOptionsMenu(true)
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cosplay, container, false)
 
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //go to AddCosplayFragment to add a cosplay
+        view.findViewById<FloatingActionButton>(R.id.addCosplayBttn).setOnClickListener {
+            it.findNavController().navigate(CosplayFragmentDirections.actionCosplayFragmentToCosplayDetailsFragment(From.BUTTON))
+        }
+    }
+
+
 
     //inflate menu resource
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
