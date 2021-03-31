@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.commit
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 import java.lang.IllegalArgumentException
@@ -37,6 +39,11 @@ class ElementFragment : BindingFragment<FragmentElementBinding>(), View.OnClickL
     }
 
     private fun onFabClicked() {
+        val navHostFragment = requireActivity()
+            .supportFragmentManager
+            .findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
+
+        navHostFragment.navController.navigate(R.id.elementsFragmentPictureViewer)
     }
 }
 

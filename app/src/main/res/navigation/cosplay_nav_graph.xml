@@ -41,4 +41,8 @@
         android:id="@+id/toBuyFragment"
         android:name="com.ifyezedev.coslog.ToBuyFragment"
         android:label="ToBuyFragment" />
+    <fragment
+        android:id="@+id/elementsFragmentPictureViewer"
+        android:name="com.ifyezedev.coslog.ElementsFragmentPictureViewer"
+        android:label="ElementsFragmentPictureViewer" />
 </navigation>
