@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ElementFragment">
+        android:layout_width="match_parent">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/elements_tab_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ElementFragment">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/elements_view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/elements_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/elements_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/element_to_buy_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="Add to buy"
+            android:src="@drawable/ic_baseline_add_24" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
