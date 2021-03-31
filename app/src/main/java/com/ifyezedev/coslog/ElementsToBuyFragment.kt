@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
-import com.ifyezedev.coslog.databinding.FragmentElementToBuyBinding
+import com.ifyezedev.coslog.databinding.FragmentElementToBuyListBinding
 
-class ElementsToBuyFragment : BindingFragment<FragmentElementToBuyBinding>() {
-    override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_buy
+class ElementsToBuyFragment : BindingFragment<FragmentElementToBuyListBinding>() {
+    override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_buy_list
     private lateinit var recyclerView: RecyclerView
 
     override fun onBindingCreated(){

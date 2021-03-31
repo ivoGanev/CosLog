@@ -1,17 +1,15 @@
 package com.ifyezedev.coslog
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
 import com.ifyezedev.coslog.databinding.ElementItemToMakeBinding
-import com.ifyezedev.coslog.databinding.FragmentElementToMakeBinding
+import com.ifyezedev.coslog.databinding.FragmentElementToMakeListBinding
 
-class ElementsToMakeFragment : BindingFragment<FragmentElementToMakeBinding>() {
-    override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make
+class ElementsToMakeFragment : BindingFragment<FragmentElementToMakeListBinding>() {
+    override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make_list
     private lateinit var recyclerView: RecyclerView
 
     override fun onBindingCreated() {
