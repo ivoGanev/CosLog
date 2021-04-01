@@ -15,7 +15,7 @@ class ElementsFragmentPictureViewer : BindingFragment<FragmentElementPictureView
     private lateinit var recyclerView: RecyclerView
 
     override fun onBindingCreated(){
-        recyclerView = binding.imageRecyclerView
+        recyclerView = binding.imagesRecyclerView
         recyclerView.adapter = Adapter(listOf(1, 2, 3, 4))
     }
 

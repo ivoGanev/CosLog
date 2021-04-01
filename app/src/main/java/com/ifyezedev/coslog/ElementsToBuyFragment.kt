@@ -13,7 +13,7 @@ class ElementsToBuyFragment : BindingFragment<FragmentElementToBuyListBinding>()
     private lateinit var recyclerView: RecyclerView
 
     override fun onBindingCreated(){
-        recyclerView = binding.elementToBuyRv
+        recyclerView = binding.recyclerView
         recyclerView.adapter = Adapter(listOf(1,2,3,4))
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -32,7 +32,7 @@ class ElementsToBuyFragment : BindingFragment<FragmentElementToBuyListBinding>()
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.binding.elementItemToBuyName.text = data[position].toString()
+            holder.binding.toBuyPriceText.text = data[position].toString()
         }
 
         override fun getItemCount(): Int {

@@ -7,7 +7,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:id="@+id/element_item_to_make_name"
+            android:id="@+id/toMakeCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
             tools:text="Item" />
 
         <TextView
-            android:id="@+id/element_item_to_make_duration"
+            android:id="@+id/durationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

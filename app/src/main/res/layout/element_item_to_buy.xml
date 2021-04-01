@@ -8,7 +8,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:id="@+id/element_item_to_buy_name"
+            android:id="@+id/toBuyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -20,7 +20,7 @@
             tools:text="Item" />
 
         <TextView
-            android:id="@+id/element_item_to_buy_price"
+            android:id="@+id/toBuyPriceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

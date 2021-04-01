@@ -13,7 +13,7 @@ class ElementsToMakeFragment : BindingFragment<FragmentElementToMakeListBinding>
     private lateinit var recyclerView: RecyclerView
 
     override fun onBindingCreated() {
-        recyclerView = binding.elementToMakeRv
+        recyclerView = binding.recyclerView
         recyclerView.adapter = Adapter(listOf("one", "two", "three", "four"))
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -33,7 +33,7 @@ class ElementsToMakeFragment : BindingFragment<FragmentElementToMakeListBinding>
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.binding.elementItemToMakeName.text = data[position].toString()
+            holder.binding.durationTextView.text = data[position].toString()
         }
 
         override fun getItemCount(): Int {
