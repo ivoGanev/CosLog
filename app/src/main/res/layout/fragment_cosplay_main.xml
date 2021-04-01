@@ -8,7 +8,10 @@
         android:orientation="vertical"
         tools:context=".CosplayActivity">
 
-        <include layout="@layout/app_bar_cosplay"/>
+        <include
+            android:id="@+id/appBarInclude"
+            layout="@layout/app_bar_cosplay"
+            />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/cosplayNavHostFragment"

@@ -15,16 +15,9 @@ class CosplayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cosplay)
 
-        //enable the Up button
-       // supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         //find the NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
         navController = navHostFragment.navController
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
