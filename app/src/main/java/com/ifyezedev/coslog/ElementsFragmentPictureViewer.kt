@@ -16,11 +16,10 @@ class ElementsFragmentPictureViewer : BindingFragment<FragmentElementPictureView
 
     override fun onBindingCreated(){
         recyclerView = binding.imageRecyclerView
-        recyclerView.adapter = Adapter(listOf(1, 2, 3, 4), requireContext())
+        recyclerView.adapter = Adapter(listOf(1, 2, 3, 4))
     }
 
-
-    private class Adapter(private val data: List<Any>, private val context: Context) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+    private class Adapter(private val data: List<Any>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val imageView : ImageView = itemView.findViewById(R.id.imageView)
         }

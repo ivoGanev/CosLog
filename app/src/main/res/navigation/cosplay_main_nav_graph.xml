@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cosplay_main_nav_graph"
+    app:startDestination="@id/cosplayMain">
+
+    <fragment
+        android:id="@+id/cosplayMain"
+        android:name="com.ifyezedev.coslog.CosplayFragmentMain"
+        android:label="CosplayMain" />
+    <fragment
+        android:id="@+id/toBuyFragment"
+        android:name="com.ifyezedev.coslog.ToBuyFragment"
+        android:label="ToBuyFragment" />
+</navigation>

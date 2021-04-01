@@ -37,12 +37,4 @@
     <action
         android:id="@+id/action_global_summaryFragment"
         app:destination="@id/summaryFragment" />
-    <fragment
-        android:id="@+id/toBuyFragment"
-        android:name="com.ifyezedev.coslog.ToBuyFragment"
-        android:label="ToBuyFragment" />
-    <fragment
-        android:id="@+id/elementsFragmentPictureViewer"
-        android:name="com.ifyezedev.coslog.ElementsFragmentPictureViewer"
-        android:label="ElementsFragmentPictureViewer" />
 </navigation>
