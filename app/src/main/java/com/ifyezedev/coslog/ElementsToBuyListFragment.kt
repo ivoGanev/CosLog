@@ -5,35 +5,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ifyezedev.coslog.databinding.ElementItemToMakeBinding
-import com.ifyezedev.coslog.databinding.FragmentElementToMakeListBinding
+import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
+import com.ifyezedev.coslog.databinding.FragmentElementToBuyListBinding
 
-class ElementsToMakeFragment : BindingFragment<FragmentElementToMakeListBinding>() {
-    override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make_list
+class ElementsToBuyListFragment : BindingFragment<FragmentElementToBuyListBinding>() {
+    override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_buy_list
     private lateinit var recyclerView: RecyclerView
 
-    override fun onBindingCreated() {
+    override fun onBindingCreated(){
         recyclerView = binding.recyclerView
-        recyclerView.adapter = Adapter(listOf("one", "two", "three", "four"))
+        recyclerView.adapter = Adapter(listOf(1,2,3,4))
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 
-    private class Adapter(private val data: List<Any>) :
-        RecyclerView.Adapter<Adapter.ViewHolder>() {
+    private class Adapter(private val data: List<Any>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val binding: ElementItemToMakeBinding = ElementItemToMakeBinding.bind(itemView)
+            val binding: ElementItemToBuyBinding = ElementItemToBuyBinding.bind(itemView)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.element_item_to_make, parent, false)
+                .inflate(R.layout.element_item_to_buy, parent, false)
             return ViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.binding.durationTextView.text = data[position].toString()
+            holder.binding.toBuyPriceText.text = data[position].toString()
         }
 
         override fun getItemCount(): Int {

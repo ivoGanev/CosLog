@@ -10,8 +10,8 @@ class ElementsFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fr
     override fun getItemCount(): Int = PAGES
 
     override fun createFragment(position: Int): Fragment = when (position) {
-        0 -> ElementsToBuyFragment()
-        1 -> ElementsToMakeFragment()
+        0 -> ElementsToBuyListFragment()
+        1 -> ElementsToMakeListFragment()
         else -> throw IllegalArgumentException("Unsupported fragment page")
     }
 }
