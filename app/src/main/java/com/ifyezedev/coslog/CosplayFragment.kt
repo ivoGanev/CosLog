@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 
+// TODO: The class name is ambiguous and it implies that is somehow related to
+//        CosplayActivity, but its not.
 class CosplayFragment : Fragment() {
 
     override fun onCreateView(

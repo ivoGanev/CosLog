@@ -3,6 +3,7 @@ package com.ifyezedev.coslog
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 import java.lang.IllegalArgumentException
@@ -13,9 +14,12 @@ class ElementFragment : BindingFragment<FragmentElementBinding>(), View.OnClickL
 
     private lateinit var elementsFragmentStateAdapter: ElementsFragmentStateAdapter
 
+    private lateinit var tabLayout: TabLayout
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(binding) {
-            binding.fab.setOnClickListener(this@ElementFragment)
+            tabLayout = elementsTabLayout
+            fab.setOnClickListener(this@ElementFragment)
             elementsFragmentStateAdapter = ElementsFragmentStateAdapter(this@ElementFragment)
             elementsViewPager.adapter = elementsFragmentStateAdapter
 
@@ -40,7 +44,10 @@ class ElementFragment : BindingFragment<FragmentElementBinding>(), View.OnClickL
             .supportFragmentManager
             .findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
 
-        navHostFragment.navController.navigate(R.id.toBuyFragment)
+        when (tabLayout.selectedTabPosition) {
+            0 -> navHostFragment.navController.navigate(R.id.toBuyFragment)
+            1 -> navHostFragment.navController.navigate(R.id.toMakeFragment)
+        }
     }
 }
 

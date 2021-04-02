@@ -13,4 +13,8 @@
         android:id="@+id/toBuyFragment"
         android:name="com.ifyezedev.coslog.ToBuyFragment"
         android:label="ToBuyFragment" />
+    <fragment
+        android:id="@+id/toMakeFragment"
+        android:name="com.ifyezedev.coslog.ToMakeFragment"
+        android:label="ToMakeFragment" />
 </navigation>
