@@ -2,21 +2,20 @@ package com.ifyezedev.coslog
 
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 import java.lang.IllegalArgumentException
 
 
-class ElementFragment : BindingFragment<FragmentElementBinding>(), View.OnClickListener {
+class ElementFragment : CosplayGraphBaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
 
     private lateinit var elementsFragmentStateAdapter: ElementsFragmentStateAdapter
 
     private lateinit var tabLayout: TabLayout
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onStart() {
         with(binding) {
             tabLayout = elementsTabLayout
             fab.setOnClickListener(this@ElementFragment)
@@ -31,6 +30,7 @@ class ElementFragment : BindingFragment<FragmentElementBinding>(), View.OnClickL
                 }
             }.attach()
         }
+        super.onStart()
     }
 
     override fun onClick(v: View?) {
@@ -40,13 +40,9 @@ class ElementFragment : BindingFragment<FragmentElementBinding>(), View.OnClickL
     }
 
     private fun onFabClicked() {
-        val navHostFragment = requireActivity()
-            .supportFragmentManager
-            .findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
-
         when (tabLayout.selectedTabPosition) {
-            0 -> navHostFragment.navController.navigate(R.id.toBuyFragment)
-            1 -> navHostFragment.navController.navigate(R.id.toMakeFragment)
+            0 -> cosplayController.navigate(R.id.toBuyFragment)
+            1 -> cosplayController.navigate(R.id.toMakeFragment)
         }
     }
 }

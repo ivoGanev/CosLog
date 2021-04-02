@@ -10,7 +10,6 @@ class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>(),
     View.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_viewer
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val imagePagerAdapter = ImagePagerAdapter(this)
         binding.imagePager.adapter = imagePagerAdapter

@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import java.lang.NullPointerException
 import java.lang.reflect.ParameterizedType
 
-abstract class BindingFragment<T: ViewDataBinding?> : Fragment() {
+abstract class BindingFragment<T : ViewDataBinding?> : Fragment() {
     private var _binding: T? = null
-    protected val binding : T get() = _binding!!
+    protected val binding: T get() = _binding!!
 
-    abstract fun bindingLayoutId() : Int
+    abstract fun bindingLayoutId(): Int
 
     /**
      * Use this callback method to ensure the binding of the fragment
@@ -30,13 +30,14 @@ abstract class BindingFragment<T: ViewDataBinding?> : Fragment() {
     ): View? {
         try {
             _binding = DataBindingUtil.inflate(layoutInflater, bindingLayoutId(), container, false)
-        }
-        catch (ex: NullPointerException) {
+        } catch (ex: NullPointerException) {
             val bindingType = (this.javaClass.genericSuperclass as ParameterizedType)
                 .actualTypeArguments[0] as Class<*>
             val resourceName = resources.getResourceName(bindingLayoutId())
-            throw NullPointerException("\n Unable to initialize binding. " +
-                    "\n - The binding type  $bindingType might not be referencing the layout $resourceName ")
+            throw NullPointerException(
+                "\n Unable to initialize binding. " +
+                        "\n - The binding type  $bindingType might not be referencing the layout $resourceName "
+            )
         }
         onBindingCreated()
         return _binding?.root

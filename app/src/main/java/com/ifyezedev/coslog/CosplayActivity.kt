@@ -1,23 +1,29 @@
 package com.ifyezedev.coslog
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
 class CosplayActivity : AppCompatActivity() {
-    lateinit var navController: NavController
+    private val cosplayCompositionRoot: CosplayCompositionRoot = CosplayCompositionRoot(this)
+
+    lateinit var cosplayController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cosplay)
 
-        //find the NavController
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
-        navController = navHostFragment.navController
+        if(savedInstanceState==null) {
+            cosplayController = cosplayCompositionRoot.cosplayController
+        }
+        println("Cosplay Activity")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -25,7 +31,6 @@ class CosplayActivity : AppCompatActivity() {
         inflater.inflate(R.menu.cosplay_menu, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
