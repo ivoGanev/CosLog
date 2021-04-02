@@ -20,7 +20,6 @@ class CosplayFragment : Fragment() {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cosplay, container, false)
-
     }
 
     //inflate menu resource

@@ -6,7 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ifyezedev.coslog.databinding.FragmentPictureViewerBinding
 
-class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>() {
+class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>(),
+    View.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_viewer
 
 
@@ -25,5 +26,18 @@ class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>() {
             }
             return fragment
         }
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.exitButton -> onExitButtonClicked()
+            R.id.shareButton -> onShareButtonClicked()
+        }
+    }
+
+    private fun onShareButtonClicked() {
+    }
+
+    private fun onExitButtonClicked() {
     }
 }
