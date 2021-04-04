@@ -1,19 +1,15 @@
 package com.ifyezedev.coslog
 
-import android.os.Bundle
 import android.view.View
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
+import com.ifyezedev.coslog.CosplayBaseFragment
+import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 
-class ToBuyFragment : BindingFragment<FragmentToBuyBinding>(), View.OnClickListener {
+class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_buy
 
     override fun onBindingCreated() {
         binding.bottom.buttonAddImage.setOnClickListener(this)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 
     override fun onClick(v: View?) {
@@ -23,9 +19,6 @@ class ToBuyFragment : BindingFragment<FragmentToBuyBinding>(), View.OnClickListe
     }
 
     private fun onAddImage() {
-        val navHostFragment = requireActivity()
-            .supportFragmentManager
-            .findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.pictureViewerFragment)
+        cosplayNavController.navigate(R.id.pictureViewerFragment)
     }
 }

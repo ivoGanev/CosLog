@@ -18,26 +18,25 @@ class ElementsToBuyListFragment : BindingFragment<FragmentElementToBuyListBindin
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
+}
 
-    private class Adapter(private val data: List<Any>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+private class Adapter(private val data: List<Any>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding: ElementItemToBuyBinding = ElementItemToBuyBinding.bind(itemView)
+    }
 
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val binding: ElementItemToBuyBinding = ElementItemToBuyBinding.bind(itemView)
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.element_item_to_buy, parent, false)
+        return ViewHolder(view)
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.element_item_to_buy, parent, false)
-            return ViewHolder(view)
-        }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.binding.toBuyPriceText.text = data[position].toString()
+    }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.binding.toBuyPriceText.text = data[position].toString()
-        }
-
-        override fun getItemCount(): Int {
-            return data.size
-        }
+    override fun getItemCount(): Int {
+        return data.size
     }
 }
 

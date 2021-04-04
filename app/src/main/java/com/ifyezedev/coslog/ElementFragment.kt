@@ -1,34 +1,28 @@
 package com.ifyezedev.coslog
 
-import android.os.Bundle
 import android.view.View
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
-import java.lang.IllegalArgumentException
 
 
-class ElementFragment : CosplayGraphBaseFragment<FragmentElementBinding>(), View.OnClickListener {
+class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
 
     private lateinit var elementsFragmentStateAdapter: ElementsFragmentStateAdapter
 
-    private lateinit var tabLayout: TabLayout
+    private lateinit var tabLayoutSetup: ElementsTabLayoutSetup
 
     override fun onStart() {
-        with(binding) {
-            tabLayout = elementsTabLayout
+        binding {
             fab.setOnClickListener(this@ElementFragment)
             elementsFragmentStateAdapter = ElementsFragmentStateAdapter(this@ElementFragment)
             elementsViewPager.adapter = elementsFragmentStateAdapter
 
-            TabLayoutMediator(elementsTabLayout, elementsViewPager) { tab, position ->
-                tab.text = when (position) {
-                    0 -> "To Buy"
-                    1 -> "To Make"
-                    else -> throw IllegalArgumentException("Unsupported fragment page")
-                }
-            }.attach()
+            tabLayoutSetup = ElementsTabLayoutSetup(
+                requireContext(),
+                elementsTabLayout,
+                elementsViewPager,
+                R.string.elements_tab_one_name, R.string.elements_tab_two_name
+            )
         }
         super.onStart()
     }
@@ -40,9 +34,9 @@ class ElementFragment : CosplayGraphBaseFragment<FragmentElementBinding>(), View
     }
 
     private fun onFabClicked() {
-        when (tabLayout.selectedTabPosition) {
-            0 -> cosplayController.navigate(R.id.toBuyFragment)
-            1 -> cosplayController.navigate(R.id.toMakeFragment)
+        when (binding.elementsTabLayout.selectedTabPosition) {
+            0 -> cosplayNavController.navigate(R.id.toBuyFragment)
+            1 -> cosplayNavController.navigate(R.id.toMakeFragment)
         }
     }
 }

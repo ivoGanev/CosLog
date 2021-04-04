@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/cosplayMain"
-        android:name="com.ifyezedev.coslog.CosplayGraphFragment"
+        android:name="com.ifyezedev.coslog.CosplayFragment"
         android:label="CosplayMain" />
     <fragment
         android:id="@+id/toBuyFragment"

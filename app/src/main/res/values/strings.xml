@@ -14,4 +14,6 @@
     <string name="view_summary">View summary</string>
     <string name="mark_as_completed">Mark as completed</string>
     <string name="app_name">CosLog</string>
+    <string name="elements_tab_one_name">To Buy</string>
+    <string name="elements_tab_two_name">To Make</string>
 </resources>

@@ -43,7 +43,11 @@ abstract class BindingFragment<T : ViewDataBinding?> : Fragment() {
         return _binding?.root
     }
 
-    override fun onDestroyView() {
+    protected fun binding(init: T.() -> Unit) {
+        binding.init()
+    }
+
+     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
