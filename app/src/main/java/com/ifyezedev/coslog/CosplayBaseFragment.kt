@@ -15,5 +15,8 @@ abstract class CosplayBaseFragment<T : ViewDataBinding?> : BindingFragment<T>() 
 
     protected val cosplayNavController: NavController get() = activity.cosplayNavController
 
+    /**
+     * This controller can be accessed only
+     * */
     protected val dialogsController: NavController get() = activity.dialogsController
 }

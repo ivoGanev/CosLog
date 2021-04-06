@@ -7,20 +7,17 @@ import com.ifyezedev.coslog.databinding.FragmentElementBinding
 class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
 
-    private lateinit var elementsFragmentStateAdapter: ElementsFragmentStateAdapter
-
     private lateinit var tabLayoutSetup: ElementsTabLayoutSetup
 
     override fun onStart() {
         binding {
             fab.setOnClickListener(this@ElementFragment)
-            elementsFragmentStateAdapter = ElementsFragmentStateAdapter(this@ElementFragment)
-            elementsViewPager.adapter = elementsFragmentStateAdapter
 
             tabLayoutSetup = ElementsTabLayoutSetup(
                 requireContext(),
                 elementsTabLayout,
                 elementsViewPager,
+                ElementsFragmentStateAdapter(this@ElementFragment),
                 R.string.elements_tab_one_name, R.string.elements_tab_two_name
             )
         }
