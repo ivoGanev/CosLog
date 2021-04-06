@@ -23,7 +23,7 @@ abstract class BaseDialogFragment<T : ViewDataBinding> : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bindingAgent = BindingAgentFragment(bindingLayoutId(), inflater, container)
+        bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         return bindingAgent.bind()
     }

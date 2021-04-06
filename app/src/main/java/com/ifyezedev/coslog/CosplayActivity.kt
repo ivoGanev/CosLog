@@ -2,13 +2,11 @@ package com.ifyezedev.coslog
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
-import androidx.navigation.NavController
+import com.ifyezedev.coslog.core.common.StandardBindingAgent
+import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 
 class CosplayActivity : AppCompatActivity() {
     val cosplayCompositionRoot: CosplayActivityCompositionRoot = CosplayActivityCompositionRoot(this)
@@ -16,6 +14,7 @@ class CosplayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cosplay)
+
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
             FragmentLifecycleCallbacks() {
 

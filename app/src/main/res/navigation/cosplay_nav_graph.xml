@@ -37,10 +37,6 @@
     <action
         android:id="@+id/action_global_summaryFragment"
         app:destination="@id/summaryFragment" />
-    <activity
-        android:id="@+id/homeActivity"
-        android:name="com.ifyezedev.coslog.HomeActivity"
-        android:label="HomeActivity" />
     <dialog
         android:id="@+id/toBuyFragment"
         android:name="com.ifyezedev.coslog.ToBuyFragment"
@@ -53,4 +49,8 @@
         android:id="@+id/toMakeFragment"
         android:name="com.ifyezedev.coslog.ToMakeFragment"
         android:label="ToMakeFragment" />
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.ifyezedev.coslog.HomeActivity"
+        android:label="HomeActivity" />
 </navigation>

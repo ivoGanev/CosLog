@@ -19,7 +19,7 @@ abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bindingAgent = BindingAgentFragment(bindingLayoutId(), inflater, container)
+        bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
         return  bindingAgent.bind()
     }
 

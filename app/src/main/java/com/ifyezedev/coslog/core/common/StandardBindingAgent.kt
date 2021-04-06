@@ -8,7 +8,7 @@ import androidx.databinding.ViewDataBinding
 import java.lang.NullPointerException
 import java.lang.reflect.ParameterizedType
 
-class BindingAgentFragment<T : ViewDataBinding>(
+class StandardBindingAgent<T : ViewDataBinding>(
     val bindingLayoutId: Int,
     private val inflater: LayoutInflater,
     private val container: ViewGroup?,
@@ -25,7 +25,7 @@ class BindingAgentFragment<T : ViewDataBinding>(
                 .actualTypeArguments[0] as Class<*>
             throw NullPointerException(
                 "\n Unable to initialize binding. " +
-                        "\n ${this::class} - The binding type  $bindingType might not be referencing the correct layout."
+                        "\n ${this::class} - The binding type $bindingType might not be referencing the correct layout."
             )
         }
         return binding.root
