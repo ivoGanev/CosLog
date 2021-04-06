@@ -1,8 +1,6 @@
 package com.ifyezedev.coslog
 
 import android.view.View
-import com.ifyezedev.coslog.CosplayBaseFragment
-import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 
 class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickListener {
@@ -19,6 +17,6 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
     }
 
     private fun onAddImage() {
-        cosplayNavController.navigate(R.id.pictureViewerFragment)
+        dialogsController.navigate(R.id.pictureViewerFragment)
     }
 }

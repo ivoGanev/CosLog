@@ -32,8 +32,8 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
 
     private fun onFabClicked() {
         when (binding.elementsTabLayout.selectedTabPosition) {
-            0 -> cosplayNavController.navigate(R.id.toBuyFragment)
-            1 -> cosplayNavController.navigate(R.id.toMakeFragment)
+            0 -> dialogsController.navigate(R.id.toBuyFragment)
+            1 -> dialogsController.navigate(R.id.toMakeFragment)
         }
     }
 }

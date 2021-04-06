@@ -13,10 +13,10 @@ abstract class CosplayBaseFragment<T : ViewDataBinding?> : BindingFragment<T>() 
 
     protected val activity: CosplayActivity get() = requireActivity() as CosplayActivity
 
-    protected val cosplayNavController: NavController get() = activity.cosplayNavController
+    protected val dialogsController: NavController get() = activity.dialogsController
 
     /**
      * This controller can be accessed only
      * */
-    protected val dialogsController: NavController get() = activity.dialogsController
+    protected val cosplayController: NavController get() = activity.cosplayController
 }

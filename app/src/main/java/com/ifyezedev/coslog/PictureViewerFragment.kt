@@ -1,13 +1,15 @@
 package com.ifyezedev.coslog
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ifyezedev.coslog.PictureViewerFragment.Keys.IMAGE_PATH
+import com.ifyezedev.coslog.core.builders.intent
 import com.ifyezedev.coslog.databinding.FragmentPictureViewerBinding
 
-class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>(),
+class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(),
     View.OnClickListener {
 
     object Keys {
@@ -18,7 +20,11 @@ class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val imagePagerAdapter = ImagePagerAdapter(this)
-        binding.imagePager.adapter = imagePagerAdapter
+        binding {
+            imagePager.adapter = imagePagerAdapter
+            exitButton.setOnClickListener(this@PictureViewerFragment)
+            shareButton.setOnClickListener(this@PictureViewerFragment)
+        }
     }
 
     class ImagePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -41,8 +47,15 @@ class PictureViewerFragment : BindingFragment<FragmentPictureViewerBinding>(),
     }
 
     private fun onShareButtonClicked() {
+        val intent = intent {
+            action = Intent.ACTION_SEND
+            type = "image/jpeg"
+            putExtra(Intent.EXTRA_TEXT, "My Image")
+        }
+        startActivity(intent)
     }
 
     private fun onExitButtonClicked() {
+        dialogsController.popBackStack()
     }
 }

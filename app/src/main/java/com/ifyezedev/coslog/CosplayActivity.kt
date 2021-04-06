@@ -1,6 +1,5 @@
 package com.ifyezedev.coslog
 
-import android.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -10,21 +9,20 @@ import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 
 class CosplayActivity : AppCompatActivity() {
     private val cosplayCompositionRoot: CosplayCompositionRoot = CosplayCompositionRoot(this)
 
-    lateinit var cosplayNavController: NavController
     lateinit var dialogsController: NavController
+    lateinit var cosplayController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cosplay)
 
         if (savedInstanceState == null) {
-            cosplayNavController = cosplayCompositionRoot.cosplayController
-            println(cosplayNavController.graph)
+            dialogsController = cosplayCompositionRoot.cosplayController
+            println(dialogsController.graph)
 
             supportFragmentManager.registerFragmentLifecycleCallbacks(object :
                 FragmentLifecycleCallbacks() {
@@ -36,7 +34,7 @@ class CosplayActivity : AppCompatActivity() {
                     savedInstanceState: Bundle?
                 ) {
                     if (f is CosplayFragment) {
-                        dialogsController = cosplayCompositionRoot.dialogsController(f)
+                        cosplayController = cosplayCompositionRoot.dialogsController(f)
                     }
                     super.onFragmentViewCreated(fm, f, v, savedInstanceState)
                 }
