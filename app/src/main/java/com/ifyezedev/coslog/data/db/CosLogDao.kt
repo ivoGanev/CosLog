@@ -1,12 +1,10 @@
 package com.ifyezedev.coslog.data.db
 
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import com.ifyezedev.coslog.data.db.entities.*
 import com.ifyezedev.coslog.data.db.entities.relations.*
 
+@Dao
 interface CosLogDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
