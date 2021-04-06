@@ -7,12 +7,9 @@ import com.ifyezedev.coslog.core.common.BaseFragment
 
 
 abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
-    lateinit var compositionRoot: CosplayFragmentCompositionRoot
-
-    abstract override fun bindingLayoutId(): Int
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        compositionRoot = CosplayFragmentCompositionRoot(requireActivity())
+    val compositionRoot by lazy {
+        CosplayFragmentCompositionRoot(requireActivity())
     }
+    
+    abstract override fun bindingLayoutId(): Int
 }
