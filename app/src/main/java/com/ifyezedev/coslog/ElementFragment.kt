@@ -12,7 +12,7 @@ import com.ifyezedev.coslog.databinding.FragmentElementBinding
 
 class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
-    
+
     override fun onStart() {
         binding {
             fab.setOnClickListener(this@ElementFragment)

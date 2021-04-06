@@ -5,5 +5,5 @@ import android.content.Intent
 fun intent(init: Intent.()-> Unit) : Intent {
     val intent = Intent()
     intent.init()
-    return  intent
+    return intent
 }
