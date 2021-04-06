@@ -9,7 +9,7 @@ import com.ifyezedev.coslog.PictureViewerFragment.Keys.IMAGE_PATH
 import com.ifyezedev.coslog.core.builders.intent
 import com.ifyezedev.coslog.databinding.FragmentPictureViewerBinding
 
-class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(),
+class PictureViewerFragment : CosplayBaseDialogFragment<FragmentPictureViewerBinding>(),
     View.OnClickListener {
 
     object Keys {
@@ -19,6 +19,7 @@ class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_viewer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val imagePagerAdapter = ImagePagerAdapter(this)
         binding {
             imagePager.adapter = imagePagerAdapter
@@ -56,6 +57,6 @@ class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(
     }
 
     private fun onExitButtonClicked() {
-        dialogsController.popBackStack()
+        compositionRoot.cosplayController.popBackStack()
     }
 }

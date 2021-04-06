@@ -1,12 +1,14 @@
 package com.ifyezedev.coslog
 
-import android.view.View
+import android.os.Bundle
+import android.view.*
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 
-class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickListener {
+class ToBuyFragment : CosplayBaseDialogFragment<FragmentToBuyBinding>(), View.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_buy
 
-    override fun onBindingCreated() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.bottom.buttonAddImage.setOnClickListener(this)
     }
 
@@ -17,6 +19,6 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
     }
 
     private fun onAddImage() {
-        dialogsController.navigate(R.id.pictureViewerFragment)
+        compositionRoot.cosplayController.navigate(R.id.pictureViewerFragment)
     }
 }

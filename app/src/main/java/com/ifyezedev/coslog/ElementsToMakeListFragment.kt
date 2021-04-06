@@ -1,5 +1,6 @@
 package com.ifyezedev.coslog
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.databinding.ElementItemToMakeBinding
 import com.ifyezedev.coslog.databinding.FragmentElementToMakeListBinding
 
-class ElementsToMakeListFragment : BindingFragment<FragmentElementToMakeListBinding>() {
+class ElementsToMakeListFragment : CosplayBaseFragment<FragmentElementToMakeListBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make_list
     private lateinit var recyclerView: RecyclerView
 
-    override fun onBindingCreated() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerView = binding.recyclerView
         recyclerView.adapter = Adapter(listOf("one", "two", "three", "four"))
         recyclerView.layoutManager =

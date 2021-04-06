@@ -1,19 +1,23 @@
 package com.ifyezedev.coslog
 
+import android.content.Context
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 
 
 class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
-
-    private lateinit var tabLayoutSetup: ElementsTabLayoutSetup
-
+    
     override fun onStart() {
         binding {
             fab.setOnClickListener(this@ElementFragment)
 
-            tabLayoutSetup = ElementsTabLayoutSetup(
+            initTabLayout(
                 requireContext(),
                 elementsTabLayout,
                 elementsViewPager,
@@ -32,9 +36,26 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
 
     private fun onFabClicked() {
         when (binding.elementsTabLayout.selectedTabPosition) {
-            0 -> dialogsController.navigate(R.id.toBuyFragment)
-            1 -> dialogsController.navigate(R.id.toMakeFragment)
+            0 -> compositionRoot.cosplayController.navigate(R.id.toBuyFragment)
+            1 -> compositionRoot.cosplayController.navigate(R.id.toMakeFragment)
         }
+    }
+
+    private fun initTabLayout(
+        context: Context,
+        tabLayout: TabLayout,
+        viewPager2: ViewPager2,
+        viewPagerAdapter: FragmentStateAdapter,
+        @StringRes vararg titles: Int
+    ) {
+        viewPager2.adapter = viewPagerAdapter
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+            tab.text = when (position) {
+                0 -> context.getString(titles[0])
+                1 -> context.getString(titles[1])
+                else -> throw IllegalArgumentException("Error. Shouldn't be on this fragment page.")
+            }
+        }.attach()
     }
 }
 

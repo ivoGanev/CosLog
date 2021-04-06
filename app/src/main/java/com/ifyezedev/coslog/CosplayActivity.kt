@@ -11,35 +11,26 @@ import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.navigation.NavController
 
 class CosplayActivity : AppCompatActivity() {
-    private val cosplayCompositionRoot: CosplayCompositionRoot = CosplayCompositionRoot(this)
-
-    lateinit var dialogsController: NavController
-    lateinit var cosplayController: NavController
+    val cosplayCompositionRoot: CosplayActivityCompositionRoot = CosplayActivityCompositionRoot(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cosplay)
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object :
+            FragmentLifecycleCallbacks() {
 
-        if (savedInstanceState == null) {
-            dialogsController = cosplayCompositionRoot.cosplayController
-            println(dialogsController.graph)
-
-            supportFragmentManager.registerFragmentLifecycleCallbacks(object :
-                FragmentLifecycleCallbacks() {
-
-                override fun onFragmentViewCreated(
-                    fm: FragmentManager,
-                    f: androidx.fragment.app.Fragment,
-                    v: View,
-                    savedInstanceState: Bundle?
-                ) {
-                    if (f is CosplayFragment) {
-                        cosplayController = cosplayCompositionRoot.dialogsController(f)
-                    }
-                    super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+            override fun onFragmentViewCreated(
+                fm: FragmentManager,
+                f: androidx.fragment.app.Fragment,
+                v: View,
+                savedInstanceState: Bundle?
+            ) {
+                if (f is CosplayFragment) {
+                    cosplayCompositionRoot.createCosplayController(f)
                 }
-            }, true)
-        }
+                super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+            }
+        }, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
