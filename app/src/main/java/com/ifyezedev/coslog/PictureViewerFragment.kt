@@ -6,7 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ifyezedev.coslog.PictureViewerFragment.Keys.IMAGE_PATH
-import com.ifyezedev.coslog.core.builders.intent
+import com.ifyezedev.coslog.core.builders.buildIntent
 import com.ifyezedev.coslog.databinding.FragmentPictureViewerBinding
 
 class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(),
@@ -48,7 +48,7 @@ class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(
     }
 
     private fun onShareButtonClicked() {
-        val intent = intent {
+        val intent = buildIntent {
             action = Intent.ACTION_SEND
             type = "image/jpeg"
             putExtra(Intent.EXTRA_TEXT, "My Image")

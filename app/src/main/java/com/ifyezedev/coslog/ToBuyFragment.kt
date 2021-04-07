@@ -1,7 +1,9 @@
 package com.ifyezedev.coslog
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import com.ifyezedev.coslog.core.builders.buildIntent
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 
 class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickListener {
@@ -19,6 +21,9 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
     }
 
     private fun onAddImage() {
-        cosplayController.navigate(R.id.pictureViewerFragment)
+        val intent = buildIntent(Intent.ACTION_PICK) {
+            type = "image/*"
+        }
+        startActivityForResult(intent, 1)
     }
 }
