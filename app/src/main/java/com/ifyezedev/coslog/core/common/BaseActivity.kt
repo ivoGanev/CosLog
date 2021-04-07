@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
+import com.ifyezedev.coslog.R
 
-abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
+abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
+
     @LayoutRes
     abstract fun bindingLayoutId(): Int
 
@@ -16,21 +18,13 @@ abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
 
     val binding: T get() = bindingAgent.binding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
-        return  bindingAgent.bind()
-    }
-
     fun binding(init: T.() -> Unit) {
         binding.init()
     }
 
-    override fun onDestroyView() {
-        bindingAgent.destroy()
-        super.onDestroyView()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        bindingAgent = StandardBindingAgent(bindingLayoutId(), layoutInflater, null)
+        setContentView(bindingAgent.bind())
     }
 }

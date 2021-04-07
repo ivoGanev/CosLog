@@ -2,60 +2,13 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/topAppBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <ImageButton
-                    android:id="@+id/shareButton"
-                    android:padding="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?android:selectableItemBackground"
-                    android:src="@drawable/ic_baseline_share_24" />
-
-                <TextView
-                    android:id="@+id/imageNumber"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    tools:text="1 of 10"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <ImageButton
-                    android:padding="16dp"
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/exitButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?android:selectableItemBackground"
-                    android:src="@drawable/ic_baseline_close_24" />
-
-            </RelativeLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="match_parent">
 
         <androidx.viewpager2.widget.ViewPager2
             app:layout_anchor="@id/appBarLayout"
             android:id="@+id/imagePager"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:layout_marginBottom="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
@@ -69,5 +22,5 @@
             android:layout_gravity="bottom|end"
             android:src="@drawable/ic_baseline_delete_24"
           />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 </layout>

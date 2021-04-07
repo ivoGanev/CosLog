@@ -9,14 +9,19 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.appbar.MaterialToolbar
+import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 
-class CosplayActivityCompositionRoot(private val activity: AppCompatActivity) {
+class CosplayActivityCompositionRoot() {
     lateinit var cosplayController: NavController
 
-    fun createCosplayController(fragment: Fragment): NavController {
-        val navHostFragment =
-            fragment.childFragmentManager.findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
-        cosplayController = navHostFragment.navController
-        return cosplayController
+    lateinit var cosplayAppBar: MaterialToolbar
+
+    fun createCosplayController(fragment: CosplayFragment) {
+        cosplayController = fragment.cosplayController
+    }
+
+    fun createCosplayAppBar(fragment: CosplayFragment) {
+        cosplayAppBar = fragment.appBar
     }
 }

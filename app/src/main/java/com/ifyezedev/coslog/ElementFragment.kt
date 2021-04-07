@@ -14,6 +14,8 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
     override fun bindingLayoutId() = R.layout.fragment_element
 
     override fun onStart() {
+        super.onStart()
+
         binding {
             fab.setOnClickListener(this@ElementFragment)
 
@@ -25,7 +27,6 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
                 R.string.elements_tab_one_name, R.string.elements_tab_two_name
             )
         }
-        super.onStart()
     }
 
     override fun onClick(v: View?) {
@@ -36,8 +37,8 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
 
     private fun onFabClicked() {
         when (binding.elementsTabLayout.selectedTabPosition) {
-            0 -> compositionRoot.cosplayController.navigate(R.id.toBuyFragment)
-            1 -> compositionRoot.cosplayController.navigate(R.id.toMakeFragment)
+            0 -> cosplayController.navigate(R.id.toBuyFragment)
+            1 -> cosplayController.navigate(R.id.toMakeFragment)
         }
     }
 
