@@ -9,12 +9,6 @@
         android:icon="@drawable/ic_delete"/>
 
     <item
-        android:id="@+id/cancel_adding"
-        android:title="Cancel"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_cancel"/>
-
-    <item
         android:id="@+id/save_cosplay"
         android:title="Save"
         app:showAsAction="always"

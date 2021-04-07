@@ -13,13 +13,22 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CosplayDetailsViewModel : ViewModel() {
-    //livedata that store the date selected from date picker
+    //livedata that stores the date selected from date picker
     private val _selectedDate = MutableLiveData<String>()
     val selectedDate: LiveData<String>
         get() = _selectedDate
 
+    //livedata that stores the current date
+    private val _initialDate = MutableLiveData<String>()
+    val initialDate: LiveData<String>
+        get() = _initialDate
+
     //date formatter
     val format = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+
+    init {
+        _initialDate.value = getInitialDate()
+    }
 
     //get today's date
     fun getInitialDate() : String {

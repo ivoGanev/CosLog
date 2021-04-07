@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.CalendarConstraints
@@ -15,9 +16,9 @@ import com.ifyezedev.coslog.databinding.FragmentCosplayDetailsBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CosplayDetailsFragment : BindingFragment<FragmentCosplayDetailsBinding>() {
+class CosplayDetailsFragment : Fragment() {
     // Inflate the layout for this fragment
-    override fun bindingLayoutId() = R.layout.fragment_cosplay_details
+    lateinit var binding: FragmentCosplayDetailsBinding
     private lateinit var source : From
     private val PICK_IMAGE_CODE = 1
     lateinit var datePicker : MaterialDatePicker<Long>
@@ -28,17 +29,22 @@ class CosplayDetailsFragment : BindingFragment<FragmentCosplayDetailsBinding>() 
         val args: CosplayDetailsFragmentArgs by navArgs()
         source = args.from
 
+        //notify activity that this fragment has options menu
         setHasOptionsMenu(true)
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        //setup binding
+        binding = FragmentCosplayDetailsBinding.inflate(inflater)
+
+        //setup viewmodel and binding lifecycleOwner
+        binding.lifecycleOwner = this
+        viewModel = ViewModelProvider(this).get(CosplayDetailsViewModel::class.java)
+        binding.viewModel = viewModel
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this).get(CosplayDetailsViewModel::class.java)
-
-        binding.initialDateEditTxt.setText(viewModel.getInitialDate())
 
         binding.addCharImg.setOnClickListener { getImageIntent() }
 
@@ -46,22 +52,20 @@ class CosplayDetailsFragment : BindingFragment<FragmentCosplayDetailsBinding>() 
 
         //initialize datePicker
         datePicker = viewModel.createDatePicker()
-
+        //open datepicker when end icon is clicked
         binding.dueDateTextLayout.setEndIconOnClickListener { datePicker.show(requireActivity().supportFragmentManager, "Picker") }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        //hide delete menu option depending on the source
+        if(source == From.BUTTON) {
+            menu.findItem(R.id.delete_cosplay)?.isVisible = false
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.cosplay_details_menu, menu)
-
-        //hide certain menu items depending on the source
-        if(source == From.BUTTON) {
-            menu.findItem(R.id.delete_cosplay)?.isVisible = false
-        }
-        else {
-            menu.findItem(R.id.cancel_adding)?.isVisible = false
-        }
-
     }
 
     //intent for picking an image from the gallery

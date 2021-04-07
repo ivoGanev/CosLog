@@ -29,7 +29,7 @@ class CosplayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //go to AddCosplayFragment to add a cosplay
+        //go to CosplayDetailsFragment to add a cosplay
         view.findViewById<FloatingActionButton>(R.id.addCosplayBttn).setOnClickListener {
             it.findNavController().navigate(CosplayFragmentDirections.actionCosplayFragmentToCosplayDetailsFragment(From.BUTTON))
         }
