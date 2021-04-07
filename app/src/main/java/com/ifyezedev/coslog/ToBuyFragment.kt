@@ -3,16 +3,23 @@ package com.ifyezedev.coslog
 import android.app.Activity.RESULT_OK
 import android.content.ClipData
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.ifyezedev.coslog.core.builders.buildIntent
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 import com.ifyezedev.coslog.databinding.PictureItemBinding
+import kotlin.math.roundToInt
 
 
 class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickListener {
@@ -23,8 +30,13 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.bottom.buttonAddImage.setOnClickListener(this)
-        binding.bottom.recyclerView.adapter = Adapter(adapterData)
+
+        val snapHelper: SnapHelper = PagerSnapHelper()
+        binding {
+            bottom.buttonAddImage.setOnClickListener(this@ToBuyFragment)
+            bottom.recyclerView.adapter = Adapter(adapterData)
+            snapHelper.attachToRecyclerView(bottom.recyclerView)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -59,6 +71,8 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
             binding.bottom.recyclerView.adapter?.notifyDataSetChanged()
         }
     }
+
+
 
     private class Adapter(private val data: List<Any>) :
         RecyclerView.Adapter<Adapter.ViewHolder>() {
