@@ -43,11 +43,11 @@ class CosplayDetailsFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addCharImg.setOnClickListener { getImageIntent() }
-
         binding.removeCharImg.setOnClickListener { removeImage() }
 
         //initialize datePicker
@@ -55,6 +55,7 @@ class CosplayDetailsFragment : Fragment() {
         //open datepicker when end icon is clicked
         binding.dueDateTextLayout.setEndIconOnClickListener { datePicker.show(requireActivity().supportFragmentManager, "Picker") }
     }
+
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         //hide delete menu option depending on the source
@@ -68,8 +69,9 @@ class CosplayDetailsFragment : Fragment() {
         inflater.inflate(R.menu.cosplay_details_menu, menu)
     }
 
-    //intent for picking an image from the gallery
-    private fun getImageIntent() {
+
+    //intent for picking an image from the gallery when button is clicked
+    fun getImageIntent() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
@@ -95,8 +97,8 @@ class CosplayDetailsFragment : Fragment() {
         }
     }
 
-    //method to remove user selected image from imageView and database
-    private fun removeImage() {
+    //method to remove user selected image from imageView and database when button is clicked
+    fun removeImage() {
         //set the imageview to the placeholder image
         binding.characterEditImg.setImageResource(R.drawable.placeholder_image)
     }
