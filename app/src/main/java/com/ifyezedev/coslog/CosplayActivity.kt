@@ -33,7 +33,7 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
 
     private fun setupNavigationBackButton(appBar: MaterialToolbar) {
         cosplayCompositionRoot.cosplayController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if (destination.id == R.id.toBuyFragment) {
+            if (destination.id == R.id.toBuyFragment || destination.id == R.id.toMakeFragment) {
                 appBar.setNavigationOnClickListener {
                     controller.popBackStack()
                 }
