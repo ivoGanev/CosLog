@@ -37,12 +37,16 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textSize="18sp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     tools:text="Kuo Yasami"/>
 
                 <TextView
                     android:id="@+id/series_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textStyle="bold"
                     tools:text="Naruto"/>
 

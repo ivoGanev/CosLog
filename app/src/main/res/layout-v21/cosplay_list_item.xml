@@ -36,6 +36,8 @@
                     android:id="@+id/character_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     tools:text="Kuo Yasami"/>
@@ -44,6 +46,8 @@
                     android:id="@+id/series_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textStyle="bold"
                     tools:text="Naruto"/>
 

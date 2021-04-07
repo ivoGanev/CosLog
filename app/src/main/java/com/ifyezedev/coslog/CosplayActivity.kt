@@ -57,4 +57,8 @@ class CosplayActivity : AppCompatActivity() {
         }
     }
 
+    //let activity handle Up navigation
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
 }
