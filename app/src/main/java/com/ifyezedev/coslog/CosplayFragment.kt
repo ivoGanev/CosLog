@@ -26,18 +26,10 @@ class CosplayFragment : BaseFragment<FragmentCosplayMainBinding>() {
             childFragmentManager.findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
         cosplayController = navHostFragment.navController
         appBar = binding.appBarInclude.topAppBar
-
-        binding {
-            appBarInclude.topAppBar.setNavigationOnClickListener {
-                cosplayController.navigate(R.id.homeActivity)
-            }
-        }
     }
 
     override fun onStart() {
         super.onStart()
-        appBar.setNavigationOnClickListener {
-            cosplayController.popBackStack()
-        }
+        binding.bottomNav.setupWithNavController(cosplayController)
     }
 }

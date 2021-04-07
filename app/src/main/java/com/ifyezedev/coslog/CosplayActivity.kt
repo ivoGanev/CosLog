@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.navigation.NavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.ifyezedev.coslog.core.common.BaseActivity
 import com.ifyezedev.coslog.core.common.StandardBindingAgent
 import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
@@ -26,7 +27,23 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
             .replace(R.id.fragmentContainer, fragment)
             .commit()
 
-        injectDependencies()
+        if (savedInstanceState == null)
+            injectDependencies()
+    }
+
+    private fun setupNavigationBackButton(appBar: MaterialToolbar) {
+        cosplayCompositionRoot.cosplayController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id == R.id.toBuyFragment) {
+                appBar.setNavigationOnClickListener {
+                    controller.popBackStack()
+                }
+            } else {
+                appBar.setNavigationOnClickListener {
+                    controller.navigate(R.id.homeActivity)
+                }
+            }
+            println(destination)
+        }
     }
 
     private fun injectDependencies() {
@@ -47,6 +64,7 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
                 if (f is CosplayFragment) {
                     cosplayCompositionRoot.createCosplayController(f)
                     cosplayCompositionRoot.createCosplayAppBar(f)
+                    setupNavigationBackButton(cosplayCompositionRoot.cosplayAppBar)
                 }
             }
         }, true)

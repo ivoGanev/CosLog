@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -71,7 +73,6 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
             binding.bottom.recyclerView.adapter?.notifyDataSetChanged()
         }
     }
-
 
 
     private class Adapter(private val data: List<Any>) :
