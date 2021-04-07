@@ -36,6 +36,7 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
         val snapHelper: SnapHelper = PagerSnapHelper()
         binding {
             bottom.buttonAddImage.setOnClickListener(this@ToBuyFragment)
+            bottom.buttonSave.setOnClickListener(this@ToBuyFragment)
             bottom.recyclerView.adapter = Adapter(adapterData)
             snapHelper.attachToRecyclerView(bottom.recyclerView)
         }
@@ -44,7 +45,12 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.buttonAddImage -> onAddImage()
+            R.id.buttonSave -> onSaveButtonPressed()
         }
+    }
+
+    private fun onSaveButtonPressed() {
+        // save all files with UUID as a suffix
     }
 
     private fun onAddImage() {
@@ -65,9 +71,8 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
             }
             intent?.data?.let { uri -> imagesUri.add(uri) }
             intent?.clipData?.let { clipData -> imagesUri.addAll(clipData.mapUri()) }
-            val bitmapImages = requireContext()
-                .contentResolver
-                .openInputStream(imagesUri)
+
+            val bitmapImages = appBitmapStore.open(imagesUri)
 
             adapterData.addAll(bitmapImages)
             binding.bottom.recyclerView.adapter?.notifyDataSetChanged()
@@ -96,15 +101,7 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
         }
     }
 
-    private fun ContentResolver.openInputStream(uriList: List<Uri>): List<Bitmap> {
-        val bitmapResult = mutableListOf<Bitmap>()
-        for (i in uriList.indices) {
-            val bitmapStream = this.openInputStream(uriList[i])
-            val bitmap = BitmapFactory.decodeStream(bitmapStream)
-            bitmapResult.add(bitmap)
-        }
-        return bitmapResult
-    }
+
 
     private fun ClipData.mapUri(): MutableList<Uri> {
         val result = mutableListOf<Uri>()

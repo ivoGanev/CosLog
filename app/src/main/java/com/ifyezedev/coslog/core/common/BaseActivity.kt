@@ -11,6 +11,8 @@ import com.ifyezedev.coslog.R
 
 abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
 
+    private lateinit var application: BaseApplication
+
     @LayoutRes
     abstract fun bindingLayoutId(): Int
 
@@ -24,6 +26,8 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        application = getApplication() as BaseApplication
         bindingAgent = StandardBindingAgent(bindingLayoutId(), layoutInflater, null)
         setContentView(bindingAgent.bind())
     }
