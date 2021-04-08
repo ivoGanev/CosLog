@@ -16,20 +16,26 @@ import com.ifyezedev.coslog.core.common.BaseFragment
 
 
 abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
-    private lateinit var compositionRoot: CosplayFragmentCompositionRoot
+
+    private val compositionRoot: CosplayFragmentCompositionRoot by lazy {
+        CosplayFragmentCompositionRoot((requireActivity() as CosplayActivity).cosplayCompositionRoot)
+    }
 
     lateinit var cosplayController: NavController
     lateinit var activity: CosplayActivity
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     override fun onStart() {
         super.onStart()
-        compositionRoot = CosplayFragmentCompositionRoot(requireActivity() as CosplayActivity)
+        inject()
+    }
+
+    private fun inject() {
         cosplayController = compositionRoot.cosplayController
     }
 
     abstract override fun bindingLayoutId(): Int
+}
+
+class CosplayFragmentCompositionRoot(private val activityCompositionRoot: CosplayActivityCompositionRoot) {
+    val cosplayController: NavController = activityCompositionRoot.cosplayController
 }

@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
+import androidx.navigation.NavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.ifyezedev.coslog.core.common.BaseActivity
 import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
@@ -12,19 +14,25 @@ import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
     override fun bindingLayoutId(): Int = R.layout.activity_cosplay
 
-    val cosplayCompositionRoot = CosplayActivityCompositionRoot()
+    val cosplayCompositionRoot: CosplayActivityCompositionRoot by lazy {
+        CosplayActivityCompositionRoot(this)
+    }
+
+    lateinit var  cosplayController: NavController
+
+    lateinit var appBar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cosplay)
+        inject()
 
-        val fragment = CosplayFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .commit()
+        binding.bottomNav.setupWithNavController(cosplayController)
+        setupNavigationBackButton(appBar)
+    }
 
-        if (savedInstanceState == null)
-            injectDependencies()
+    private fun inject() {
+        cosplayController = cosplayCompositionRoot.cosplayController
+        appBar = cosplayCompositionRoot.appBar
     }
 
     private fun setupNavigationBackButton(appBar: MaterialToolbar) {
@@ -42,28 +50,5 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
         }
     }
 
-    private fun injectDependencies() {
-        /*
-        * Creating the CosplayFragment dependencies is not straight forward.
-        * In order to grab its dependencies we have to wait for the fragment
-        * view to be created.
-        * */
-        supportFragmentManager.registerFragmentLifecycleCallbacks(object :
-            FragmentLifecycleCallbacks() {
-            override fun onFragmentViewCreated(
-                fm: FragmentManager,
-                f: Fragment,
-                v: View,
-                savedInstanceState: Bundle?
-            ) {
-                super.onFragmentViewCreated(fm, f, v, savedInstanceState)
-                if (f is CosplayFragment) {
-                    cosplayCompositionRoot.assignCosplayController(f)
-                    cosplayCompositionRoot.assignCosplayAppBar(f)
-                    setupNavigationBackButton(cosplayCompositionRoot.cosplayAppBar)
-                }
-            }
-        }, true)
-    }
 
 }
