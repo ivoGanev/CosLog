@@ -5,24 +5,67 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.*
 
-data class BitmapStoreDetails(val name: String, val galleryTag: String, val path: String)
+data class BitmapDetails(
+    val name: String,
+    val tag: String,
+)
 
 class AppBitmapStore(private val context: Context) {
-    private val delimiter = "->"
+    private val delimiter = "$$"
 
-    fun store(imagesUri: List<Uri>) {
+    fun save(bitmap: Bitmap, details: BitmapDetails) {
+        val fileName = details.toFileName()
 
+        val dir = File(context.filesDir, details.tag)
+        dir.mkdirs()
+
+        try {
+            FileOutputStream(File(dir, fileName)).use { stream ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            }
+
+        } catch (e: IOException) {
+            //TODO return a failure
+        }
     }
+
+    fun saveAll(bitmapsData: List<Pair<Bitmap, BitmapDetails>>) {
+        bitmapsData.forEach { bitmapData ->
+            save(bitmapData.first, bitmapData.second)
+        }
+    }
+
+    fun openAll(tag: String): List<Bitmap> {
+        val bitmapList = mutableListOf<Bitmap>()
+        val dir = File(context.filesDir, tag)
+        val files = dir.listFiles()!!
+
+        try {
+            for (i in files.indices) {
+                FileInputStream(files[i]).use { stream ->
+                    val bitmap = BitmapFactory.decodeStream(stream)
+                    bitmapList.add(bitmap)
+                }
+            }
+        } catch (e: IOException) {
+            //TODO return a failure
+        }
+        return bitmapList
+    }
+
 
     fun open(imagesUri: List<Uri>): List<Bitmap> =
         context.contentResolver.openInputStream(imagesUri)
 
-
-    private fun toFileName(bitmapStoreDetails: BitmapStoreDetails) = with(bitmapStoreDetails) {
+    private fun BitmapDetails.toFileName() = with(this) {
         val uuid = UUID.randomUUID()
-        galleryTag + delimiter + name + uuid
+        name + delimiter + uuid
     }
 }
 
