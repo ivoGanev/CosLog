@@ -13,7 +13,7 @@ data class BitmapDetails(
     val tag: String,
 )
 
-class AppBitmapHandler(private val context: Context) {
+class BitmapResolver(private val context: Context) {
     private val delimiter = "$$"
 
     fun save(uri: Uri, tag: String) {
@@ -31,7 +31,7 @@ class AppBitmapHandler(private val context: Context) {
             }
 
         } catch (e: IOException) {
-            //TODO return a failure
+            //TODO to handle
         }
     }
 
@@ -55,7 +55,7 @@ class AppBitmapHandler(private val context: Context) {
                     }
                 }
             } catch (e: IOException) {
-                //TODO return a failure
+                //TODO to handle
             }
         }
         return bitmapList
@@ -63,7 +63,6 @@ class AppBitmapHandler(private val context: Context) {
 
     fun open(imagesUri: List<Uri>): List<Bitmap> =
         context.contentResolver.loadBitmaps(imagesUri)
-
 }
 
 

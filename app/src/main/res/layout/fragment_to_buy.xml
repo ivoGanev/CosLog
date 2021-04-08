@@ -77,7 +77,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <include
-                android:id="@+id/bottom"
+                android:id="@+id/bottomView"
                 layout="@layout/element_bottom" />
 
         </RelativeLayout>

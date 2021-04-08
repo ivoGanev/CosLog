@@ -1,13 +1,13 @@
 package com.ifyezedev.coslog.core.common
 
 import android.app.Application
-import com.ifyezedev.coslog.core.io.AppBitmapHandler
+import com.ifyezedev.coslog.core.io.BitmapResolver
 
 class BaseApplication: Application() {
-    lateinit var appBitmapHandler: AppBitmapHandler
+    lateinit var bitmapResolver: BitmapResolver
 
     override fun onCreate() {
-        appBitmapHandler = AppBitmapHandler(this)
+        bitmapResolver = BitmapResolver(this)
         super.onCreate()
     }
 }
