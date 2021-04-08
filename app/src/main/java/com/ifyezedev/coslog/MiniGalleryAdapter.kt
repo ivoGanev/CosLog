@@ -10,19 +10,17 @@ import com.ifyezedev.coslog.databinding.PictureItemBinding
 class MiniGalleryAdapter(private val data: MutableList<Bitmap>) :
     RecyclerView.Adapter<MiniGalleryAdapter.ViewHolder>() {
 
+    lateinit var clickListener: OnClickListener
+
     fun addAll(data: List<Bitmap>) {
         this.data.addAll(data)
         this.notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val binding: PictureItemBinding = PictureItemBinding.bind(itemView)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.picture_item, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -32,5 +30,26 @@ class MiniGalleryAdapter(private val data: MutableList<Bitmap>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val bitmap = data[position] as Bitmap
         holder.binding.imageView.setImageBitmap(bitmap)
+    }
+
+    class ViewHolder(
+        itemView: View,
+        private val clickListener: OnClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        val binding: PictureItemBinding = PictureItemBinding.bind(itemView)
+
+        init {
+            binding.imageView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            when (v?.id) {
+                binding.imageView.id -> clickListener.onImageClickedListener(binding.imageView)
+            }
+        }
+    }
+
+    interface OnClickListener {
+        fun onImageClickedListener(view: View)
     }
 }

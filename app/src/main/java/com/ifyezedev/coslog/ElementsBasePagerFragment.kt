@@ -16,7 +16,8 @@ import com.ifyezedev.coslog.databinding.ElementBottomBinding
 //TODO: when rotating the app obviously the bitmapUriCache is not
 //  saved and picture are removed from the recycler view. This eventually
 //  should be fixed with a view model.
-abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(), View.OnClickListener {
+abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(), View.OnClickListener,
+    MiniGalleryAdapter.OnClickListener {
 
     abstract val galleryTag: String
     abstract override fun bindingLayoutId(): Int
@@ -37,6 +38,7 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
         val files = bitmapResolver.openAll(galleryTag) as MutableList
 
         adapter = MiniGalleryAdapter(files)
+        adapter.clickListener = this
 
         bottomBinding.apply {
             buttonAddImage.setOnClickListener(this@ElementsBasePagerFragment)
@@ -86,6 +88,10 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
             result.add(this.getItemAt(i).uri)
         }
         return result
+    }
+
+    override fun onImageClickedListener(view: View) {
+        cosplayController.navigate(R.id.pictureViewerFragment)
     }
 }
 
