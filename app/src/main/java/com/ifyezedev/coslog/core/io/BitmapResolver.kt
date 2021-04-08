@@ -8,11 +8,6 @@ import android.net.Uri
 import java.io.*
 import java.util.*
 
-data class BitmapDetails(
-    val name: String,
-    val tag: String,
-)
-
 class BitmapResolver(private val context: Context) {
     private val delimiter = "$$"
 
