@@ -2,19 +2,13 @@ package com.ifyezedev.coslog
 
 import android.app.Activity.RESULT_OK
 import android.content.ClipData
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
@@ -22,7 +16,6 @@ import com.ifyezedev.coslog.core.builders.buildIntent
 import com.ifyezedev.coslog.core.io.BitmapDetails
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 import com.ifyezedev.coslog.databinding.PictureItemBinding
-import kotlin.math.roundToInt
 
 
 class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickListener {
@@ -36,7 +29,7 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
         super.onViewCreated(view, savedInstanceState)
 
         val snapHelper: SnapHelper = PagerSnapHelper()
-        val files = appBitmapStore.openAll(galleryTag)
+        val files = appBitmapHandler.openAll(galleryTag)
         val bitmapData = files.map { bitmap ->
             Pair(bitmap, BitmapDetails("", ""))
         }
@@ -57,7 +50,7 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
     }
 
     private fun onSaveButtonPressed() {
-        appBitmapStore.saveAll(adapterData)
+        appBitmapHandler.saveAll(adapterData)
     }
 
     private fun onAddImage() {
@@ -79,7 +72,7 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
             intent?.data?.let { uri -> imagesUri.add(uri) }
             intent?.clipData?.let { clipData -> imagesUri.addAll(clipData.mapUri()) }
 
-            val bitmapImages = appBitmapStore.open(imagesUri)
+            val bitmapImages = appBitmapHandler.open(imagesUri)
             val bitmapsData: MutableList<Pair<Bitmap, BitmapDetails>> = mutableListOf()
 
             for(i in 0 until imagesUri.size) {

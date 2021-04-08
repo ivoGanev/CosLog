@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.ifyezedev.coslog.core.io.AppBitmapStore
+import com.ifyezedev.coslog.core.io.AppBitmapHandler
 
 abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
 
@@ -19,7 +19,7 @@ abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
     val binding: T get() = bindingAgent.binding
 
     lateinit var application: BaseApplication
-    lateinit var appBitmapStore: AppBitmapStore
+    lateinit var appBitmapHandler: AppBitmapHandler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +33,7 @@ abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         application = requireActivity().application as BaseApplication
-        appBitmapStore = application.appBitmapStore
+        appBitmapHandler = application.appBitmapHandler
     }
 
     fun binding(init: T.() -> Unit) {

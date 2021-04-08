@@ -17,11 +17,11 @@ class CosplayActivityCompositionRoot() {
 
     lateinit var cosplayAppBar: MaterialToolbar
 
-    fun createCosplayController(fragment: CosplayFragment) {
+    fun assignCosplayController(fragment: CosplayFragment) {
         cosplayController = fragment.cosplayController
     }
 
-    fun createCosplayAppBar(fragment: CosplayFragment) {
+    fun assignCosplayAppBar(fragment: CosplayFragment) {
         cosplayAppBar = fragment.appBar
     }
 }

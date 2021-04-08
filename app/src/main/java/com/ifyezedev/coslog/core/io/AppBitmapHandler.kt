@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.lifecycle.ViewModelStore
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -16,7 +17,7 @@ data class BitmapDetails(
     val tag: String,
 )
 
-class AppBitmapStore(private val context: Context) {
+class AppBitmapHandler(private val context: Context) {
     private val delimiter = "$$"
 
     fun save(bitmap: Bitmap, details: BitmapDetails) {
@@ -59,9 +60,8 @@ class AppBitmapStore(private val context: Context) {
         return bitmapList
     }
 
-
     fun open(imagesUri: List<Uri>): List<Bitmap> =
-        context.contentResolver.openInputStream(imagesUri)
+        context.contentResolver.loadBitmap(imagesUri)
 
     private fun BitmapDetails.toFileName() = with(this) {
         val uuid = UUID.randomUUID()
@@ -69,10 +69,10 @@ class AppBitmapStore(private val context: Context) {
     }
 }
 
-private fun ContentResolver.openInputStream(uriList: List<Uri>): List<Bitmap> {
+private fun ContentResolver.loadBitmap(contentProviderUris: List<Uri>): List<Bitmap> {
     val bitmapResult = mutableListOf<Bitmap>()
-    for (i in uriList.indices) {
-        val bitmapStream = this.openInputStream(uriList[i])
+    for (i in contentProviderUris.indices) {
+        val bitmapStream = this.openInputStream(contentProviderUris[i])
         val bitmap = BitmapFactory.decodeStream(bitmapStream)
         bitmapResult.add(bitmap)
     }

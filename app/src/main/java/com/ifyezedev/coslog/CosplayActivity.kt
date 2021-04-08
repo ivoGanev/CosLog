@@ -1,16 +1,12 @@
 package com.ifyezedev.coslog
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
-import androidx.navigation.NavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.ifyezedev.coslog.core.common.BaseActivity
-import com.ifyezedev.coslog.core.common.StandardBindingAgent
 import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 
 class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
@@ -62,8 +58,8 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
             ) {
                 super.onFragmentViewCreated(fm, f, v, savedInstanceState)
                 if (f is CosplayFragment) {
-                    cosplayCompositionRoot.createCosplayController(f)
-                    cosplayCompositionRoot.createCosplayAppBar(f)
+                    cosplayCompositionRoot.assignCosplayController(f)
+                    cosplayCompositionRoot.assignCosplayAppBar(f)
                     setupNavigationBackButton(cosplayCompositionRoot.cosplayAppBar)
                 }
             }
