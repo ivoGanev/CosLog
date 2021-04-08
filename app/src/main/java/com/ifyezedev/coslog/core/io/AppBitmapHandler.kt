@@ -5,11 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.lifecycle.ViewModelStore
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.util.*
 
 data class BitmapDetails(
@@ -20,10 +16,13 @@ data class BitmapDetails(
 class AppBitmapHandler(private val context: Context) {
     private val delimiter = "$$"
 
-    fun save(bitmap: Bitmap, details: BitmapDetails) {
-        val fileName = details.toFileName()
+    fun save(uri: Uri, tag: String) {
+        val originalFileName = uri.toString().substringAfterLast("/")
+        val uuid = UUID.randomUUID()
+        val fileName = originalFileName + delimiter + uuid
+        val dir = File(context.filesDir, tag)
+        val bitmap = context.contentResolver.loadBitmap(uri)
 
-        val dir = File(context.filesDir, details.tag)
         dir.mkdirs()
 
         try {
@@ -36,40 +35,44 @@ class AppBitmapHandler(private val context: Context) {
         }
     }
 
-    fun saveAll(bitmapsData: List<Pair<Bitmap, BitmapDetails>>) {
-        bitmapsData.forEach { bitmapData ->
-            save(bitmapData.first, bitmapData.second)
+    fun saveAll(uris: List<Uri>, tag: String) {
+        uris.forEach { uri ->
+            save(uri, tag)
         }
     }
 
     fun openAll(tag: String): List<Bitmap> {
         val bitmapList = mutableListOf<Bitmap>()
         val dir = File(context.filesDir, tag)
-        val files = dir.listFiles()!!
+        val files = dir.listFiles()
 
-        try {
-            for (i in files.indices) {
-                FileInputStream(files[i]).use { stream ->
-                    val bitmap = BitmapFactory.decodeStream(stream)
-                    bitmapList.add(bitmap)
+        files?.let {
+            try {
+                for (i in files.indices) {
+                    FileInputStream(files[i]).use { stream ->
+                        val bitmap = BitmapFactory.decodeStream(stream)
+                        bitmapList.add(bitmap)
+                    }
                 }
+            } catch (e: IOException) {
+                //TODO return a failure
             }
-        } catch (e: IOException) {
-            //TODO return a failure
         }
         return bitmapList
     }
 
     fun open(imagesUri: List<Uri>): List<Bitmap> =
-        context.contentResolver.loadBitmap(imagesUri)
+        context.contentResolver.loadBitmaps(imagesUri)
 
-    private fun BitmapDetails.toFileName() = with(this) {
-        val uuid = UUID.randomUUID()
-        name + delimiter + uuid
-    }
 }
 
-private fun ContentResolver.loadBitmap(contentProviderUris: List<Uri>): List<Bitmap> {
+
+private fun ContentResolver.loadBitmap(contentProviderUri: Uri): Bitmap {
+    val bitmapStream = this.openInputStream(contentProviderUri)
+    return BitmapFactory.decodeStream(bitmapStream)
+}
+
+private fun ContentResolver.loadBitmaps(contentProviderUris: List<Uri>): List<Bitmap> {
     val bitmapResult = mutableListOf<Bitmap>()
     for (i in contentProviderUris.indices) {
         val bitmapStream = this.openInputStream(contentProviderUris[i])

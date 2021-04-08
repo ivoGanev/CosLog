@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.ifyezedev.coslog.core.builders.buildIntent
-import com.ifyezedev.coslog.core.io.BitmapDetails
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 import com.ifyezedev.coslog.databinding.PictureItemBinding
 
@@ -23,21 +22,22 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
 
     override fun bindingLayoutId(): Int = R.layout.fragment_to_buy
 
-    private val adapterData: MutableList<Pair<Bitmap, BitmapDetails>> = mutableListOf()
+    private val bitmapUriCache: MutableList<Uri> = mutableListOf()
+
+    private lateinit var adapter: Adapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val snapHelper: SnapHelper = PagerSnapHelper()
-        val files = appBitmapHandler.openAll(galleryTag)
-        val bitmapData = files.map { bitmap ->
-            Pair(bitmap, BitmapDetails("", ""))
-        }
+        val files = appBitmapHandler.openAll(galleryTag) as MutableList
+
+        adapter = Adapter(files)
 
         binding {
             bottom.buttonAddImage.setOnClickListener(this@ToBuyFragment)
             bottom.buttonSave.setOnClickListener(this@ToBuyFragment)
-            bottom.recyclerView.adapter = Adapter(bitmapData)
+            bottom.recyclerView.adapter = adapter
             snapHelper.attachToRecyclerView(bottom.recyclerView)
         }
     }
@@ -50,7 +50,7 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
     }
 
     private fun onSaveButtonPressed() {
-        appBitmapHandler.saveAll(adapterData)
+        appBitmapHandler.saveAll(bitmapUriCache, "buy-gallery")
     }
 
     private fun onAddImage() {
@@ -65,30 +65,25 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode == RESULT_OK && requestCode == 0) {
-            // Handle single files
-            val imagesUri: MutableList<Uri> = mutableListOf()
-            intent?.let {
-            }
-            intent?.data?.let { uri -> imagesUri.add(uri) }
-            intent?.clipData?.let { clipData -> imagesUri.addAll(clipData.mapUri()) }
+            val tempCache: MutableList<Uri> = mutableListOf()
 
-            val bitmapImages = appBitmapHandler.open(imagesUri)
-            val bitmapsData: MutableList<Pair<Bitmap, BitmapDetails>> = mutableListOf()
+            intent?.data?.let { uri -> tempCache.add(uri) }
+            intent?.clipData?.let { clipData -> tempCache.addAll(clipData.mapUri()) }
 
-            for(i in 0 until imagesUri.size) {
-                val path = imagesUri[i].toString().substringAfterLast('/')
-                bitmapsData.add(Pair(bitmapImages[i], BitmapDetails(path, "to-buy")))
-                println(imagesUri[i].toString())
-                println(path)
-            }
-
-            adapterData.addAll(bitmapsData)
-            binding.bottom.recyclerView.adapter?.notifyDataSetChanged()
+            val bitmapImages = appBitmapHandler.open(tempCache)
+            bitmapUriCache.addAll(tempCache)
+            adapter.addAll(bitmapImages)
         }
     }
 
-    private class Adapter(private val data: List<Any>) :
+    private class Adapter(private val data: MutableList<Bitmap>) :
         RecyclerView.Adapter<Adapter.ViewHolder>() {
+
+        fun addAll(data: List<Bitmap>) {
+            this.data.addAll(data)
+            this.notifyDataSetChanged()
+        }
+
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val binding: PictureItemBinding = PictureItemBinding.bind(itemView)
         }
@@ -99,14 +94,13 @@ class ToBuyFragment : CosplayBaseFragment<FragmentToBuyBinding>(), View.OnClickL
             return ViewHolder(view)
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val element = data[position] as Pair<Bitmap, BitmapDetails>
-            val bitmap = element.first
-            holder.binding.imageView.setImageBitmap(bitmap)
-        }
-
         override fun getItemCount(): Int {
             return data.size
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val bitmap = data[position] as Bitmap
+            holder.binding.imageView.setImageBitmap(bitmap)
         }
     }
 
