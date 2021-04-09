@@ -40,6 +40,8 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
 
     private lateinit var saveBitmapstoInternalStorageUseCase: SaveBitmapToInternalStorageUseCase
 
+    private lateinit var deleteBitmapsFromInternalStorageUseCaseUseCase: DeleteBitmapFromInternalStorageUseCase
+
     private lateinit var bitmapHolderCache: BitmapHolderCache
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,6 +55,7 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
         bottomBinding.apply {
             buttonAddImage.setOnClickListener(this@ElementsBasePagerFragment)
             buttonSave.setOnClickListener(this@ElementsBasePagerFragment)
+            buttonDelete.setOnClickListener(this@ElementsBasePagerFragment)
             snapHelper.attachToRecyclerView(recyclerView)
         }
         bitmapHolderCache = BitmapHolderCache()
@@ -63,6 +66,8 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
             LoadBitmapsFromInternalStorageUseCase(galleryTag)
 
         saveBitmapstoInternalStorageUseCase = SaveBitmapToInternalStorageUseCase()
+
+        deleteBitmapsFromInternalStorageUseCaseUseCase = DeleteBitmapFromInternalStorageUseCase()
 
         lifecycleScope.launch {
             loadBitmapsFromInternalStorageUseCase.invoke(requireContext()) { bitmapHolders ->
@@ -84,7 +89,13 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
         when (v?.id) {
             R.id.buttonAddImage -> onAddImage()
             R.id.buttonSave -> onSaveButtonPressed()
+            R.id.buttonDelete -> onDeleteButtonPressed()
         }
+    }
+
+    private fun onDeleteButtonPressed() {
+        println(adapter.data[0])
+        deleteBitmapsFromInternalStorageUseCaseUseCase.invoke(requireContext(), listOf(adapter.data[0]) , galleryTag)
     }
 
     private fun onSaveButtonPressed() {

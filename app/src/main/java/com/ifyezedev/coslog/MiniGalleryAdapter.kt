@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.databinding.PictureItemBinding
 
-class MiniGalleryAdapter(private val data: MutableList<BitmapHolder>) :
+class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
     RecyclerView.Adapter<MiniGalleryAdapter.ViewHolder>() {
 
     lateinit var clickListener: OnClickListener
