@@ -1,6 +1,7 @@
 package com.ifyezedev.coslog
 
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
+import com.ifyezedev.coslog.feature.elements.ElementsBasePagerFragment
 
 class ToMakeFragment : ElementsBasePagerFragment<FragmentToBuyBinding>() {
 

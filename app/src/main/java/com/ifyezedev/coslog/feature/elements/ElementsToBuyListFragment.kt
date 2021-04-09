@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog
+package com.ifyezedev.coslog.feature.elements
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ifyezedev.coslog.CosplayBaseFragment
+import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
 import com.ifyezedev.coslog.databinding.FragmentElementToBuyListBinding
 

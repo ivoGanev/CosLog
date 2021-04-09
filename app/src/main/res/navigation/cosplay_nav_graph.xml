@@ -6,7 +6,7 @@
     app:startDestination="@id/elementFragment">
     <fragment
         android:id="@+id/elementFragment"
-        android:name="com.ifyezedev.coslog.ElementFragment"
+        android:name="com.ifyezedev.coslog.feature.elements.ElementFragment"
         android:label="fragment_element"
         tools:layout="@layout/fragment_element" />
     <fragment

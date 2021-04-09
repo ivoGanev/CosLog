@@ -1,18 +1,18 @@
 package com.ifyezedev.coslog
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.databinding.PictureItemBinding
 
-class MiniGalleryAdapter(private val data: MutableList<Bitmap>) :
+class MiniGalleryAdapter(private val data: MutableList<BitmapHolder>) :
     RecyclerView.Adapter<MiniGalleryAdapter.ViewHolder>() {
 
     lateinit var clickListener: OnClickListener
 
-    fun addAll(data: List<Bitmap>) {
+    fun addAll(data: List<BitmapHolder>) {
         this.data.addAll(data)
         this.notifyDataSetChanged()
     }
@@ -28,8 +28,8 @@ class MiniGalleryAdapter(private val data: MutableList<Bitmap>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val bitmap = data[position] as Bitmap
-        holder.binding.imageView.setImageBitmap(bitmap)
+        val bitmapHolder = data[position] as BitmapHolder
+        holder.binding.imageView.setImageBitmap(bitmapHolder.bitmap)
     }
 
     class ViewHolder(
