@@ -40,7 +40,7 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
 
     private lateinit var saveBitmapstoInternalStorageUseCase: SaveBitmapToInternalStorageUseCase
 
-    private lateinit var deleteBitmapsFromInternalStorageUseCaseUseCase: DeleteBitmapFromInternalStorageUseCase
+    private lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapFromInternalStorageUseCase
 
     private lateinit var bitmapHolderCache: BitmapHolderCache
 
@@ -67,7 +67,7 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
 
         saveBitmapstoInternalStorageUseCase = SaveBitmapToInternalStorageUseCase()
 
-        deleteBitmapsFromInternalStorageUseCaseUseCase = DeleteBitmapFromInternalStorageUseCase()
+        deleteBitmapsFromInternalStorageUseCase = DeleteBitmapFromInternalStorageUseCase()
 
         lifecycleScope.launch {
             loadBitmapsFromInternalStorageUseCase.invoke(requireContext()) { bitmapHolders ->
@@ -94,8 +94,9 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
     }
 
     private fun onDeleteButtonPressed() {
-        println(adapter.data[0])
-        deleteBitmapsFromInternalStorageUseCaseUseCase.invoke(requireContext(), listOf(adapter.data[0]) , galleryTag)
+        deleteBitmapsFromInternalStorageUseCase.invoke(listOf(adapter.data[0]))
+        adapter.data.removeAt(0)
+        adapter.notifyDataSetChanged()
     }
 
     private fun onSaveButtonPressed() {

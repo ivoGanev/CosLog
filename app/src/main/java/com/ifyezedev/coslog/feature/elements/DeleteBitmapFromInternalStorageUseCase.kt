@@ -5,7 +5,7 @@ import com.ifyezedev.coslog.core.data.BitmapHolder
 import java.io.File
 
 class DeleteBitmapFromInternalStorageUseCase {
-     fun invoke(bitmapHolders: List<BitmapHolder>, tag: String) {
+     fun invoke(bitmapHolders: List<BitmapHolder>) {
         val deletePaths = bitmapHolders.filter { holder -> holder.filePath != null }
         deletePaths.forEach {
             val file = File(it.filePath)
