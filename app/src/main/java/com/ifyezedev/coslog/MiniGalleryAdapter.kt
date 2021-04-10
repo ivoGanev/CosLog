@@ -2,6 +2,7 @@ package com.ifyezedev.coslog
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.core.data.BitmapHolder

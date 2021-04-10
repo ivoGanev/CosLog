@@ -7,7 +7,6 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
@@ -53,28 +52,31 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
 
+        injectClasses()
+        // setup buttons and views
+        setupViews()
+    }
+
+    private fun setupViews() = bottomBinding.run {
         val snapHelper: SnapHelper = PagerSnapHelper()
 
         val onSnapPositionChangeListener = OnSnapPositionChangeListener { position ->
             currentSelectedImagePosition = position
-            println("Position $position")
         }
 
-        injectClasses()
+        buttonAddImage.setOnClickListener(this@ElementsBaseFragment)
+        buttonSave.setOnClickListener(this@ElementsBaseFragment)
+        buttonDelete.setOnClickListener(this@ElementsBaseFragment)
+        snapHelper.attachToRecyclerView(recyclerView)
 
-        bottomBinding.apply {
-            buttonAddImage.setOnClickListener(this@ElementsBaseFragment)
-            buttonSave.setOnClickListener(this@ElementsBaseFragment)
-            buttonDelete.setOnClickListener(this@ElementsBaseFragment)
-            snapHelper.attachToRecyclerView(recyclerView)
-
-            recyclerView.addItemDecoration(BoundsOffsetDecoration())
-            recyclerView.addOnScrollListener(SnapOnScrollListener(
+        recyclerView.addItemDecoration(BoundsOffsetDecoration())
+        recyclerView.addOnScrollListener(
+            SnapOnScrollListener(
                 snapHelper,
                 SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
                 onSnapPositionChangeListener
-            ))
-        }
+            )
+        )
     }
 
     private fun injectClasses() {
@@ -114,7 +116,8 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
     }
 
     private fun onDeleteButtonPressed() {
-        if(currentSelectedImagePosition!=RecyclerView.NO_POSITION) {
+        if (currentSelectedImagePosition != RecyclerView.NO_POSITION) {
+            // TODO: Check if this needs to be fixed so the user is able to cancel the delete action
             deleteBitmapsFromInternalStorageUseCase.invoke(listOf(adapter.data[currentSelectedImagePosition]))
             adapter.data.removeAt(currentSelectedImagePosition)
             adapter.notifyDataSetChanged()
