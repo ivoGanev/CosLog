@@ -17,16 +17,13 @@ class SaveBitmapsToInternalStorageUseCase  {
             dir.mkdirs()
 
             bitmapHolders.forEach { bitmapHolder ->
+                println(tag + bitmapHolder.filePath)
                 invoke(bitmapHolder, dir)
             }
         }
     }
 
     private fun invoke(bitmapHolder: BitmapHolder, dir: File) {
-        if (bitmapHolder.filePath == null) {
-            throw NullPointerException("File path is required in order to save the file.")
-        }
-
         try {
             FileOutputStream(File(dir, bitmapHolder.filePath)).use { stream ->
                 bitmapHolder.bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)

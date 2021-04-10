@@ -70,8 +70,10 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(ElementsViewModel::class.java)
 
+
         viewModel.loadBitmapsFromInternalStorage(requireContext())
         { bitmapHolders ->
+
             // Bitmap holders are loaded in through an IO dispatcher so we need to move
             // them on the Main dispatcher if we want to assign them to UI components.
             lifecycleScope.launch(Dispatchers.Main) {

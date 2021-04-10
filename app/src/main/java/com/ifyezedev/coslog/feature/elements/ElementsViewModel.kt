@@ -2,6 +2,7 @@ package com.ifyezedev.coslog.feature.elements
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -39,9 +40,8 @@ class ElementsViewModel(
 
     fun loadBitmapsFromInternalStorage(context: Context, onResult: (List<BitmapHolder>) -> Unit) {
         viewModelScope.launch {
-            loadBitmapsFromInternalStorageUseCase.invoke(context) { bitmaps, filePath ->
-                val merge = bitmaps.mergeToBitmapHolders(filePath)
-                onResult(merge)
+            loadBitmapsFromInternalStorageUseCase.invoke(context) { bitmapHolders ->
+                onResult(bitmapHolders)
             }
         }
     }
