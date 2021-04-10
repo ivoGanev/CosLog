@@ -10,8 +10,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.NullPointerException
 
-internal class SaveBitmapToInternalStorageUseCase  {
-    suspend fun invoke(context: Context, bitmapHolders: List<BitmapHolder>, tag: String) {
+class SaveBitmapsToInternalStorageUseCase  {
+    suspend fun invoke(context: Context, tag: String, bitmapHolders: List<BitmapHolder>) {
         withContext(Dispatchers.IO) {
             val dir = File(context.filesDir, tag)
             dir.mkdirs()

@@ -11,12 +11,7 @@ import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * 1. Gets a bitmap from a content provider gallery Uri.
- * 2. Converts the Uri to a custom file path.
- * 3. Provides a [BitmapHolder] and puts it inside the provided adapter.
- * */
-internal class GetBitmapFromAndroidGalleryUseCase  {
+class GetBitmapsFromAndroidGalleryUseCase  {
     private fun loadBitmaps(context: Context, uri: List<Uri>): List<Bitmap> {
         return context.contentResolver.loadOsGalleryBitmaps(uri)
     }

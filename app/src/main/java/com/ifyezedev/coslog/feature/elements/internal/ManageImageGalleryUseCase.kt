@@ -1,11 +1,11 @@
 package com.ifyezedev.coslog.feature.elements.internal
 
 class ManageImageGalleryUseCase {
-    private lateinit var getBitmapFromAndroidGalleryUseCase: GetBitmapFromAndroidGalleryUseCase
+    private lateinit var getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase
 
     private lateinit var loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase
 
-    private lateinit var saveBitmapstoInternalStorageUseCase: SaveBitmapToInternalStorageUseCase
+    private lateinit var saveBitmapstoInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase
 
     private lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapFromInternalStorageUseCase
 
