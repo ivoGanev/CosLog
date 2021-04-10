@@ -100,10 +100,14 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
 
     private fun onDeleteButtonPressed() {
         // TODO: Check if the user is able to cancel the delete action
-        val filePath = adapter.getCurrentSelectedItemFilePath()!!
-        val removeSuccessful = adapter.removeItemAtCurrentSelectedPosition()
-        if (removeSuccessful)
-            viewModel.deleteBitmapFromInternalStorage(filePath)
+
+        // TODO: filePath as null is ambiguous and error prone.
+        val filePath = adapter.getCurrentSelectedItemFilePath()
+        if(filePath!=null) {
+            val removeSuccessful = adapter.removeItemAtCurrentSelectedPosition()
+            if (removeSuccessful)
+                viewModel.deleteBitmapFromInternalStorage(filePath)
+        }
     }
 
     private fun onSaveButtonPressed() {

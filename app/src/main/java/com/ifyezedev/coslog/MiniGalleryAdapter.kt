@@ -35,9 +35,11 @@ class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
         return false
     }
 
-    /** @return null if there is an item selected */
+    /** @return null when no item is selected */
     fun getCurrentSelectedItemFilePath(): String? {
-        return data[currentSelectedImagePosition].filePath
+        return if (currentSelectedImagePosition >= 0 && currentSelectedImagePosition != RecyclerView.NO_POSITION)
+            data[currentSelectedImagePosition].filePath
+        else null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderObject {
