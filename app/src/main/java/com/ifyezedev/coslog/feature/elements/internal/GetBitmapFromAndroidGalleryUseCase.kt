@@ -16,8 +16,7 @@ import kotlinx.coroutines.withContext
  * 2. Converts the Uri to a custom file path.
  * 3. Provides a [BitmapHolder] and puts it inside the provided adapter.
  * */
-internal class GetBitmapFromAndroidGalleryUseCase() :
-    ManageGalleryUseCase() {
+internal class GetBitmapFromAndroidGalleryUseCase  {
     private fun loadBitmaps(context: Context, uri: List<Uri>): List<Bitmap> {
         return context.contentResolver.loadOsGalleryBitmaps(uri)
     }

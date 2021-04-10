@@ -3,7 +3,6 @@ package com.ifyezedev.coslog.feature.elements.internal
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,33 +10,28 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-internal class LoadBitmapsFromInternalStorageUseCase(
+class LoadBitmapsFromInternalStorageUseCase(
     private val galleryTag: String
-) : ManageGalleryUseCase() {
-
-    suspend fun invoke(context: Context, onResult: (List<BitmapHolder>) -> Unit) {
+) {
+    suspend fun invoke(context: Context, onResult: (List<Bitmap>, List<String>) -> Unit) {
         withContext(Dispatchers.IO) {
-            val bitmapList = mutableListOf<Bitmap>()
+            val bitmaps = mutableListOf<Bitmap>()
             val dir = File(context.filesDir, galleryTag)
             val files = dir.listFiles()
 
-            files?.let {
+            files?.let { filesNotNull ->
                 try {
                     for (i in files.indices) {
                         FileInputStream(files[i]).use { stream ->
                             val bitmap = BitmapFactory.decodeStream(stream)
-                            bitmapList.add(bitmap)
+                            bitmaps.add(bitmap)
                         }
                     }
+                    onResult(bitmaps, filesNotNull.map { file -> file.path })
                 } catch (e: IOException) {
                     //TODO to handle
                 }
             }
-            val bitmapHolders = bitmapList.mergeToBitmapHolders(files!!.map {
-                    file -> file.path
-            })
-
-            onResult(bitmapHolders)
         }
     }
 }

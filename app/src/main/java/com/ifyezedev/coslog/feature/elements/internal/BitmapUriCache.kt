@@ -6,7 +6,7 @@ import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.loadOsGalleryBitmaps
 import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 
-internal class BitmapHolderCache {
+internal class BitmapUriCache {
     private val cache: MutableList<Uri> = mutableListOf()
     private val pathConverter = UriToBitmapGalleryPathConverterStandard()
 

@@ -1,4 +1,5 @@
 package com.ifyezedev.coslog.feature.elements
+
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -36,13 +37,12 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
 
     private lateinit var getBitmapFromAndroidGalleryUseCase: GetBitmapFromAndroidGalleryUseCase
 
-    private lateinit var loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase
 
     private lateinit var saveBitmapstoInternalStorageUseCase: SaveBitmapToInternalStorageUseCase
 
     private lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapFromInternalStorageUseCase
 
-    private lateinit var bitmapHolderCache: BitmapHolderCache
+    private lateinit var bitmapUriCache: BitmapUriCache
 
     private lateinit var viewModel: ElementsViewModel
     private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
@@ -60,7 +60,7 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
 
     private fun setupViews() = bottomBinding.run {
         val snapHelper: SnapHelper = PagerSnapHelper()
-        bitmapHolderCache = BitmapHolderCache()
+        bitmapUriCache = BitmapUriCache()
 
         buttonAddImage.setOnClickListener(this@ElementsBaseFragment)
         buttonSave.setOnClickListener(this@ElementsBaseFragment)
@@ -69,41 +69,35 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
 
         getBitmapFromAndroidGalleryUseCase = GetBitmapFromAndroidGalleryUseCase()
 
-        loadBitmapsFromInternalStorageUseCase =
-            LoadBitmapsFromInternalStorageUseCase(galleryTag)
-
         saveBitmapstoInternalStorageUseCase = SaveBitmapToInternalStorageUseCase()
-
-        lifecycleScope.launch {
-            loadBitmapsFromInternalStorageUseCase.invoke(requireContext()) { bitmapHolders ->
-                // bitmaps are coming from IO dispatcher but we need to assign them on the
-                // main thread.
-                launch {
-                    withContext(Dispatchers.Main)
-                    {
-                        adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
-                        bottomBinding.recyclerView.adapter = adapter
-                        adapter.clickListener = this@ElementsBaseFragment
-
-                        recyclerView.addItemDecoration(BoundsOffsetDecoration())
-                        recyclerView.addOnScrollListener(
-                            SnapOnScrollListener(
-                                snapHelper,
-                                SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
-                                adapter.onSnapPositionChangeListener
-                            )
-                        )
-                    }
-                }
-            }
-        }
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGalleryUseCase(),
-            DeleteBitmapFromInternalStorageUseCase()
+            DeleteBitmapFromInternalStorageUseCase(),
+            LoadBitmapsFromInternalStorageUseCase(galleryTag)
         )
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(ElementsViewModel::class.java)
+
+        viewModel.loadBitmapsFromInternalStorage(requireContext())
+        { bitmapHolders ->
+            // Bitmap holders are loaded in a IO thread so we need to dispatch
+            // them on the Main dispatcher if we want to assign them to UI components.
+            lifecycleScope.launch(Dispatchers.Main) {
+                adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
+                bottomBinding.recyclerView.adapter = adapter
+                adapter.clickListener = this@ElementsBaseFragment
+
+                recyclerView.addItemDecoration(BoundsOffsetDecoration())
+                recyclerView.addOnScrollListener(
+                    SnapOnScrollListener(
+                        snapHelper,
+                        SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
+                        adapter.onSnapPositionChangeListener
+                    )
+                )
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -118,13 +112,13 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
         // TODO: Check if the user is able to cancel the delete action
         val filePath = adapter.getCurrentSelectedItemFilePath()!!
         val removeSuccessful = adapter.removeItemAtCurrentSelectedPosition()
-        if(removeSuccessful)
+        if (removeSuccessful)
             viewModel.deleteBitmapFromInternalStorage(filePath)
     }
 
     private fun onSaveButtonPressed() {
         val context = requireContext()
-        val bitmapHolders = bitmapHolderCache.toBitmapHolders(context)
+        val bitmapHolders = bitmapUriCache.toBitmapHolders(context)
 
         lifecycleScope.launch {
             saveBitmapstoInternalStorageUseCase.invoke(context, bitmapHolders, galleryTag)
@@ -147,7 +141,7 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
                 ) { bitmaps, uris ->
                     lifecycleScope.launch(Dispatchers.Main) {
                         val pathConverter = UriToBitmapGalleryPathConverterStandard()
-                        bitmapHolderCache.addAll(uris)
+                        bitmapUriCache.addAll(uris)
                         val bitmapHolders =
                             bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(uris))
                         adapter.addAll(bitmapHolders)
