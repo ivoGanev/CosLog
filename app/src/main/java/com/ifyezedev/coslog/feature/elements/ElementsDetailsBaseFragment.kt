@@ -3,6 +3,7 @@ package com.ifyezedev.coslog.feature.elements
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -21,7 +22,7 @@ import com.ifyezedev.coslog.feature.elements.internal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
+abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 
@@ -53,9 +54,9 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
         val snapHelper: SnapHelper = PagerSnapHelper()
         bitmapUriCache = BitmapUriCache()
 
-        buttonAddImage.setOnClickListener(this@ElementsBaseFragment)
-        buttonSave.setOnClickListener(this@ElementsBaseFragment)
-        buttonDelete.setOnClickListener(this@ElementsBaseFragment)
+        buttonAddImage.setOnClickListener(this@ElementsDetailsBaseFragment)
+        buttonSave.setOnClickListener(this@ElementsDetailsBaseFragment)
+        buttonDelete.setOnClickListener(this@ElementsDetailsBaseFragment)
         snapHelper.attachToRecyclerView(recyclerView)
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
@@ -75,8 +76,10 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
             // them on the Main dispatcher if we want to assign them to UI components.
             lifecycleScope.launch(Dispatchers.Main) {
                 adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
+                Log.e(this@ElementsDetailsBaseFragment::class.java.toString(),  "Hello")
+                println(adapter)
                 bottomBinding.recyclerView.adapter = adapter
-                adapter.clickListener = this@ElementsBaseFragment
+                adapter.clickListener = this@ElementsDetailsBaseFragment
 
                 recyclerView.addItemDecoration(BoundsOffsetDecoration())
                 recyclerView.addOnScrollListener(
@@ -111,6 +114,7 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
     }
 
     private fun onSaveButtonPressed() {
+        val t=  galleryTag
         viewModel.saveBitmapsToInternalStorage(requireContext(), galleryTag)
     }
 
