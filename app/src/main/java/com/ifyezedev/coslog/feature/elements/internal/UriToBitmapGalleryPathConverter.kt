@@ -1,14 +1,14 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.internal
 
 import android.net.Uri
 import java.util.*
 
-interface UriToBitmapGalleryPathConverter {
+internal interface UriToBitmapGalleryPathConverter {
     fun toFilePath(uri: Uri): String
     fun toFilePaths(uri: List<Uri>): List<String>
 }
 
-class UriToBitmapGalleryPathConverterStandard : UriToBitmapGalleryPathConverter {
+internal class UriToBitmapGalleryPathConverterStandard : UriToBitmapGalleryPathConverter {
     private val delimiter = "$$"
 
     override fun toFilePath(uri: Uri): String {

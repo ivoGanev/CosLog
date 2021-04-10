@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.internal
 
 import android.content.Context
 import android.content.Intent
@@ -16,18 +16,18 @@ import kotlinx.coroutines.withContext
  * 2. Converts the Uri to a custom file path.
  * 3. Provides a [BitmapHolder] and puts it inside the provided adapter.
  * */
-class GetBitmapFromAndroidGalleryUseCase(private val bitmapHolderCache: BitmapHolderCache) :
-    GalleryBaseUseCase() {
+internal class GetBitmapFromAndroidGalleryUseCase() :
+    ManageGalleryUseCase() {
     private fun loadBitmaps(context: Context, uri: List<Uri>): List<Bitmap> {
         return context.contentResolver.loadOsGalleryBitmaps(uri)
     }
 
     /**
-     * The onResult is always the newest selected images from the gallery
+     * @param onResult returns a list of loaded bitmaps and their content provider Uri address.
      * */
     suspend fun invoke(
         context: Context, intent: Intent,
-        onResult: (List<BitmapHolder>) -> Unit
+        onResult: (List<Bitmap>, List<Uri>) -> Unit
     ) {
         withContext(Dispatchers.IO) {
             val tempUriCache: MutableList<Uri> = mutableListOf()
@@ -35,13 +35,8 @@ class GetBitmapFromAndroidGalleryUseCase(private val bitmapHolderCache: BitmapHo
             intent.data?.let { uri -> tempUriCache.add(uri) }
             intent.clipData?.let { clipData -> tempUriCache.addAll(clipData.mapToUri()) }
 
-            bitmapHolderCache.addAll(tempUriCache)
-
             val bitmaps = loadBitmaps(context, tempUriCache)
-            val bitmapHolders =
-                bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(tempUriCache))
-
-            onResult(bitmapHolders)
+            onResult(bitmaps, tempUriCache)
         }
     }
 

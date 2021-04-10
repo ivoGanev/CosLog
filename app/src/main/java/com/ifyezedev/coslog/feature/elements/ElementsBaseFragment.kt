@@ -1,11 +1,11 @@
 package com.ifyezedev.coslog.feature.elements
-
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.SnapHelper
 import com.ifyezedev.coslog.CosplayBaseFragment
 import com.ifyezedev.coslog.MiniGalleryAdapter
 import com.ifyezedev.coslog.R
-import com.ifyezedev.coslog.core.builders.buildIntent
-import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
-import com.ifyezedev.coslog.core.etc.OnSnapPositionChangeListener
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
+import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
+import com.ifyezedev.coslog.feature.elements.internal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,6 +44,9 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
 
     private lateinit var bitmapHolderCache: BitmapHolderCache
 
+    private lateinit var viewModel: ElementsViewModel
+    private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
+
     private var currentSelectedImagePosition = RecyclerView.NO_POSITION
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,76 +54,72 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
 
-        injectClasses()
-        // setup buttons and views
+        // setup buttons, recycler view, etc.
         setupViews()
     }
 
     private fun setupViews() = bottomBinding.run {
         val snapHelper: SnapHelper = PagerSnapHelper()
-
-        val onSnapPositionChangeListener = OnSnapPositionChangeListener { position ->
-            currentSelectedImagePosition = position
-        }
+        bitmapHolderCache = BitmapHolderCache()
 
         buttonAddImage.setOnClickListener(this@ElementsBaseFragment)
         buttonSave.setOnClickListener(this@ElementsBaseFragment)
         buttonDelete.setOnClickListener(this@ElementsBaseFragment)
         snapHelper.attachToRecyclerView(recyclerView)
 
-        recyclerView.addItemDecoration(BoundsOffsetDecoration())
-        recyclerView.addOnScrollListener(
-            SnapOnScrollListener(
-                snapHelper,
-                SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
-                onSnapPositionChangeListener
-            )
-        )
-    }
-
-    private fun injectClasses() {
-        bitmapHolderCache = BitmapHolderCache()
-
-        getBitmapFromAndroidGalleryUseCase = GetBitmapFromAndroidGalleryUseCase(bitmapHolderCache)
+        getBitmapFromAndroidGalleryUseCase = GetBitmapFromAndroidGalleryUseCase()
 
         loadBitmapsFromInternalStorageUseCase =
             LoadBitmapsFromInternalStorageUseCase(galleryTag)
 
         saveBitmapstoInternalStorageUseCase = SaveBitmapToInternalStorageUseCase()
 
-        deleteBitmapsFromInternalStorageUseCase = DeleteBitmapFromInternalStorageUseCase()
-
         lifecycleScope.launch {
             loadBitmapsFromInternalStorageUseCase.invoke(requireContext()) { bitmapHolders ->
+                // bitmaps are coming from IO dispatcher but we need to assign them on the
+                // main thread.
                 launch {
-                    initGallery(bitmapHolders)
+                    withContext(Dispatchers.Main)
+                    {
+                        adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
+                        bottomBinding.recyclerView.adapter = adapter
+                        adapter.clickListener = this@ElementsBaseFragment
+
+                        recyclerView.addItemDecoration(BoundsOffsetDecoration())
+                        recyclerView.addOnScrollListener(
+                            SnapOnScrollListener(
+                                snapHelper,
+                                SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
+                                adapter.onSnapPositionChangeListener
+                            )
+                        )
+                    }
                 }
             }
         }
-    }
 
-    private suspend fun initGallery(bitmapHolders: List<BitmapHolder>) =
-        withContext(Dispatchers.Main) {
-            adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
-            bottomBinding.recyclerView.adapter = adapter
-            adapter.clickListener = this@ElementsBaseFragment
-        }
+        viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
+            OpenAndroidImageGalleryUseCase(),
+            DeleteBitmapFromInternalStorageUseCase()
+        )
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(ElementsViewModel::class.java)
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.buttonAddImage -> onAddImage()
+            R.id.buttonAddImage -> onAddImageButtonClicked()
             R.id.buttonSave -> onSaveButtonPressed()
             R.id.buttonDelete -> onDeleteButtonPressed()
         }
     }
 
     private fun onDeleteButtonPressed() {
-        if (currentSelectedImagePosition != RecyclerView.NO_POSITION) {
-            // TODO: Check if this needs to be fixed so the user is able to cancel the delete action
-            deleteBitmapsFromInternalStorageUseCase.invoke(listOf(adapter.data[currentSelectedImagePosition]))
-            adapter.data.removeAt(currentSelectedImagePosition)
-            adapter.notifyDataSetChanged()
-        }
+        // TODO: Check if the user is able to cancel the delete action
+        val filePath = adapter.getCurrentSelectedItemFilePath()!!
+        val removeSuccessful = adapter.removeItemAtCurrentSelectedPosition()
+        if(removeSuccessful)
+            viewModel.deleteBitmapFromInternalStorage(filePath)
     }
 
     private fun onSaveButtonPressed() {
@@ -133,14 +131,8 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
         }
     }
 
-    private fun onAddImage() {
-        val intent = buildIntent() {
-            action = Intent.ACTION_GET_CONTENT
-            type = "image/*"
-            putExtra("return-data", true);
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        }
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 0)
+    private fun onAddImageButtonClicked() {
+        viewModel.openAndroidImageGallery(::startActivityForResult)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -152,8 +144,12 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
                 getBitmapFromAndroidGalleryUseCase.invoke(
                     requireContext(),
                     intent
-                ) { bitmapHolders ->
+                ) { bitmaps, uris ->
                     lifecycleScope.launch(Dispatchers.Main) {
+                        val pathConverter = UriToBitmapGalleryPathConverterStandard()
+                        bitmapHolderCache.addAll(uris)
+                        val bitmapHolders =
+                            bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(uris))
                         adapter.addAll(bitmapHolders)
                     }
                 }
@@ -165,4 +161,5 @@ abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T
         cosplayController.navigate(R.id.pictureViewerFragment)
     }
 }
+
 

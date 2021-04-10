@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.internal
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -11,9 +11,9 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-class LoadBitmapsFromInternalStorageUseCase(
+internal class LoadBitmapsFromInternalStorageUseCase(
     private val galleryTag: String
-) : GalleryBaseUseCase() {
+) : ManageGalleryUseCase() {
 
     suspend fun invoke(context: Context, onResult: (List<BitmapHolder>) -> Unit) {
         withContext(Dispatchers.IO) {

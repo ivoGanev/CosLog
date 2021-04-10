@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.internal
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,19 +10,19 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.NullPointerException
 
-class SaveBitmapToInternalStorageUseCase : GalleryBaseUseCase() {
+internal class SaveBitmapToInternalStorageUseCase : ManageGalleryUseCase() {
     suspend fun invoke(context: Context, bitmapHolders: List<BitmapHolder>, tag: String) {
         withContext(Dispatchers.IO) {
             val dir = File(context.filesDir, tag)
             dir.mkdirs()
 
             bitmapHolders.forEach { bitmapHolder ->
-                invoke(bitmapHolder, tag, dir)
+                invoke(bitmapHolder, dir)
             }
         }
     }
 
-    private fun invoke(bitmapHolder: BitmapHolder, tag: String, dir: File) {
+    private fun invoke(bitmapHolder: BitmapHolder, dir: File) {
         if (bitmapHolder.filePath == null) {
             throw NullPointerException("File path is required in order to save the file.")
         }
