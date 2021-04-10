@@ -1,7 +1,7 @@
-package com.ifyezedev.coslog
+package com.ifyezedev.coslog.feature.elements
 
+import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
-import com.ifyezedev.coslog.feature.elements.ElementsBaseFragment
 
 class ToBuyFragment : ElementsBaseFragment<FragmentToBuyBinding>() {
 
