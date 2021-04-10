@@ -7,22 +7,24 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.ifyezedev.coslog.CosplayBaseFragment
 import com.ifyezedev.coslog.MiniGalleryAdapter
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.core.builders.buildIntent
 import com.ifyezedev.coslog.core.data.BitmapHolder
+import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
+import com.ifyezedev.coslog.core.etc.OnSnapPositionChangeListener
+import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-//TODO: when rotating the app obviously the bitmapUriCache is not
-//  saved and picture are removed from the recycler view. This eventually
-//  should be fixed with a view model.
-abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
+abstract class ElementsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 
@@ -44,20 +46,38 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
 
     private lateinit var bitmapHolderCache: BitmapHolderCache
 
+    private var currentSelectedImagePosition = RecyclerView.NO_POSITION
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        println(view.findViewById(R.id.bottomView))
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
 
         val snapHelper: SnapHelper = PagerSnapHelper()
 
-        bottomBinding.apply {
-            buttonAddImage.setOnClickListener(this@ElementsBasePagerFragment)
-            buttonSave.setOnClickListener(this@ElementsBasePagerFragment)
-            buttonDelete.setOnClickListener(this@ElementsBasePagerFragment)
-            snapHelper.attachToRecyclerView(recyclerView)
+        val onSnapPositionChangeListener = OnSnapPositionChangeListener { position ->
+            currentSelectedImagePosition = position
+            println("Position $position")
         }
+
+        injectClasses()
+
+        bottomBinding.apply {
+            buttonAddImage.setOnClickListener(this@ElementsBaseFragment)
+            buttonSave.setOnClickListener(this@ElementsBaseFragment)
+            buttonDelete.setOnClickListener(this@ElementsBaseFragment)
+            snapHelper.attachToRecyclerView(recyclerView)
+
+            recyclerView.addItemDecoration(BoundsOffsetDecoration())
+            recyclerView.addOnScrollListener(SnapOnScrollListener(
+                snapHelper,
+                SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
+                onSnapPositionChangeListener
+            ))
+        }
+    }
+
+    private fun injectClasses() {
         bitmapHolderCache = BitmapHolderCache()
 
         getBitmapFromAndroidGalleryUseCase = GetBitmapFromAndroidGalleryUseCase(bitmapHolderCache)
@@ -82,7 +102,7 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
         withContext(Dispatchers.Main) {
             adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
             bottomBinding.recyclerView.adapter = adapter
-            adapter.clickListener = this@ElementsBasePagerFragment
+            adapter.clickListener = this@ElementsBaseFragment
         }
 
     override fun onClick(v: View?) {
@@ -94,9 +114,11 @@ abstract class ElementsBasePagerFragment<T : ViewDataBinding> : CosplayBaseFragm
     }
 
     private fun onDeleteButtonPressed() {
-        deleteBitmapsFromInternalStorageUseCase.invoke(listOf(adapter.data[0]))
-        adapter.data.removeAt(0)
-        adapter.notifyDataSetChanged()
+        if(currentSelectedImagePosition!=RecyclerView.NO_POSITION) {
+            deleteBitmapsFromInternalStorageUseCase.invoke(listOf(adapter.data[currentSelectedImagePosition]))
+            adapter.data.removeAt(currentSelectedImagePosition)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun onSaveButtonPressed() {

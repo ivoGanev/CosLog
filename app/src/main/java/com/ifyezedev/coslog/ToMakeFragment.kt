@@ -1,9 +1,9 @@
 package com.ifyezedev.coslog
 
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
-import com.ifyezedev.coslog.feature.elements.ElementsBasePagerFragment
+import com.ifyezedev.coslog.feature.elements.ElementsBaseFragment
 
-class ToMakeFragment : ElementsBasePagerFragment<FragmentToBuyBinding>() {
+class ToMakeFragment : ElementsBaseFragment<FragmentToBuyBinding>() {
 
     override val galleryTag: String = "to-make-gallery"
 
