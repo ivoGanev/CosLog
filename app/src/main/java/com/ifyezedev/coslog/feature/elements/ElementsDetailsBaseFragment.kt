@@ -134,10 +134,13 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
             if (removeSuccessful)
                 viewModel.deleteBitmapFromInternalStorage(filePath)
         }
+        toastNotify("Image deleted from internal storage.")
     }
 
     private fun onSaveButtonPressed() {
         viewModel.saveBitmapsToInternalStorage(requireContext(), galleryTag)
+        // TODO: Make sure to handle IOExceptions
+        toastNotify("Successfully saved images to internal storage.")
     }
 
     private fun onAddImageButtonPressed() {
