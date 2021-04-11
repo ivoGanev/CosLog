@@ -160,6 +160,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     override fun onImageClickedListener(view: View) {
         val bundle = Bundle().apply {
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
+            putString(PictureGalleryFragment.Keys.GALLERY_TAG, galleryTag)
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
     }
