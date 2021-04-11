@@ -53,7 +53,7 @@ class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolderObject, position: Int) {
-        val bitmapHolder = data[position] as BitmapHolder
+        val bitmapHolder = data[position]
         holder.binding.imageView.setImageBitmap(bitmapHolder.bitmap)
     }
 

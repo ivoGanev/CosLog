@@ -12,7 +12,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-class LoadBitmapsFromInternalStorageUseCase() {
+class LoadBitmapsFromInternalStorageUseCase {
     suspend fun invoke(context: Context, galleryTag: String, onResult: (List<BitmapHolder>) -> Unit) {
         withContext(Dispatchers.IO) {
             val bitmapHolders = mutableListOf<BitmapHolder>()
@@ -25,8 +25,6 @@ class LoadBitmapsFromInternalStorageUseCase() {
                         FileInputStream(files[i]).use { stream ->
                             val bitmap = BitmapFactory.decodeStream(stream)
                             bitmapHolders.add(BitmapHolder(bitmap, filesNotNull[i].path))
-                            Log.e(this::class.java.toString(), filesNotNull[i].path )
-
                         }
                     }
                 } catch (e: IOException) {
@@ -34,6 +32,14 @@ class LoadBitmapsFromInternalStorageUseCase() {
                 }
             }
             onResult(bitmapHolders)
+        }
+    }
+
+    suspend fun invoke(filePath: String, onResult: (Bitmap) -> Unit) {
+        withContext(Dispatchers.IO) {
+            FileInputStream(File(filePath)).use { stream ->
+                onResult(BitmapFactory.decodeStream(stream))
+            }
         }
     }
 }

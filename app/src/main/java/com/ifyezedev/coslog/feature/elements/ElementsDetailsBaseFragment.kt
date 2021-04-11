@@ -10,10 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import com.ifyezedev.coslog.CosplayActivity
-import com.ifyezedev.coslog.CosplayBaseFragment
-import com.ifyezedev.coslog.MiniGalleryAdapter
-import com.ifyezedev.coslog.R
+import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
@@ -32,8 +29,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     private lateinit var bottomBinding: ElementBottomBinding
 
     private lateinit var adapter: MiniGalleryAdapter
-
-    private lateinit var bitmapUriCache: BitmapUriCache
 
     private lateinit var viewModel: ElementsViewModel
     private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
@@ -57,7 +52,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
             if (navigated) {
                 viewModel.clearPendingUriCache()
                 a.onNavAway = null
-                println("cache cleared")
+                // println("cache cleared")
             }
             navigated = true
         }
@@ -70,7 +65,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
     private fun setupViews() = bottomBinding.run {
         val snapHelper: SnapHelper = PagerSnapHelper()
-        bitmapUriCache = BitmapUriCache()
 
         buttonAddImage.setOnClickListener(this@ElementsDetailsBaseFragment)
         buttonSave.setOnClickListener(this@ElementsDetailsBaseFragment)
@@ -133,7 +127,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     private fun onDeleteButtonPressed() {
         // TODO: Check if the user is able to cancel the delete action
 
-        // TODO: filePath as null is ambiguous and error prone.
+        // TODO: filePath as null is ambiguous and error prone. Need to rethink the design.
         val filePath = adapter.getCurrentSelectedItemFilePath()
         if (filePath != null) {
             val removeSuccessful = adapter.removeItemAtCurrentSelectedPosition()
@@ -164,7 +158,10 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     }
 
     override fun onImageClickedListener(view: View) {
-        cosplayController.navigate(R.id.pictureViewerFragment)
+        val bundle = Bundle().apply {
+            putInt(PictureViewerFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
+        }
+        cosplayController.navigate(R.id.pictureViewerFragment, bundle)
     }
 }
 

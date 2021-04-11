@@ -40,15 +40,27 @@
     <fragment
         android:id="@+id/toBuyFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ToBuyFragmentDetails"
-        android:label="ToBuyFragment" />
+        android:label="ToBuyFragment" >
+        <action
+            android:id="@+id/action_toBuyFragment_to_pictureViewerFragment"
+            app:destination="@id/pictureViewerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/pictureViewerFragment"
         android:name="com.ifyezedev.coslog.PictureViewerFragment"
-        android:label="PictureViewerFragment" />
+        android:label="PictureViewerFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/toMakeFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ToMakeFragmentDetails"
-        android:label="ToMakeFragment" />
+        android:label="ToMakeFragment" >
+        <action
+            android:id="@+id/action_toMakeFragment_to_pictureViewerFragment"
+            app:destination="@id/pictureViewerFragment" />
+    </fragment>
     <activity
         android:id="@+id/homeActivity"
         android:name="com.ifyezedev.coslog.HomeActivity"
