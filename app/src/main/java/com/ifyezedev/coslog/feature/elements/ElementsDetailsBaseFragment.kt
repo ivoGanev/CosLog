@@ -3,12 +3,16 @@ package com.ifyezedev.coslog.feature.elements
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 import androidx.recyclerview.widget.SnapHelper
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
@@ -17,6 +21,7 @@ import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.feature.elements.internal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
     View.OnClickListener,
@@ -134,7 +139,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
             if (removeSuccessful)
                 viewModel.deleteBitmapFromInternalStorage(filePath)
         }
-        toastNotify("Image deleted from internal storage.")
     }
 
     private fun onSaveButtonPressed() {
@@ -155,6 +159,23 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
             viewModel.getBitmapsFromAndroidGallery(requireContext(), intent) { bitmapHolders ->
                 lifecycleScope.launch(Dispatchers.Main) {
                     adapter.addAll(bitmapHolders)
+
+                    // bug: if the scrolling is slow it will flicker because notifyDataSetChanged()
+                    // will redraw the whole RV
+                    adapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+                        override fun onChanged() {
+                            val smoothScroller: SmoothScroller = object : LinearSmoothScroller(context) {
+                                private val MILLISECONDS_PER_INCH = 10f // The bigger the value, the slower
+
+                                override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+                                    return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
+                                }
+                            }
+                            smoothScroller.targetPosition = adapter.data.size
+                            bottomBinding.recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
+                        }
+                    })
+
                 }
             }
         }
