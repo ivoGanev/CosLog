@@ -17,7 +17,7 @@ class SaveBitmapsToInternalStorageUseCase  {
             dir.mkdirs()
 
             bitmapHolders.forEach { bitmapHolder ->
-                println(tag + bitmapHolder.filePath)
+                //println(tag + bitmapHolder.filePath)
                 invoke(bitmapHolder, dir)
             }
         }

@@ -3,15 +3,14 @@ package com.ifyezedev.coslog.feature.elements
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.ifyezedev.coslog.CosplayActivity
 import com.ifyezedev.coslog.CosplayBaseFragment
 import com.ifyezedev.coslog.MiniGalleryAdapter
 import com.ifyezedev.coslog.R
@@ -39,7 +38,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     private lateinit var viewModel: ElementsViewModel
     private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
 
-    private var currentSelectedImagePosition = RecyclerView.NO_POSITION
+    private var navigatedIntoFragment: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +47,25 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         // setup buttons, recycler view, etc.
         setupViews()
+        var navigated = false
+
+        val a = requireActivity() as CosplayActivity
+        a.onNavAway = CosplayActivity.OnNavigatedAway {
+            if (savedInstanceState != null) {
+                navigated = savedInstanceState.getBoolean("navigated")
+            }
+            if (navigated) {
+                viewModel.clearPendingUriCache()
+                a.onNavAway = null
+                println("cache cleared")
+            }
+            navigated = true
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean("navigated", true)
+        super.onSaveInstanceState(outState)
     }
 
     private fun setupViews() = bottomBinding.run {
@@ -62,35 +80,44 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGalleryUseCase(),
             DeleteBitmapFromInternalStorageUseCase(),
-            LoadBitmapsFromInternalStorageUseCase(galleryTag),
+            LoadBitmapsFromInternalStorageUseCase(),
             GetBitmapsFromAndroidGalleryUseCase(),
             SaveBitmapsToInternalStorageUseCase(),
+        )
+
+        adapter = MiniGalleryAdapter(mutableListOf())
+        bottomBinding.recyclerView.adapter = adapter
+        adapter.clickListener = this@ElementsDetailsBaseFragment
+
+        recyclerView.addItemDecoration(BoundsOffsetDecoration())
+        recyclerView.addOnScrollListener(
+            SnapOnScrollListener(
+                snapHelper,
+                SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
+                adapter.onSnapPositionChangeListener
+            )
         )
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(ElementsViewModel::class.java)
 
-
-        viewModel.loadBitmapsFromInternalStorage(requireContext())
+        viewModel.loadBitmapsFromInternalStorage(requireContext(), galleryTag)
         { bitmapHolders ->
 
-            // Bitmap holders are loaded in through an IO dispatcher so we need to move
+            // Bitmap holders are loaded through an IO dispatcher so we need to move
             // them on the Main dispatcher if we want to assign them to UI components.
             lifecycleScope.launch(Dispatchers.Main) {
-                adapter = MiniGalleryAdapter(bitmapHolders.toMutableList())
-                Log.e(this@ElementsDetailsBaseFragment::class.java.toString(),  "Hello")
-                println(adapter)
-                bottomBinding.recyclerView.adapter = adapter
-                adapter.clickListener = this@ElementsDetailsBaseFragment
+                adapter.addAll(bitmapHolders)
+            }
+        }
 
-                recyclerView.addItemDecoration(BoundsOffsetDecoration())
-                recyclerView.addOnScrollListener(
-                    SnapOnScrollListener(
-                        snapHelper,
-                        SnapOnScrollListener.Behavior.NOTIFY_ON_SCROLL,
-                        adapter.onSnapPositionChangeListener
-                    )
-                )
+        viewModel.loadBitmapsFromCachedUris(requireContext())
+        { bitmapHolders ->
+
+            // Bitmap holders are loaded through an IO dispatcher so we need to move
+            // them on the Main dispatcher if we want to assign them to UI components.
+            lifecycleScope.launch(Dispatchers.Main) {
+                adapter.addAll(bitmapHolders)
             }
         }
     }
@@ -108,7 +135,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         // TODO: filePath as null is ambiguous and error prone.
         val filePath = adapter.getCurrentSelectedItemFilePath()
-        if(filePath!=null) {
+        if (filePath != null) {
             val removeSuccessful = adapter.removeItemAtCurrentSelectedPosition()
             if (removeSuccessful)
                 viewModel.deleteBitmapFromInternalStorage(filePath)
@@ -116,12 +143,11 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     }
 
     private fun onSaveButtonPressed() {
-        val t=  galleryTag
         viewModel.saveBitmapsToInternalStorage(requireContext(), galleryTag)
     }
 
     private fun onAddImageButtonPressed() {
-        viewModel.openAndroidImageGallery(::startActivityForResult)
+        viewModel.openAndroidImageGalleryForResult(::startActivityForResult)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -136,7 +162,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
             }
         }
     }
-
 
     override fun onImageClickedListener(view: View) {
         cosplayController.navigate(R.id.pictureViewerFragment)

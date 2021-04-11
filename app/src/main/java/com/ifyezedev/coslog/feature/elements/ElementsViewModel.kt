@@ -3,16 +3,16 @@ package com.ifyezedev.coslog.feature.elements
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.loadOsGalleryBitmaps
 import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import com.ifyezedev.coslog.feature.elements.internal.*
 import com.ifyezedev.coslog.feature.elements.internal.GetBitmapsFromAndroidGalleryUseCase
 import com.ifyezedev.coslog.feature.elements.internal.UriToBitmapGalleryPathConverterStandard
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ElementsViewModel(
     private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
@@ -20,15 +20,13 @@ class ElementsViewModel(
     private val loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase,
     private val getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase,
     private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,
-
-    ) :
-    ViewModel() {
+    ) : ViewModel(), LifecycleObserver {
 
     private var bitmapUriCache: BitmapUriCache = BitmapUriCache()
 
     private val pathConverter = UriToBitmapGalleryPathConverterStandard()
 
-    fun openAndroidImageGallery(activityForResult: (Intent, Int) -> Unit) {
+    fun openAndroidImageGalleryForResult(activityForResult: (Intent, Int) -> Unit) {
         openAndroidImageGalleryUseCase.invoke(activityForResult)
     }
 
@@ -38,11 +36,20 @@ class ElementsViewModel(
         }
     }
 
-    fun loadBitmapsFromInternalStorage(context: Context, onResult: (List<BitmapHolder>) -> Unit) {
+    fun loadBitmapsFromInternalStorage(context: Context, galleryTag: String, onResult: (List<BitmapHolder>) -> Unit) {
         viewModelScope.launch {
-            loadBitmapsFromInternalStorageUseCase.invoke(context) { bitmapHolders ->
+            loadBitmapsFromInternalStorageUseCase.invoke(context, galleryTag) { bitmapHolders ->
                 onResult(bitmapHolders)
             }
+        }
+    }
+
+    fun loadBitmapsFromCachedUris(context: Context, onResult: (List<BitmapHolder>) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val bitmaps = context.contentResolver.loadOsGalleryBitmaps(bitmapUriCache.data)
+            val bitmapHolders =
+                bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(bitmapUriCache.data))
+            onResult(bitmapHolders)
         }
     }
 
@@ -93,5 +100,9 @@ class ElementsViewModel(
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
+    }
+
+    fun clearPendingUriCache() {
+        bitmapUriCache.data.clear()
     }
 }

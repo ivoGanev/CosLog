@@ -18,7 +18,7 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
         CosplayActivityCompositionRoot(this)
     }
 
-    lateinit var  cosplayController: NavController
+    lateinit var cosplayController: NavController
 
     lateinit var appBar: MaterialToolbar
 
@@ -28,6 +28,17 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
 
         binding.bottomNav.setupWithNavController(cosplayController)
         setupNavigationBackButton(appBar)
+
+        supportFragmentManager.findFragmentById(R.id.cosplayNavHostFragment)
+            ?.childFragmentManager?.addOnBackStackChangedListener {
+                onNavAway?.onNavigateAway()
+            }
+    }
+
+    var onNavAway: OnNavigatedAway? = null
+
+    fun interface OnNavigatedAway {
+        fun onNavigateAway()
     }
 
     private fun inject() {
@@ -39,7 +50,8 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
         cosplayCompositionRoot.cosplayController.addOnDestinationChangedListener { controller, destination, _ ->
             if (destination.id == R.id.toBuyFragment
                 || destination.id == R.id.toMakeFragment
-                || destination.id == R.id.pictureViewerFragment) {
+                || destination.id == R.id.pictureViewerFragment
+            ) {
                 appBar.setNavigationOnClickListener {
                     controller.popBackStack()
                 }
