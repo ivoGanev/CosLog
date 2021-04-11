@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.ifyezedev.coslog.PictureGalleryFragment.Keys.GALLERY_TAG
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_INDEX
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_PATH
 import com.ifyezedev.coslog.core.builders.buildIntent
@@ -18,6 +19,7 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"
         const val IMAGE_INDEX = "com.ifyezedev.coslog.keys.fragments.image_index"
+        const val GALLERY_TAG = "com.ifyezedev.coslog.keys.fragments.gallery_tag"
     }
 
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_gallery
@@ -25,7 +27,7 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dir = File(context?.filesDir, "buy-gallery")
+        val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
         val galleryData = dir.listFiles().mapIndexed { index, file -> Pair( file.path, index) }
 
         val imagePagerAdapter = ImagePagerAdapter(this@PictureGalleryFragment, galleryData)
@@ -64,8 +66,8 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.exitButton -> onExitButtonClicked()
-            R.id.shareButton -> onShareButtonClicked()
+          //  R.id.exitButton -> onExitButtonClicked()
+           // R.id.shareButton -> onShareButtonClicked()
         }
     }
 
