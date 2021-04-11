@@ -13,7 +13,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             app:layout_anchorGravity="bottom"
-            tools:listitem="@layout/picture_viewer_item" />
+            tools:listitem="@layout/picture_gallery_item" />
 
         <ImageButton
             android:id="@+id/deleteImageButton"

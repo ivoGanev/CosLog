@@ -4,17 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.ifyezedev.coslog.PictureViewerFragment.Keys.IMAGE_INDEX
-import com.ifyezedev.coslog.PictureViewerFragment.Keys.IMAGE_PATH
+import androidx.viewpager2.widget.ViewPager2
+import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_INDEX
+import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_PATH
 import com.ifyezedev.coslog.core.builders.buildIntent
-import com.ifyezedev.coslog.databinding.FragmentPictureViewerBinding
-import com.ifyezedev.coslog.feature.elements.internal.LoadBitmapsFromInternalStorageUseCase
-import kotlinx.coroutines.launch
+import com.ifyezedev.coslog.databinding.FragmentPictureGalleryBinding
 import java.io.File
 
-class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(),
+class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding>(),
     View.OnClickListener {
 
     object Keys {
@@ -22,7 +20,7 @@ class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(
         const val IMAGE_INDEX = "com.ifyezedev.coslog.keys.fragments.image_index"
     }
 
-    override fun bindingLayoutId(): Int = R.layout.fragment_picture_viewer
+    override fun bindingLayoutId(): Int = R.layout.fragment_picture_gallery
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,16 +28,21 @@ class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(
         val dir = File(context?.filesDir, "buy-gallery")
         val galleryData = dir.listFiles().mapIndexed { index, file -> Pair( file.path, index) }
 
-        val imagePagerAdapter = ImagePagerAdapter(this@PictureViewerFragment, galleryData)
-
+        val imagePagerAdapter = ImagePagerAdapter(this@PictureGalleryFragment, galleryData)
 
         binding {
             imagePager.adapter = imagePagerAdapter
             imagePager.setCurrentItem(requireArguments().getInt(IMAGE_INDEX), false)
+            imagePager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    println(position)
+                }
+            })
 
             //exitButton.setOnClickListener(this@PictureViewerFragment)
-            // shareButton.setOnClickListener(this@PictureViewerFragment)
+            //shareButton.setOnClickListener(this@PictureViewerFragment)
         }
+
     }
 
     class ImagePagerAdapter(
@@ -48,7 +51,6 @@ class PictureViewerFragment : CosplayBaseFragment<FragmentPictureViewerBinding>(
     ) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int = data.size
-
 
         override fun createFragment(position: Int): Fragment {
             val fragment = PictureItemFragment()

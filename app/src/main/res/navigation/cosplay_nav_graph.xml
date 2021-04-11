@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/pictureViewerFragment"
-        android:name="com.ifyezedev.coslog.PictureViewerFragment"
+        android:name="com.ifyezedev.coslog.PictureGalleryFragment"
         android:label="PictureViewerFragment" >
         <argument
             android:name="position"

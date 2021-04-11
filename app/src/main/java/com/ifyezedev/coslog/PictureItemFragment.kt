@@ -12,7 +12,7 @@ class PictureItemFragment : CosplayBaseFragment<PictureItemBinding>() {
     override fun bindingLayoutId(): Int = R.layout.picture_item
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val path = arguments?.getString(PictureViewerFragment.Keys.IMAGE_PATH)
+        val path = arguments?.getString(PictureGalleryFragment.Keys.IMAGE_PATH)
         val loadFromInternalStorageUseCase = LoadBitmapsFromInternalStorageUseCase()
 
         lifecycleScope.launch {
