@@ -2,7 +2,6 @@ package com.ifyezedev.coslog.feature.elements
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.*
 import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.loadOsGalleryBitmaps
@@ -12,7 +11,6 @@ import com.ifyezedev.coslog.feature.elements.internal.GetBitmapsFromAndroidGalle
 import com.ifyezedev.coslog.feature.elements.internal.UriToBitmapGalleryPathConverterStandard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ElementsViewModel(
     private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
@@ -22,7 +20,8 @@ class ElementsViewModel(
     private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,
     ) : ViewModel(), LifecycleObserver {
 
-    private var bitmapUriCache: BitmapUriCache = BitmapUriCache()
+    // pending to be saved
+    private var pendingBitmapCache: BitmapUriCache = BitmapUriCache()
 
     private val pathConverter = UriToBitmapGalleryPathConverterStandard()
 
@@ -46,9 +45,9 @@ class ElementsViewModel(
 
     fun loadBitmapsFromCachedUris(context: Context, onResult: (List<BitmapHolder>) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val bitmaps = context.contentResolver.loadOsGalleryBitmaps(bitmapUriCache.data)
+            val bitmaps = context.contentResolver.loadOsGalleryBitmaps(pendingBitmapCache.data)
             val bitmapHolders =
-                bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(bitmapUriCache.data))
+                bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(pendingBitmapCache.data))
             onResult(bitmapHolders)
         }
     }
@@ -60,7 +59,7 @@ class ElementsViewModel(
     ) {
         viewModelScope.launch {
             getBitmapsFromAndroidGalleryUseCase.invoke(context, intent) { bitmaps, uris ->
-                bitmapUriCache.data.addAll(uris)
+                pendingBitmapCache.data.addAll(uris)
                 val bitmapHolders =
                     bitmaps.mergeToBitmapHolders(pathConverter.toFilePaths(uris))
                 onResult(bitmapHolders)
@@ -72,13 +71,17 @@ class ElementsViewModel(
         context: Context,
         tag: String,
     ) {
-        val bitmaps = context.contentResolver.loadOsGalleryBitmaps(bitmapUriCache.data)
-        val filePaths = pathConverter.toFilePaths(bitmapUriCache.data)
+        val bitmaps = context.contentResolver.loadOsGalleryBitmaps(pendingBitmapCache.data)
+        val filePaths = pathConverter.toFilePaths(pendingBitmapCache.data)
         val bitmapHolders = bitmaps.mergeToBitmapHolders(filePaths)
-        bitmapUriCache.data.clear()
+        pendingBitmapCache.data.clear()
         viewModelScope.launch {
             saveBitmapsToInternalStorageUseCase.invoke(context, tag, bitmapHolders)
         }
+    }
+
+    fun clearPendingUriCache() {
+        pendingBitmapCache.data.clear()
     }
 
     class ElementsViewModelFactory(
@@ -100,9 +103,5 @@ class ElementsViewModel(
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
-    }
-
-    fun clearPendingUriCache() {
-        bitmapUriCache.data.clear()
     }
 }

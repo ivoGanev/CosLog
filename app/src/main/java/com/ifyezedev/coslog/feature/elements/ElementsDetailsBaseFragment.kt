@@ -42,30 +42,48 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        println(savedInstanceState)
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
 
         // setup buttons, recycler view, etc.
         setupViews()
-        var navigated = false
 
-        val a = requireActivity() as CosplayActivity
-        a.onNavAway = CosplayActivity.OnNavigatedAway {
-            if (savedInstanceState != null) {
-                navigated = savedInstanceState.getBoolean("navigated")
-            }
-            if (navigated) {
-                viewModel.clearPendingUriCache()
-                a.onNavAway = null
-                // println("cache cleared")
-            }
-            navigated = true
+        // The details page use a pending uri bitmap cache to store only the
+        // Uri path instead of the actual Bitmaps.
+        // Due to inheritance unfortunately, both details page fragments share
+        // the same view model and access the same cache. We need to clean it when
+        // the we navigate away from any of them to prevent one of them using the
+        // other one's cache which results in a bug.
+        if(savedInstanceState==null) {
+            viewModel.clearPendingUriCache()
+             //println("cache cleared")
         }
-    }
+        else {
+            viewModel.loadBitmapsFromCachedUris(requireContext())
+            { bitmapHolders ->
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean("navigated", true)
-        super.onSaveInstanceState(outState)
+                // Bitmap holders are loaded through an IO dispatcher so we need to move
+                // them on the Main dispatcher if we want to assign them to UI components.
+                lifecycleScope.launch(Dispatchers.Main) {
+                    adapter.addAll(bitmapHolders)
+                }
+            }
+        }
+
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(ElementsViewModel::class.java)
+
+        viewModel.loadBitmapsFromInternalStorage(requireContext(), galleryTag)
+        { bitmapHolders ->
+
+            // Bitmap holders are loaded through an IO dispatcher so we need to move
+            // them on the Main dispatcher if we want to assign them to UI components.
+            lifecycleScope.launch(Dispatchers.Main) {
+                adapter.addAll(bitmapHolders)
+            }
+        }
+
     }
 
     private fun setupViews() = bottomBinding.run {
@@ -96,29 +114,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
                 adapter.onSnapPositionChangeListener
             )
         )
-
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(ElementsViewModel::class.java)
-
-        viewModel.loadBitmapsFromInternalStorage(requireContext(), galleryTag)
-        { bitmapHolders ->
-
-            // Bitmap holders are loaded through an IO dispatcher so we need to move
-            // them on the Main dispatcher if we want to assign them to UI components.
-            lifecycleScope.launch(Dispatchers.Main) {
-                adapter.addAll(bitmapHolders)
-            }
-        }
-
-        viewModel.loadBitmapsFromCachedUris(requireContext())
-        { bitmapHolders ->
-
-            // Bitmap holders are loaded through an IO dispatcher so we need to move
-            // them on the Main dispatcher if we want to assign them to UI components.
-            lifecycleScope.launch(Dispatchers.Main) {
-                adapter.addAll(bitmapHolders)
-            }
-        }
     }
 
     override fun onClick(v: View?) {

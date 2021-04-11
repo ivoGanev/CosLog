@@ -1,10 +1,6 @@
 package com.ifyezedev.coslog
 
 import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
@@ -28,17 +24,6 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
 
         binding.bottomNav.setupWithNavController(cosplayController)
         setupNavigationBackButton(appBar)
-
-        supportFragmentManager.findFragmentById(R.id.cosplayNavHostFragment)
-            ?.childFragmentManager?.addOnBackStackChangedListener {
-                onNavAway?.onNavigateAway()
-            }
-    }
-
-    var onNavAway: OnNavigatedAway? = null
-
-    fun interface OnNavigatedAway {
-        fun onNavigateAway()
     }
 
     private fun inject() {
