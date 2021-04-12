@@ -48,7 +48,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         // setup buttons, recycler view, etc.
         setupViews()
-        
+
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(ElementsViewModel::class.java)
 
