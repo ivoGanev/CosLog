@@ -18,17 +18,18 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
 
     lateinit var appBar: MaterialToolbar
 
+    lateinit var cosplayAppBar: CosplayAppBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        inject()
+
+        cosplayController = cosplayCompositionRoot.cosplayController
+        appBar = cosplayCompositionRoot.appBar
 
         binding.bottomNav.setupWithNavController(cosplayController)
         setupNavigationBackButton(appBar)
-    }
 
-    private fun inject() {
-        cosplayController = cosplayCompositionRoot.cosplayController
-        appBar = cosplayCompositionRoot.appBar
+        cosplayAppBar = CosplayAppBar(appBar)
     }
 
     private fun setupNavigationBackButton(appBar: MaterialToolbar) {

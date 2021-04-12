@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -19,40 +19,22 @@
                 app:contentInsetEnd="0dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetRight="0dp"
-                app:contentInsetStart="0dp">
+                app:contentInsetStart="0dp"
+                app:contentInsetEndWithActions="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:menu="@menu/cosplay_menu"
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_24">
 
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/appHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
-                    <ImageButton
-                        android:layout_alignParentStart="true"
-                        android:id="@+id/backButton"
-                        android:layout_width="?attr/actionBarSize"
-                        android:layout_height="?attr/actionBarSize"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_baseline_arrow_back_24" />
-
-                    <TextView
-                        android:layout_toEndOf="@id/backButton"
-                        android:layout_toStartOf="@id/moreMenu"
-                        android:gravity="center_vertical"
-                        android:id="@+id/appHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/app_name"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <ImageButton
-                        android:id="@+id/moreMenu"
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="?attr/actionBarSize"
-                        android:layout_height="?attr/actionBarSize"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_baseline_more_vert_24" />
-                </RelativeLayout>
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 </layout>
