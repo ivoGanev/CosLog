@@ -48,6 +48,19 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         // setup buttons, recycler view, etc.
         setupViews()
+        
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(ElementsViewModel::class.java)
+
+        viewModel.loadBitmapsFromInternalStorage(requireContext(), galleryTag)
+        { bitmapHolders ->
+
+            // Bitmap holders are loaded through an IO dispatcher so we need to move
+            // them on the Main dispatcher if we want to assign them to UI components.
+            lifecycleScope.launch(Dispatchers.Main) {
+                adapter.addAll(bitmapHolders)
+            }
+        }
 
         // The details page use a pending uri bitmap cache to store only the
         // Uri path instead of the actual Bitmaps.
@@ -70,20 +83,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
                 }
             }
         }
-
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(ElementsViewModel::class.java)
-
-        viewModel.loadBitmapsFromInternalStorage(requireContext(), galleryTag)
-        { bitmapHolders ->
-
-            // Bitmap holders are loaded through an IO dispatcher so we need to move
-            // them on the Main dispatcher if we want to assign them to UI components.
-            lifecycleScope.launch(Dispatchers.Main) {
-                adapter.addAll(bitmapHolders)
-            }
-        }
-
     }
 
     private fun setupViews() = bottomBinding.run {
