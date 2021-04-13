@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.MenuItem
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -175,6 +176,13 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
                 }
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> cosplayController.navigateUp()
+        }
+        return true
     }
 
     override fun onImageClickedListener(view: View) {

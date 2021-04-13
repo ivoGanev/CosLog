@@ -2,6 +2,7 @@ package com.ifyezedev.coslog
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
@@ -29,10 +30,6 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
         binding.bottomNav.setupWithNavController(cosplayController)
 
         setSupportActionBar(appBar)
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return cosplayController.navigateUp()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

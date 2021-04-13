@@ -1,6 +1,7 @@
 package com.ifyezedev.coslog
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -30,6 +31,14 @@ abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
 
     private fun inject() {
         cosplayController = compositionRoot.cosplayController
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> cosplayController.navigate(R.id.homeActivity)
+        }
+
+        return true
     }
 
     abstract override fun bindingLayoutId(): Int
