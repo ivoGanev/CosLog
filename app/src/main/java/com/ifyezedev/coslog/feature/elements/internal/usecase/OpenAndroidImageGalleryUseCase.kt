@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements.internal
+package com.ifyezedev.coslog.feature.elements.internal.usecase
 
 import android.content.Intent
 import com.ifyezedev.coslog.core.builders.buildIntent

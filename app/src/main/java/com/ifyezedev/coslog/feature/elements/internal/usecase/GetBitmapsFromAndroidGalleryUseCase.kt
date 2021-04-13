@@ -1,13 +1,11 @@
-package com.ifyezedev.coslog.feature.elements.internal
+package com.ifyezedev.coslog.feature.elements.internal.usecase
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.loadOsGalleryBitmaps
 import com.ifyezedev.coslog.core.extensions.mapToUri
-import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

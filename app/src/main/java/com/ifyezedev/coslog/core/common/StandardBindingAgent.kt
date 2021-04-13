@@ -8,6 +8,9 @@ import androidx.databinding.ViewDataBinding
 import java.lang.NullPointerException
 import java.lang.reflect.ParameterizedType
 
+/**
+ * Class that only stores the layout binding and provides a way of cleaning it.
+ * */
 class StandardBindingAgent<T : ViewDataBinding>(
     val bindingLayoutId: Int,
     private val inflater: LayoutInflater,

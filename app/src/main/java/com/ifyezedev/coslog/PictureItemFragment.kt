@@ -5,7 +5,7 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.databinding.PictureItemBinding
-import com.ifyezedev.coslog.feature.elements.internal.LoadBitmapsFromInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

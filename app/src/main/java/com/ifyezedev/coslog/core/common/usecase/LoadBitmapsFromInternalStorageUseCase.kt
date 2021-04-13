@@ -1,11 +1,9 @@
-package com.ifyezedev.coslog.feature.elements.internal
+package com.ifyezedev.coslog.core.common.usecase
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import com.ifyezedev.coslog.core.data.BitmapHolder
-import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

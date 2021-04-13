@@ -3,18 +3,22 @@ package com.ifyezedev.coslog.feature.elements
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.*
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
 import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.loadOsGalleryBitmaps
 import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
 import com.ifyezedev.coslog.feature.elements.internal.*
-import com.ifyezedev.coslog.feature.elements.internal.GetBitmapsFromAndroidGalleryUseCase
+import com.ifyezedev.coslog.feature.elements.internal.usecase.GetBitmapsFromAndroidGalleryUseCase
 import com.ifyezedev.coslog.feature.elements.internal.UriToBitmapGalleryPathConverterStandard
+import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ElementsViewModel(
     private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
-    private val deleteBitmapsFromInternalStorageUseCase: DeleteBitmapFromInternalStorageUseCase,
+    private val deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase,
     private val loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase,
     private val getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase,
     private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,
@@ -86,7 +90,7 @@ class ElementsViewModel(
 
     class ElementsViewModelFactory(
         private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
-        private val deleteBitmapsFromInternalStorageUseCase: DeleteBitmapFromInternalStorageUseCase,
+        private val deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase,
         private val loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase,
         private val getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase,
         private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,

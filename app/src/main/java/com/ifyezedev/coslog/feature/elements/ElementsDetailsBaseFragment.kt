@@ -19,6 +19,8 @@ import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.feature.elements.internal.*
+import com.ifyezedev.coslog.feature.elements.internal.usecase.GetBitmapsFromAndroidGalleryUseCase
+import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -95,10 +97,10 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGalleryUseCase(),
-            DeleteBitmapFromInternalStorageUseCase(),
-            LoadBitmapsFromInternalStorageUseCase(),
+            application.deleteBitmapsFromInternalStorageUseCase,
+            application.loadBitmapsFromInternalStorageUseCase,
             GetBitmapsFromAndroidGalleryUseCase(),
-            SaveBitmapsToInternalStorageUseCase(),
+            application.saveBitmapsToInternalStorageUseCase,
         )
 
         adapter = MiniGalleryAdapter(mutableListOf())
