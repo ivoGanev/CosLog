@@ -44,11 +44,15 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
                     println(position)
                 }
             })
-
-            //exitButton.setOnClickListener(this@PictureViewerFragment)
-            //shareButton.setOnClickListener(this@PictureViewerFragment)
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
+        val toolbar = cosplayToolbarController.getToolbar(getToolbarType()) as PictureGalleryToolbar
+        toolbar.setShareButtonListener {
+            onShareButtonClicked()
+        }
     }
 
     class ImagePagerAdapter(

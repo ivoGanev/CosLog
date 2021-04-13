@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.annotation.IdRes
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.Toolbar
 
 class CosplayToolbarController(private val viewFlipper: ViewFlipper) {
@@ -59,7 +60,7 @@ abstract class NavigationToolbar(val rootView: View) {
 
 class PictureGalleryToolbar(rootView: View) : NavigationToolbar(rootView) {
     fun setShareButtonListener(listener: View.OnClickListener) {
-        val shareButton = rootView.findViewById<Button>(R.id.shareButton)
+        val shareButton = rootView.findViewById<AppCompatImageButton>(R.id.shareButton)
         shareButton.setOnClickListener(listener)
     }
 
