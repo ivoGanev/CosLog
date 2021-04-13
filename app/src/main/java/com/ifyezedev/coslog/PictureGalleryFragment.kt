@@ -24,32 +24,38 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
 
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_gallery
 
+
+
     override fun getToolbarType(): CosplayToolbarController.ToolbarType {
         return CosplayToolbarController.ToolbarType.PictureGallery
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
-        val galleryData = dir.listFiles().mapIndexed { index, file -> Pair( file.path, index) }
-
-        val imagePagerAdapter = ImagePagerAdapter(this@PictureGalleryFragment, galleryData)
-
-        binding {
-            imagePager.adapter = imagePagerAdapter
-            imagePager.setCurrentItem(requireArguments().getInt(IMAGE_INDEX), false)
-            imagePager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    println(position)
-                }
-            })
-        }
     }
 
     override fun onStart() {
         super.onStart()
+        val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
+        val galleryData = dir.listFiles().mapIndexed { index, file -> Pair( file.path, index) }
         val toolbar = cosplayToolbarController.getToolbar(getToolbarType()) as PictureGalleryToolbar
+
+        val imagePagerAdapter = ImagePagerAdapter(this@PictureGalleryFragment, galleryData)
+
+        val imageIndex = requireArguments().getInt(IMAGE_INDEX)
+        binding {
+            imagePager.adapter = imagePagerAdapter
+            imagePager.setCurrentItem(imageIndex, false)
+
+            imagePager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+               toolbar.setTitle("Image: ${position+1} out of ${galleryData.size}")
+                }
+            })
+        }
+
+        toolbar.setTitle("Image: ${imageIndex+1} out of ${galleryData.size}")
+
         toolbar.setShareButtonListener {
             onShareButtonClicked()
         }
