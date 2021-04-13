@@ -1,9 +1,9 @@
 package com.ifyezedev.coslog
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.appbar.MaterialToolbar
 
 class CosplayActivityCompositionRoot(private val activity: AppCompatActivity) {
     val cosplayController: NavController
@@ -13,9 +13,5 @@ class CosplayActivityCompositionRoot(private val activity: AppCompatActivity) {
             return navHostFragment.navController
         }
 
-    val appBar: MaterialToolbar = activity.findViewById(R.id.toolbar)
-
-    val cosplayToolbarController: CosplayToolbarController by lazy {
-        CosplayToolbarController(activity.findViewById(R.id.viewFlipper))
-    }
+    val appBar = activity.findViewById<Toolbar>(R.id.appToolbar)
 }

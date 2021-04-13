@@ -1,15 +1,15 @@
 package com.ifyezedev.coslog
 
 import android.os.Bundle
-import android.view.View
+import android.view.Menu
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.appbar.MaterialToolbar
 import com.ifyezedev.coslog.core.common.BaseActivity
 import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 
 
-class CosplayActivity : BaseActivity<ActivityCosplayBinding>(), View.OnClickListener {
+class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
     override fun bindingLayoutId(): Int = R.layout.activity_cosplay
 
     val cosplayCompositionRoot: CosplayActivityCompositionRoot by lazy {
@@ -18,21 +18,25 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>(), View.OnClickList
 
     lateinit var cosplayController: NavController
 
-    lateinit var appBar: MaterialToolbar
-
-    lateinit var cosplayToolbarController: CosplayToolbarController
+    lateinit var appBar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cosplayController = cosplayCompositionRoot.cosplayController
 
         appBar = cosplayCompositionRoot.appBar
-        cosplayToolbarController = cosplayCompositionRoot.cosplayToolbarController
 
         binding.bottomNav.setupWithNavController(cosplayController)
+
+        setSupportActionBar(appBar)
     }
 
-    override fun onClick(v: View?) {
-        cosplayToolbarController.displayAppBar(CosplayToolbarController.ToolbarType.PictureGallery)
+    override fun onSupportNavigateUp(): Boolean {
+        return cosplayController.navigateUp()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.cosplay_menu, menu)
+        return true
     }
 }

@@ -2,6 +2,9 @@ package com.ifyezedev.coslog
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -27,24 +30,15 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
 
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_gallery
 
-
-    override fun getToolbarType(): CosplayToolbarController.ToolbarType {
-        return CosplayToolbarController.ToolbarType.PictureGallery
-    }
-
     // TODO: Move this to a ViewModel with LiveData eventually
     private var pagePosition: Int = -1
 
     private lateinit var imagePagerAdapter: ImagePagerAdapter
 
-    private lateinit var toolbar: PictureGalleryToolbar
-
     override fun onStart() {
         super.onStart()
         val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
         val galleryData = dir.listFiles().mapIndexed { index, file -> Pair(file.path, index) }
-
-        toolbar = cosplayToolbarController.getToolbar(getToolbarType()) as PictureGalleryToolbar
 
         imagePagerAdapter = ImagePagerAdapter(this@PictureGalleryFragment,
             galleryData as MutableList<Pair<String, Int>>
@@ -60,17 +54,14 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
             imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     pagePosition = position + 1
-                    toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
+                   // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
                 }
             })
 
             deleteImageButton.setOnClickListener(this@PictureGalleryFragment)
         }
 
-        toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
-        toolbar.setShareButtonListener {
-            onShareButtonClicked()
-        }
+       // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
     }
 
 
@@ -81,7 +72,6 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
     }
 
     private fun deleteImage() {
-
         lifecycleScope.launch {
             val deletePath = imagePagerAdapter.data[pagePosition-1].first
             application.deleteBitmapsFromInternalStorageUseCase.invoke(deletePath)
@@ -89,12 +79,40 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
             launch(Dispatchers.Main){
                 imagePagerAdapter.data.removeAt(pagePosition-1)
                 imagePagerAdapter.notifyDataSetChanged()
-                toolbar.setTitle("Image: $pagePosition out of ${imagePagerAdapter.data.size}")
+               // toolbar.setTitle("Image: $pagePosition out of ${imagePagerAdapter.data.size}")
 
                 if(imagePagerAdapter.data.size ==0)
                     cosplayController.popBackStack()
             }
         }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        println("Hi")
+        val item1 = menu.findItem(R.id.edit_cosplay)
+        val item2 = menu.findItem(R.id.mark_completed)
+        val item3 = menu.findItem(R.id.view_summary)
+        if (item1 != null && item2 != null && item3 != null) {
+            item1.isVisible = false
+            item2.isVisible = false
+            item3.isVisible = false
+        }
+
+        val shareButton = menu.findItem(R.id.shareButton)
+        val deleteButton = menu.findItem(R.id.deleteButton)
+
+        shareButton.isVisible = true
+        deleteButton.isVisible = true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.shareButton -> onShareButtonClicked()
+            R.id.deleteButton -> deleteImage()
+            android.R.id.home -> cosplayController.navigateUp()
+        }
+
+        return true
     }
 
     private fun onShareButtonClicked() {
@@ -105,7 +123,6 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
         }
         startActivity(intent)
     }
-
 
     class ImagePagerAdapter(
         fragment: Fragment,
