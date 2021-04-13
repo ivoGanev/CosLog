@@ -11,7 +11,7 @@ import com.ifyezedev.coslog.R
 
 abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
 
-    private lateinit var application: BaseApplication
+    lateinit var application: BaseApplication
 
     @LayoutRes
     abstract fun bindingLayoutId(): Int

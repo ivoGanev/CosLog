@@ -26,7 +26,11 @@ abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
+        onAfterBindingCreated()
         return bindingAgent.bind()
+    }
+
+    open fun onAfterBindingCreated() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

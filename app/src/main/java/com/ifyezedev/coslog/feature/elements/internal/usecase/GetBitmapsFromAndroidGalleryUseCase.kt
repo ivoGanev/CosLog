@@ -31,6 +31,5 @@ class GetBitmapsFromAndroidGalleryUseCase  {
             onResult(bitmaps, tempUriCache)
         }
     }
-
 }
 

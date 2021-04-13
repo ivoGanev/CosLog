@@ -29,7 +29,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 
-    abstract val galleryTag: String
+    open val galleryTag: String = "image-gallery"
 
     abstract override fun bindingLayoutId(): Int
 
@@ -44,7 +44,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        println(savedInstanceState)
+
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
 

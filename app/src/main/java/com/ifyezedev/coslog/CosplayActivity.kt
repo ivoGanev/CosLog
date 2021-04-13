@@ -24,14 +24,13 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>(), View.OnClickList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         cosplayController = cosplayCompositionRoot.cosplayController
+
         appBar = cosplayCompositionRoot.appBar
         cosplayToolbarController = cosplayCompositionRoot.cosplayToolbarController
 
         binding.bottomNav.setupWithNavController(cosplayController)
     }
-
 
     override fun onClick(v: View?) {
         cosplayToolbarController.displayAppBar(CosplayToolbarController.ToolbarType.PictureGallery)

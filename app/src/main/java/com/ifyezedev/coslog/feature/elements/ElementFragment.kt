@@ -17,6 +17,7 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
 
     override fun onStart() {
         super.onStart()
+
         binding {
             fab.setOnClickListener(this@ElementFragment)
 
