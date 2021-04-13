@@ -20,7 +20,7 @@ class ElementsViewModel(
     private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,
     ) : ViewModel(), LifecycleObserver {
 
-    // pending to be saved
+    // TODO: Do we store bitmaps directly to the internal storage?
     private var pendingBitmapCache: BitmapUriCache = BitmapUriCache()
 
     private val pathConverter = UriToBitmapGalleryPathConverterStandard()

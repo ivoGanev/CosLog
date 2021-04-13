@@ -1,17 +1,9 @@
 package com.ifyezedev.coslog
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.appbar.MaterialToolbar
-import com.ifyezedev.coslog.core.common.BaseApplication
+import com.ifyezedev.coslog.CosplayToolbarController.ToolbarType
 import com.ifyezedev.coslog.core.common.BaseFragment
 
 
@@ -23,19 +15,42 @@ abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
 
     lateinit var cosplayController: NavController
     lateinit var activity: CosplayActivity
+    lateinit var cosplayToolbarController: CosplayToolbarController
 
     override fun onStart() {
         super.onStart()
         inject()
+        cosplayToolbarController.displayAppBar(getToolbarType())
+        cosplayToolbarController.getToolbar(getToolbarType()).setBackButtonListener { backButton ->
+            onBackButtonPressed(backButton)
+        }
     }
 
     private fun inject() {
         cosplayController = compositionRoot.cosplayController
+        cosplayToolbarController = compositionRoot.cosplayToolbarController
     }
 
     abstract override fun bindingLayoutId(): Int
+
+    /**
+     * Defines which app bar the fragment would use. Default is defined in app_bar_cosplay.xml
+     * */
+    open fun getToolbarType(): ToolbarType {
+        return ToolbarType.Cosplay
+    }
+
+    /**
+     * If you need to do go back a few fragments you can override this and use the
+     * cosplayController.
+     * */
+    open fun onBackButtonPressed(backButton: View) {
+        cosplayController.popBackStack()
+    }
 }
 
 class CosplayFragmentCompositionRoot(private val activityCompositionRoot: CosplayActivityCompositionRoot) {
     val cosplayController: NavController = activityCompositionRoot.cosplayController
+    val cosplayToolbarController: CosplayToolbarController =
+        activityCompositionRoot.cosplayToolbarController
 }

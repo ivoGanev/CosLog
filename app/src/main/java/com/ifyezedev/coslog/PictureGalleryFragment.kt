@@ -24,6 +24,10 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
 
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_gallery
 
+    override fun getToolbarType(): CosplayToolbarController.ToolbarType {
+        return CosplayToolbarController.ToolbarType.PictureGallery
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -9,18 +9,32 @@
         android:orientation="vertical"
         tools:context=".CosplayActivity">
 
-        <include
-            android:id="@+id/appBarInclude"
-            layout="@layout/app_bar_cosplay"
-            />
+
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/appBarCosplay"
+                layout="@layout/app_bar_cosplay"
+                />
+
+            <include
+                android:id="@+id/appBarImageGallery"
+                layout="@layout/app_bar_image_gallery"
+                />
+
+        </ViewFlipper>
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/cosplayNavHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/appBarInclude"
             android:layout_above="@id/bottomNav"
+            android:layout_below="@id/viewFlipper"
             app:defaultNavHost="true"
             app:navGraph="@navigation/cosplay_nav_graph" />
 

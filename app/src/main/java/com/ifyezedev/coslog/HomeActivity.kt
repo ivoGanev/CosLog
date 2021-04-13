@@ -29,7 +29,7 @@ class HomeActivity : AppCompatActivity() {
         //initialize drawerLayout variable
         drawerLayout = binding.drawerLayout
 
-        setSupportActionBar(binding.topAppBar)
+        setSupportActionBar(binding.toolbar)
         //link navcontroller to ActionBar
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
