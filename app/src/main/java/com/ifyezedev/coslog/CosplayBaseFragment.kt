@@ -2,15 +2,17 @@ package com.ifyezedev.coslog
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import com.ifyezedev.coslog.CosplayToolbarController.ToolbarType
+import com.ifyezedev.coslog.core.common.BaseApplication
 import com.ifyezedev.coslog.core.common.BaseFragment
 
 
 abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
 
     private val compositionRoot: CosplayFragmentCompositionRoot by lazy {
-        CosplayFragmentCompositionRoot((requireActivity() as CosplayActivity).cosplayCompositionRoot)
+        CosplayFragmentCompositionRoot(this)
     }
 
     lateinit var cosplayController: NavController
@@ -49,8 +51,13 @@ abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
     }
 }
 
-class CosplayFragmentCompositionRoot(private val activityCompositionRoot: CosplayActivityCompositionRoot) {
+class CosplayFragmentCompositionRoot(fragment: Fragment) {
+    val application = fragment.requireActivity().application as BaseApplication
+
+    private val activityCompositionRoot = (fragment.requireActivity() as CosplayActivity).cosplayCompositionRoot
+
     val cosplayController: NavController = activityCompositionRoot.cosplayController
+
     val cosplayToolbarController: CosplayToolbarController =
         activityCompositionRoot.cosplayToolbarController
 }
