@@ -1,21 +1,16 @@
 package com.ifyezedev.coslog.data.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
-@Entity(tableName = "note_items", foreignKeys = [ForeignKey(entity = Cosplay::class, parentColumns = ["cid"], childColumns = ["cosplay_id"])])
+@Entity(tableName = "notes")
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    val noteId: Int,
+    val noteId: Long = 0L,
 
-    val cosplay_id: Int,
+    val cosplay_id: Long,
 
-    @ColumnInfo(name = "title")
     var title: String,
 
-    @ColumnInfo(name = "body")
     var body: String
 
 )

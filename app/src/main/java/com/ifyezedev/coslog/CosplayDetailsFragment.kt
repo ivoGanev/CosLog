@@ -4,17 +4,17 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.ifyezedev.coslog.data.db.CosLogDatabase
+import com.ifyezedev.coslog.data.db.CosLogDatabase.Companion.getDatabase
 import com.ifyezedev.coslog.databinding.FragmentCosplayDetailsBinding
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 class CosplayDetailsFragment : Fragment() {
     // Inflate the layout for this fragment
@@ -35,10 +35,17 @@ class CosplayDetailsFragment : Fragment() {
         //setup binding
         binding = FragmentCosplayDetailsBinding.inflate(inflater)
 
+        //reference to the application context
+        var application = requireActivity().application
+
+        //first get a reference to the DAO of the database
+        val dataSource = getDatabase(application).cosLogDao
+
         //setup viewmodel and binding lifecycleOwner
         binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this).get(CosplayDetailsViewModel::class.java)
-        binding.viewModel = viewModel
+        val viewModelFactory = CosplayDetailsViewModelFactory(dataSource)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CosplayDetailsViewModel::class.java)
+        binding.cosplayViewModel = viewModel
 
         return binding.root
     }
@@ -53,7 +60,17 @@ class CosplayDetailsFragment : Fragment() {
         //initialize datePicker
         datePicker = viewModel.createDatePicker()
         //open datepicker when end icon is clicked
-        binding.dueDateTextLayout.setEndIconOnClickListener { datePicker.show(requireActivity().supportFragmentManager, "Picker") }
+        binding.dueDateTextLayout.setEndIconOnClickListener {
+            datePicker.show(requireActivity().supportFragmentManager,
+                "Picker")
+        }
+
+        //observe error and notify the user with toast
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty() && it != null) {
+                Toast.makeText(requireActivity(), it, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
 
@@ -68,6 +85,24 @@ class CosplayDetailsFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.cosplay_details_menu, menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        binding.apply {
+            return when(item.itemId) {
+                //save the cosplay to database
+                R.id.save_cosplay -> {
+                    println("save cosplay button clicked")
+                    viewModel.saveCosplay(characterEditTxt.text.toString(), seriesEditTxt.text.toString(),
+                        budgetEditTxt.text.toString())
+                    true
+                }
+
+                else -> super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+
 
 
     //intent for picking an image from the gallery when button is clicked
@@ -98,7 +133,7 @@ class CosplayDetailsFragment : Fragment() {
     }
 
     //method to remove user selected image from imageView and database when button is clicked
-    fun removeImage() {
+    private fun removeImage() {
         //set the imageview to the placeholder image
         binding.characterEditImg.setImageResource(R.drawable.placeholder_image)
     }

@@ -1,18 +1,23 @@
 package com.ifyezedev.coslog
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.ifyezedev.coslog.data.db.CosLogDao
+import com.ifyezedev.coslog.data.db.entities.Cosplay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CosplayDetailsViewModel : ViewModel() {
+class CosplayDetailsViewModel(val database: CosLogDao) : ViewModel() {
+
     //livedata that stores the date selected from date picker
     private val _selectedDate = MutableLiveData<String>()
     val selectedDate: LiveData<String>
@@ -23,18 +28,28 @@ class CosplayDetailsViewModel : ViewModel() {
     val initialDate: LiveData<String>
         get() = _initialDate
 
+    //livedata that stores the error to be displayed to the user
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String>
+        get() = _error
+
+    //global variables for long initial and due date
+    private var initialLongDate: Long = Calendar.getInstance().timeInMillis
+    private var dueLongDate: Long? = null
+
+
     //date formatter
-    val format = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+    private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+
 
     init {
+        //set initial date to live data
         _initialDate.value = getInitialDate()
     }
 
-    //get today's date
-    fun getInitialDate() : String {
-        format.timeZone = TimeZone.getTimeZone("UTC")
-        val date = Date()
-        return format.format(date)
+    //function to get today's date
+    private fun getInitialDate() : String {
+        return initialLongDate.toFormattedDate(dateFormatter)
     }
 
     //datePicker for setting due date
@@ -54,9 +69,8 @@ class CosplayDetailsViewModel : ViewModel() {
         picker.addOnPositiveButtonClickListener {
             val longDate = picker.selection
             if (longDate != null){
-                format.timeZone = TimeZone.getTimeZone("UTC")
-                val date = Date(longDate)
-                _selectedDate.value = format.format(date)
+                dueLongDate = longDate
+                _selectedDate.value = longDate.toFormattedDate(dateFormatter)
             }
 
         }
@@ -64,12 +78,35 @@ class CosplayDetailsViewModel : ViewModel() {
         return picker
     }
 
-    fun saveImage(ImgBitmap : Bitmap) {
-        //todo: save image to internal storage, save image location info to database (move this todo to method that will when user clicks save)
+
+    //save the cosplay to database
+    fun saveCosplay(characterName: String, series: String, budget: String) {
+
+        //if name or series are null or empty, warn user
+        if (characterName.trim().isEmpty() or  series.trim().isEmpty()) {
+            _error.value = "Character name and series must be provided"
+            return
+        }
+
+
+        //if name or series isn't empty save cosplay to database
+        val budgetDouble = budget.toDoubleOrNull()
+        val currentTime = initialLongDate
+
+        val cosplay = Cosplay(0,
+            characterName,
+            series,
+            initialLongDate,
+            dueLongDate,
+            currentTime,
+            budgetDouble)
+
+        Log.i("viewmodel cosplay obj", cosplay.toString())
+
+        viewModelScope.launch(Dispatchers.IO) {
+            database.insertCosplay(cosplay)
+        }
     }
 
-    fun deleteImage() {
-        //todo: remove image from database (when loading cosplay details from database if image is null display placeholder)
-    }
 
 }

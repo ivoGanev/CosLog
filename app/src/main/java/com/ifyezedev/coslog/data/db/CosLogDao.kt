@@ -2,51 +2,51 @@ package com.ifyezedev.coslog.data.db
 
 import androidx.room.*
 import com.ifyezedev.coslog.data.db.entities.*
-import com.ifyezedev.coslog.data.db.entities.relations.*
 
 @Dao
 interface CosLogDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertCosplay(cosplay: Cosplay)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertElement(element: Element)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEvent(event: Event)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNote(note: Note)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertPicture(picture: Picture)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProcess(task: Task)
+    @Insert
+    suspend fun insertProcess(process: Process)
 
-    @Transaction
-    @Query("SELECT * FROM cosplay_items WHERE cid = :cid")
-    suspend fun getCosplayAndElementWithCid(cid: Int): List<CosplayAndElement>
+    @Insert
+    suspend fun insertTask(task: Task)
 
-    @Transaction
-    @Query("SELECT * FROM cosplay_items WHERE cid = :cid")
-    suspend fun getCosplayAndEventWithCid(cid: Int): List<CosplayAndEvent>
+    @Insert
+    suspend fun insertNote(note: Note)
 
-    @Transaction
-    @Query("SELECT * FROM cosplay_items WHERE cid = :cid")
-    suspend fun getCosplayAndNoteWithCid(cid: Int): List<CosplayAndNote>
+    @Insert
+    suspend fun insertEvent(event: Event)
 
-    @Transaction
-    @Query("SELECT * FROM cosplay_items WHERE cid = :cid")
-    suspend fun getCosplayAndPictureWithCid(cid: Int): List<CosplayAndPicture>
+    @Update
+    suspend fun updateCosplay(cosplay: Cosplay)
 
-    @Transaction
-    @Query("SELECT * FROM cosplay_items WHERE cid = :cid")
-    suspend fun getCosplayAndProcessWithCid(cid: Int): List<CosplayAndProcess>
+    @Update
+    suspend fun updateElement(element: Element)
 
-    @Transaction
-    @Query("SELECT * FROM cosplay_items WHERE cid = :cid")
-    suspend fun getCosplayAndTaskWithCid(cid: Int): List<CosplayAndTask>
+    @Update
+    suspend fun updateNote(note: Note)
 
+    @Update
+    suspend fun updateTask(task: Task)
+
+    @Update
+    suspend fun updatePicture(picture: Picture)
+
+    @Update
+    suspend fun updateEvent(event: Event)
+
+    @Update
+    suspend fun updateProcess(process: Process)
+
+    @Query("SELECT * FROM cosplays")
+    suspend fun getAllCosplays() : List<Cosplay>
 }
