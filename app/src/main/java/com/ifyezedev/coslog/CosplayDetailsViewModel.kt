@@ -103,7 +103,7 @@ class CosplayDetailsViewModel(val database: CosLogDao) : ViewModel() {
 
         Log.i("viewmodel cosplay obj", cosplay.toString())
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             database.insertCosplay(cosplay)
         }
     }
