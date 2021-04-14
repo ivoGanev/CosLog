@@ -43,6 +43,8 @@ dependencies {
     // Dependency Injection
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     // Core
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
