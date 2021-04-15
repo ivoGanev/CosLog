@@ -2,19 +2,15 @@ package com.ifyezedev.coslog
 
 import android.os.Bundle
 import android.view.Menu
-import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
-import com.ifyezedev.coslog.core.common.BaseBindingActivity
+import com.ifyezedev.coslog.core.common.BaseActivity
 import com.ifyezedev.coslog.core.common.BaseApplication
 import com.ifyezedev.coslog.core.di.activity.*
-import com.ifyezedev.coslog.core.di.app.AppComponent
-import com.ifyezedev.coslog.core.di.app.AppModule
-import com.ifyezedev.coslog.core.di.app.DaggerAppComponent
 import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 import javax.inject.Inject
 
-class CosplayActivity : BaseBindingActivity<ActivityCosplayBinding>() {
+class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
     override fun bindingLayoutId(): Int = R.layout.activity_cosplay
 
     val cosplayActivityComponent: CosplayActivityComponent by lazy {

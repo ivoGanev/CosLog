@@ -6,12 +6,12 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.NavController
-import com.ifyezedev.coslog.core.common.BaseBindingFragment
+import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.core.di.fragment.CosplayFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.DaggerCosplayFragmentComponent
 
 
-abstract class CosplayFragment<T : ViewDataBinding> : BaseBindingFragment<T>() {
+abstract class CosplayFragment<T : ViewDataBinding> : BaseFragment<T>() {
 
     lateinit var cosplayController: NavController
     lateinit var toolbar: Toolbar
