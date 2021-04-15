@@ -10,11 +10,12 @@ interface UriToBitmapGalleryPathConverter {
 
 class UriToBitmapGalleryPathConverterStandard : UriToBitmapGalleryPathConverter {
     private val delimiter = "$$"
+    private val formatSuffix = ".jpeg"
 
     override fun toFilePath(uri: Uri): String {
         val originalFileName = uri.toString().substringAfterLast("/")
         val uuid = UUID.randomUUID()
-        return originalFileName + delimiter + uuid
+        return originalFileName + delimiter + uuid + formatSuffix
     }
 
     override fun toFilePaths(uris: List<Uri>): List<String> {

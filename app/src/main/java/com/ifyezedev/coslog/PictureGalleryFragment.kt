@@ -37,7 +37,12 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
     override fun onStart() {
         super.onStart()
         val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
-        val galleryData = dir.listFiles().mapIndexed { index, file -> Pair(file.path, index) }
+        val galleryData = dir.listFiles().mapIndexed {
+                index, file ->
+
+            println("Mapped ${file.path} to $index")
+            Pair(file.path, index)
+        }
 
         imagePagerAdapter = ImagePagerAdapter(
             this@PictureGalleryFragment,
@@ -45,7 +50,7 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
         )
 
         val imageIndex = requireArguments().getInt(IMAGE_INDEX)
-        pagePosition = imageIndex + 1
+        pagePosition = imageIndex
 
         binding {
             imagePager.adapter = imagePagerAdapter
@@ -53,15 +58,17 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
 
             imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    pagePosition = position + 1
-                    toolbar.title = "Image: $pagePosition out of ${galleryData.size}"
+                    println("On Page Selected:" + pagePosition)
+                    pagePosition = position
+                    updateToolbarTitle()
                 }
             })
 
             deleteImageButton.setOnClickListener(this@PictureGalleryFragment)
         }
 
-        toolbar.title = "Image: $pagePosition out of ${galleryData.size}"
+        updateToolbarTitle()
+
     }
 
 
@@ -73,13 +80,12 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
 
     private fun deleteImage() {
         lifecycleScope.launch {
-            val deletePath = imagePagerAdapter.data[pagePosition - 1].first
+            val deletePath = imagePagerAdapter.data[pagePosition].first
             deleteBitmapsFromInternalStorageUseCase.invoke(deletePath)
-
             launch(Dispatchers.Main) {
-                imagePagerAdapter.data.removeAt(pagePosition - 1)
-                imagePagerAdapter.notifyDataSetChanged()
-                // toolbar.setTitle("Image: $pagePosition out of ${imagePagerAdapter.data.size}")
+                imagePagerAdapter.data.removeAt(pagePosition)
+                imagePagerAdapter.notifyItemRemoved(pagePosition)
+                updateToolbarTitle()
 
                 if (imagePagerAdapter.data.size == 0)
                     cosplayController.popBackStack()
@@ -87,8 +93,11 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
         }
     }
 
+    private fun updateToolbarTitle() {
+        toolbar.title = "Image: ${pagePosition+1} out of ${imagePagerAdapter.data.size}"
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
-        println("Hi")
         val item1 = menu.findItem(R.id.edit_cosplay)
         val item2 = menu.findItem(R.id.mark_completed)
         val item3 = menu.findItem(R.id.view_summary)
@@ -129,9 +138,19 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
         val data: MutableList<Pair<String, Int>>
     ) : FragmentStateAdapter(fragment) {
 
+        private val pageIds = data.map { it.hashCode().toLong() }
         override fun getItemCount(): Int = data.size
 
+        override fun getItemId(position: Int): Long {
+            return data[position].hashCode().toLong() // make sure notifyDataSetChanged() works
+        }
+
+        override fun containsItem(itemId: Long): Boolean {
+            return pageIds.contains(itemId)
+        }
+
         override fun createFragment(position: Int): Fragment {
+           // println("Creating fragment: $position with path ${data[position].first}")
             val fragment = PictureItemFragment()
             fragment.arguments = Bundle().apply {
                 putString(IMAGE_PATH, data[position].first)
