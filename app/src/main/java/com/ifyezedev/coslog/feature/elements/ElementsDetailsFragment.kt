@@ -1,6 +1,7 @@
 package com.ifyezedev.coslog.feature.elements
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -10,11 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.RecyclerView.SmoothScroller
-import androidx.recyclerview.widget.SnapHelper
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
@@ -102,9 +100,12 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayFragment<T>
         )
 
         adapter = MiniGalleryAdapter(mutableListOf())
+        adapter.setHasStableIds(true)
+
         bottomBinding.recyclerView.adapter = adapter
         adapter.clickListener = this@ElementsDetailsFragment
 
+        recyclerView.layoutManager = MyLayoutManager(requireContext())
         recyclerView.addItemDecoration(BoundsOffsetDecoration())
         recyclerView.addOnScrollListener(
             SnapOnScrollListener(
@@ -113,6 +114,12 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayFragment<T>
                 adapter.onSnapPositionChangeListener
             )
         )
+    }
+
+    class MyLayoutManager(context: Context?) : LinearLayoutManager(context, HORIZONTAL, false) {
+        override fun supportsPredictiveItemAnimations(): Boolean {
+            return true
+        }
     }
 
     override fun onClick(v: View?) {
