@@ -1,5 +1,6 @@
 package com.ifyezedev.coslog.core.di.activity
 
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,4 +18,8 @@ class CosplayActivityModule(private val activity: AppCompatActivity) {
             activity.supportFragmentManager.findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
         return navHostFragment.navController
     }
+
+    @Provides
+    @CosplayActivityScope
+    fun toolbar(): androidx.appcompat.widget.Toolbar = activity.findViewById(R.id.appToolbar)
 }

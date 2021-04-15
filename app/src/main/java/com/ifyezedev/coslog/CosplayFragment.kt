@@ -3,22 +3,18 @@ package com.ifyezedev.coslog
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import com.ifyezedev.coslog.core.common.BaseApplication
 import com.ifyezedev.coslog.core.common.BaseBindingFragment
-import com.ifyezedev.coslog.core.common.BaseFragment
-import com.ifyezedev.coslog.core.di.activity.CosplayActivityComponent
-import com.ifyezedev.coslog.core.di.activity.CosplayActivityModule
-import com.ifyezedev.coslog.core.di.activity.DaggerCosplayActivityComponent
 import com.ifyezedev.coslog.core.di.fragment.CosplayFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.DaggerCosplayFragmentComponent
 
 
-abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseBindingFragment<T>() {
+abstract class CosplayFragment<T : ViewDataBinding> : BaseBindingFragment<T>() {
 
     lateinit var cosplayController: NavController
+    lateinit var toolbar: Toolbar
 
     private val cosplayFragmentComponent: CosplayFragmentComponent by lazy {
         DaggerCosplayFragmentComponent.builder()
@@ -28,13 +24,17 @@ abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseBindingFragment<T>
 
     override fun onAfterBindingCreated() {
         cosplayController = cosplayFragmentComponent.cosplayController()
+        toolbar = cosplayFragmentComponent.toolbar()
+
+        // set the default toolbar title because other classes like, PictureGallery
+        // change it dynamically
+        toolbar.title = requireContext().resources.getString(R.string.app_name)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {

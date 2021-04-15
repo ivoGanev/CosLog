@@ -14,7 +14,6 @@ import com.ifyezedev.coslog.core.di.app.DaggerAppComponent
 import com.ifyezedev.coslog.databinding.ActivityCosplayBinding
 import javax.inject.Inject
 
-
 class CosplayActivity : BaseBindingActivity<ActivityCosplayBinding>() {
     override fun bindingLayoutId(): Int = R.layout.activity_cosplay
 

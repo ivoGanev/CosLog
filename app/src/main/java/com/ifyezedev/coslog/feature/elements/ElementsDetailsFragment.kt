@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
+abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 
@@ -89,9 +89,9 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     private fun setupViews() = bottomBinding.run {
         val snapHelper: SnapHelper = PagerSnapHelper()
 
-        buttonAddImage.setOnClickListener(this@ElementsDetailsBaseFragment)
-        buttonSave.setOnClickListener(this@ElementsDetailsBaseFragment)
-        buttonDelete.setOnClickListener(this@ElementsDetailsBaseFragment)
+        buttonAddImage.setOnClickListener(this@ElementsDetailsFragment)
+        buttonSave.setOnClickListener(this@ElementsDetailsFragment)
+        buttonDelete.setOnClickListener(this@ElementsDetailsFragment)
         snapHelper.attachToRecyclerView(recyclerView)
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
@@ -104,7 +104,7 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         adapter = MiniGalleryAdapter(mutableListOf())
         bottomBinding.recyclerView.adapter = adapter
-        adapter.clickListener = this@ElementsDetailsBaseFragment
+        adapter.clickListener = this@ElementsDetailsFragment
 
         recyclerView.addItemDecoration(BoundsOffsetDecoration())
         recyclerView.addOnScrollListener(

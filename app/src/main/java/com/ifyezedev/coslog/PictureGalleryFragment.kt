@@ -3,7 +3,6 @@ package com.ifyezedev.coslog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -19,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding>(),
+class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
     View.OnClickListener {
 
     object Keys {
@@ -55,14 +54,14 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
             imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     pagePosition = position + 1
-                    // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
+                    toolbar.title = "Image: $pagePosition out of ${galleryData.size}"
                 }
             })
 
             deleteImageButton.setOnClickListener(this@PictureGalleryFragment)
         }
 
-        // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
+        toolbar.title = "Image: $pagePosition out of ${galleryData.size}"
     }
 
 

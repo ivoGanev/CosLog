@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.ifyezedev.coslog.databinding.FragmentElementBinding
 import java.lang.NullPointerException
 import java.lang.reflect.ParameterizedType
 
