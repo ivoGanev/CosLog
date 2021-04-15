@@ -7,31 +7,34 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import com.ifyezedev.coslog.core.common.BaseApplication
+import com.ifyezedev.coslog.core.common.BaseBindingFragment
 import com.ifyezedev.coslog.core.common.BaseFragment
+import com.ifyezedev.coslog.core.di.activity.CosplayActivityComponent
+import com.ifyezedev.coslog.core.di.activity.CosplayActivityModule
+import com.ifyezedev.coslog.core.di.activity.DaggerCosplayActivityComponent
+import com.ifyezedev.coslog.core.di.fragment.CosplayFragmentComponent
+import com.ifyezedev.coslog.core.di.fragment.DaggerCosplayFragmentComponent
 
 
-abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
-
-    private val compositionRoot: CosplayFragmentCompositionRoot by lazy {
-        CosplayFragmentCompositionRoot(this)
-    }
+abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseBindingFragment<T>() {
 
     lateinit var cosplayController: NavController
-    lateinit var activity: CosplayActivity
+
+    private val cosplayFragmentComponent: CosplayFragmentComponent by lazy {
+        DaggerCosplayFragmentComponent.builder()
+            .cosplayActivityComponent((requireActivity() as CosplayActivity).cosplayActivityComponent)
+            .build()
+    }
+
+    override fun onAfterBindingCreated() {
+        cosplayController = cosplayFragmentComponent.cosplayController()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onStart() {
-        super.onStart()
-        inject()
-    }
-
-    private fun inject() {
-        cosplayController = compositionRoot.cosplayController
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -42,12 +45,4 @@ abstract class CosplayBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
     }
 
     abstract override fun bindingLayoutId(): Int
-}
-
-class CosplayFragmentCompositionRoot(fragment: Fragment) {
-    val application = fragment.requireActivity().application as BaseApplication
-
-    private val activityCompositionRoot = (fragment.requireActivity() as CosplayActivity).cosplayCompositionRoot
-
-    val cosplayController: NavController = activityCompositionRoot.cosplayController
 }

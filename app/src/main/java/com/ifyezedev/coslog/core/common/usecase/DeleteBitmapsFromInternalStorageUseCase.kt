@@ -12,4 +12,8 @@ class DeleteBitmapsFromInternalStorageUseCase {
             file.delete()
         }
     }
+
+    fun hello() {
+        println("hello")
+    }
 }

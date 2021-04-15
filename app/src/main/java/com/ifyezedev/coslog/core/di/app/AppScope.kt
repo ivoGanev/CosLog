@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.core.di.module
+package com.ifyezedev.coslog.core.di.app
 
 import javax.inject.Scope
 

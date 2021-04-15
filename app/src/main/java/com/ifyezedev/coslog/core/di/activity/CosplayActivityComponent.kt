@@ -1,0 +1,14 @@
+package com.ifyezedev.coslog.core.di.activity
+
+import androidx.navigation.NavController
+import com.ifyezedev.coslog.CosplayActivity
+import com.ifyezedev.coslog.core.common.BaseActivity
+import com.ifyezedev.coslog.core.di.app.AppComponent
+import dagger.Component
+
+@Component(modules = [CosplayActivityModule::class], dependencies = [AppComponent::class])
+@CosplayActivityScope
+interface CosplayActivityComponent {
+    fun inject(activity: CosplayActivity)
+    fun cosplayController() : NavController
+}

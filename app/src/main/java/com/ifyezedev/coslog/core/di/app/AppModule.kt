@@ -1,6 +1,5 @@
-package com.ifyezedev.coslog.core.di.module
+package com.ifyezedev.coslog.core.di.app
 
-import android.app.Application
 import com.ifyezedev.coslog.core.common.BaseApplication
 import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase

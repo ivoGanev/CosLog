@@ -41,8 +41,6 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
     private lateinit var viewModel: ElementsViewModel
     private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
 
-    private var navigatedIntoFragment: Boolean = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -98,10 +96,10 @@ abstract class ElementsDetailsBaseFragment<T : ViewDataBinding> : CosplayBaseFra
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGalleryUseCase(),
-            application.deleteBitmapsFromInternalStorageUseCase,
-            application.loadBitmapsFromInternalStorageUseCase,
+            deleteBitmapsFromInternalStorageUseCase,
+            loadBitmapsFromInternalStorageUseCase,
             GetBitmapsFromAndroidGalleryUseCase(),
-            application.saveBitmapsToInternalStorageUseCase,
+            saveBitmapsToInternalStorageUseCase,
         )
 
         adapter = MiniGalleryAdapter(mutableListOf())

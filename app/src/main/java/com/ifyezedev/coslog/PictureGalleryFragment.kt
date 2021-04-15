@@ -40,7 +40,8 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
         val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
         val galleryData = dir.listFiles().mapIndexed { index, file -> Pair(file.path, index) }
 
-        imagePagerAdapter = ImagePagerAdapter(this@PictureGalleryFragment,
+        imagePagerAdapter = ImagePagerAdapter(
+            this@PictureGalleryFragment,
             galleryData as MutableList<Pair<String, Int>>
         )
 
@@ -54,14 +55,14 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
             imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     pagePosition = position + 1
-                   // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
+                    // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
                 }
             })
 
             deleteImageButton.setOnClickListener(this@PictureGalleryFragment)
         }
 
-       // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
+        // toolbar.setTitle("Image: $pagePosition out of ${galleryData.size}")
     }
 
 
@@ -73,15 +74,15 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
 
     private fun deleteImage() {
         lifecycleScope.launch {
-            val deletePath = imagePagerAdapter.data[pagePosition-1].first
-            application.deleteBitmapsFromInternalStorageUseCase.invoke(deletePath)
+            val deletePath = imagePagerAdapter.data[pagePosition - 1].first
+            deleteBitmapsFromInternalStorageUseCase.invoke(deletePath)
 
-            launch(Dispatchers.Main){
-                imagePagerAdapter.data.removeAt(pagePosition-1)
+            launch(Dispatchers.Main) {
+                imagePagerAdapter.data.removeAt(pagePosition - 1)
                 imagePagerAdapter.notifyDataSetChanged()
-               // toolbar.setTitle("Image: $pagePosition out of ${imagePagerAdapter.data.size}")
+                // toolbar.setTitle("Image: $pagePosition out of ${imagePagerAdapter.data.size}")
 
-                if(imagePagerAdapter.data.size ==0)
+                if (imagePagerAdapter.data.size == 0)
                     cosplayController.popBackStack()
             }
         }
@@ -106,7 +107,7 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.shareButton -> onShareButtonClicked()
             R.id.deleteButton -> deleteImage()
             android.R.id.home -> cosplayController.navigateUp()

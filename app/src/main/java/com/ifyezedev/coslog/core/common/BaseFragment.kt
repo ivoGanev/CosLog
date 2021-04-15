@@ -8,45 +8,35 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
+import com.ifyezedev.coslog.core.di.activity.BaseActivityComponent
+import com.ifyezedev.coslog.core.di.activity.DaggerBaseActivityComponent
+import com.ifyezedev.coslog.core.di.fragment.DaggerFragmentComponent
+import com.ifyezedev.coslog.core.di.fragment.FragmentComponent
+import javax.inject.Inject
 
-abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
+abstract class BaseFragment : Fragment() {
+    @Inject
+    lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase
 
-    @LayoutRes
-    abstract fun bindingLayoutId(): Int
+    @Inject
+    lateinit var loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase
 
-    private lateinit var bindingAgent: LayoutBindingAgent<T>
+    @Inject
+    lateinit var saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase
 
-    val binding: T get() = bindingAgent.binding
-
-    lateinit var application: BaseApplication
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
-        onAfterBindingCreated()
-        return bindingAgent.bind()
-    }
-
-    open fun onAfterBindingCreated() {
+    private val baseFragmentComponent: FragmentComponent by lazy {
+        DaggerFragmentComponent.builder()
+            .appComponent((requireActivity().application as BaseApplication).appComponent)
+            .build()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        baseFragmentComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
-        application = requireActivity().application as BaseApplication
     }
 
-    fun binding(init: T.() -> Unit) {
-        binding.init()
-    }
-
-    override fun onDestroyView() {
-        bindingAgent.destroy()
-        super.onDestroyView()
-    }
-
-    fun toastNotify(message: String) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
-        .show()
+    fun toastNotify(message: String) = (requireActivity() as BaseActivity).toastNotify(message)
 }
