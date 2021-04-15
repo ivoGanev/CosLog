@@ -15,12 +15,5 @@
             app:layout_anchorGravity="bottom"
             tools:listitem="@layout/picture_gallery_item" />
 
-        <ImageButton
-            android:id="@+id/deleteImageButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom|end"
-            android:src="@drawable/ic_delete"
-          />
     </FrameLayout>
 </layout>

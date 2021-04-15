@@ -18,8 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
-    View.OnClickListener {
+class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(){
 
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"
@@ -58,24 +57,14 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(),
 
             imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    println("On Page Selected:" + pagePosition)
                     pagePosition = position
                     updateToolbarTitle()
                 }
             })
-
-            deleteImageButton.setOnClickListener(this@PictureGalleryFragment)
         }
 
         updateToolbarTitle()
 
-    }
-
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.deleteImageButton -> deleteImage()
-        }
     }
 
     private fun deleteImage() {
