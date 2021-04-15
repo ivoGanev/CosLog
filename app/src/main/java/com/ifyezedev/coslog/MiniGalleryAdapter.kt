@@ -21,8 +21,15 @@ class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
     lateinit var clickListener: OnClickListener
 
     fun addAll(data: List<BitmapHolder>) {
-        this.data.addAll(data)
-        this.notifyDataSetChanged()
+        // insert in a queue fashioned way
+        data.forEach { element ->
+            this.data.add(0, element)
+        }
+        notifyDataSetChanged()
+    }
+
+    override fun getItemId(position: Int): Long {
+        return data[position].hashCode().toLong()
     }
 
     /** @return true if the item has been successfully deleted. */

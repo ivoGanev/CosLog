@@ -69,11 +69,10 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayFragment<T>
         // the same view model and access the same cache. We need to clean it when
         // the we navigate away from any of them to prevent one of them using the
         // other one's cache which results in a bug.
-        if(savedInstanceState==null) {
+        if (savedInstanceState == null) {
             viewModel.clearPendingUriCache()
-             //println("cache cleared")
-        }
-        else {
+            //println("cache cleared")
+        } else {
             viewModel.loadBitmapsFromCachedUris(requireContext())
             { bitmapHolders ->
 
@@ -152,32 +151,13 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayFragment<T>
             intent != null
         ) {
             viewModel.getBitmapsFromAndroidGallery(requireContext(), intent) { bitmapHolders ->
-                lifecycleScope.launch(Dispatchers.Main) {
-                    adapter.addAll(bitmapHolders)
-
-                    // bug: if the scrolling is slow it will flicker because notifyDataSetChanged()
-                    // will redraw the whole RV
-                    adapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
-                        override fun onChanged() {
-                            val smoothScroller: SmoothScroller = object : LinearSmoothScroller(context) {
-                                private val MILLISECONDS_PER_INCH = 10f // The bigger the value, the slower
-
-                                override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-                                    return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
-                                }
-                            }
-                            smoothScroller.targetPosition = adapter.data.size
-                            bottomBinding.recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
-                        }
-                    })
-
-                }
+                lifecycleScope.launch(Dispatchers.Main) { adapter.addAll(bitmapHolders) }
             }
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             android.R.id.home -> cosplayController.navigateUp()
         }
         return true
