@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -18,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(){
+class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>() {
 
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"
@@ -36,10 +35,9 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(){
     override fun onStart() {
         super.onStart()
         val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
-        val galleryData = dir.listFiles().mapIndexed {
-                index, file ->
+        val galleryData = dir.listFiles().mapIndexed { index, file ->
 
-            println("Mapped ${file.path} to $index")
+          //  println("Mapped ${file.path} to $index")
             Pair(file.path, index)
         }
 
@@ -72,18 +70,17 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(){
             val deletePath = imagePagerAdapter.data[pagePosition].first
             deleteBitmapsFromInternalStorageUseCase.invoke(deletePath)
             launch(Dispatchers.Main) {
-                imagePagerAdapter.data.removeAt(pagePosition)
-                imagePagerAdapter.notifyItemRemoved(pagePosition)
+                imagePagerAdapter.removeAt(pagePosition)
                 updateToolbarTitle()
 
-                if (imagePagerAdapter.data.size == 0)
+                if (imagePagerAdapter.data.isEmpty())
                     cosplayController.popBackStack()
             }
         }
     }
 
     private fun updateToolbarTitle() {
-        toolbar.title = "Image: ${pagePosition+1} out of ${imagePagerAdapter.data.size}"
+        toolbar.title = "Image: ${pagePosition + 1} out of ${imagePagerAdapter.data.size}"
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -124,25 +121,27 @@ class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>(){
 
     class ImagePagerAdapter(
         fragment: Fragment,
-        val data: MutableList<Pair<String, Int>>
+        private val _data: MutableList<Pair<String, Int>>
     ) : FragmentStateAdapter(fragment) {
 
-        private val pageIds = data.map { it.hashCode().toLong() }
-        override fun getItemCount(): Int = data.size
+        val data: List<Pair<String, Int>> get() = _data
 
-        override fun getItemId(position: Int): Long {
-            return data[position].hashCode().toLong() // make sure notifyDataSetChanged() works
+        fun removeAt(position: Int) {
+            _data.removeAt(position)
+            notifyItemRemoved(position)
         }
 
-        override fun containsItem(itemId: Long): Boolean {
-            return pageIds.contains(itemId)
+        override fun getItemCount(): Int = _data.size
+
+        override fun getItemId(position: Int): Long {
+            return _data[position].hashCode().toLong()
         }
 
         override fun createFragment(position: Int): Fragment {
-           // println("Creating fragment: $position with path ${data[position].first}")
+            // println("Creating fragment: $position with path ${data[position].first}")
             val fragment = PictureItemFragment()
             fragment.arguments = Bundle().apply {
-                putString(IMAGE_PATH, data[position].first)
+                putString(IMAGE_PATH, _data[position].first)
                 putInt(IMAGE_INDEX, position + 1)
             }
             return fragment

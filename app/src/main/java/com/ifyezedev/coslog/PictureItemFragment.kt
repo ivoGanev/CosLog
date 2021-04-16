@@ -15,7 +15,7 @@ class PictureItemFragment : BaseFragment<PictureItemBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val path = arguments?.getString(PictureGalleryFragment.Keys.IMAGE_PATH)
         val loadFromInternalStorageUseCase = LoadBitmapsFromInternalStorageUseCase()
-
+        println(path)
         lifecycleScope.launch {
             loadFromInternalStorageUseCase.invoke(path!!)
             { bitmap ->
