@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_cosplayFragment_to_cosplayActivity"
             app:destination="@id/cosplayActivity" />
+        <action
+            android:id="@+id/action_cosplayFragment_to_cosplayDetailsFragment"
+            app:destination="@id/cosplayDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/archiveFragment"
@@ -45,6 +48,14 @@
     <activity
         android:id="@+id/cosplayActivity"
         android:name="com.ifyezedev.coslog.CosplayActivity"
-        android:label="activity_cosplay"
+        android:label="@string/cosplay"
         tools:layout="@layout/activity_cosplay" />
+    <fragment
+        android:id="@+id/cosplayDetailsFragment"
+        android:name="com.ifyezedev.coslog.CosplayDetailsFragment"
+        android:label="@string/cosplay_details">
+        <argument
+            android:name="from"
+            app:argType="com.ifyezedev.coslog.From" />
+    </fragment>
 </navigation>

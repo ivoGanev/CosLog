@@ -18,8 +18,4 @@ class CosplayActivityModule(private val activity: AppCompatActivity) {
             activity.supportFragmentManager.findFragmentById(R.id.cosplayNavHostFragment) as NavHostFragment
         return navHostFragment.navController
     }
-
-    @Provides
-    @CosplayActivityScope
-    fun toolbar(): androidx.appcompat.widget.Toolbar = activity.findViewById(R.id.appToolbar)
 }

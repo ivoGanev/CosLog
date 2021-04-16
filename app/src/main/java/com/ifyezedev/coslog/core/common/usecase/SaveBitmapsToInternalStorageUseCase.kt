@@ -10,6 +10,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class SaveBitmapsToInternalStorageUseCase  {
+
+    // TODO: make it return the file path
     suspend fun invoke(context: Context, tag: String, bitmapHolders: List<BitmapHolder>) {
         withContext(Dispatchers.IO) {
             val dir = File(context.filesDir, tag)

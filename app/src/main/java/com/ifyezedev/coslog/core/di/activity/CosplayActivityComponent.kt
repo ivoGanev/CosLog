@@ -10,5 +10,4 @@ import dagger.Component
 interface CosplayActivityComponent {
     fun inject(activity: CosplayActivity)
     fun cosplayController(): NavController
-    fun toolbar(): androidx.appcompat.widget.Toolbar
 }

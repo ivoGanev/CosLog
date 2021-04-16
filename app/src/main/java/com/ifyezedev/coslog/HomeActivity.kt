@@ -20,8 +20,9 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //initialize binding variable
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
 
+        //Set up ActionBar and Navigation Drawer
         //find NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -29,7 +30,6 @@ class HomeActivity : AppCompatActivity() {
         //initialize drawerLayout variable
         drawerLayout = binding.drawerLayout
 
-        setSupportActionBar(binding.toolbar)
         //link navcontroller to ActionBar
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 

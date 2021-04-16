@@ -9,5 +9,4 @@ import dagger.Component
 @CosplayFragmentScope
 interface CosplayFragmentComponent {
     fun cosplayController() : NavController
-    fun toolbar() : Toolbar
 }

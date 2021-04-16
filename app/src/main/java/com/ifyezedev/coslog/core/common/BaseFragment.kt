@@ -47,11 +47,12 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
         saveBitmapsToInternalStorageUseCase = baseFragmentComponent.saveBitmapsToInternalStorageUseCase()
 
         bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
-        onAfterBindingCreated()
-        return bindingAgent.bind()
+        val view = bindingAgent.bind()
+        onAfterBindingCreated(view)
+        return view
     }
 
-    open fun onAfterBindingCreated() {
+    open fun onAfterBindingCreated(view: View) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

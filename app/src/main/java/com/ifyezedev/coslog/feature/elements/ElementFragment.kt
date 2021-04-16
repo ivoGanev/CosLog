@@ -7,12 +7,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.ifyezedev.coslog.CosplayBaseFragment
+import com.ifyezedev.coslog.CosplayActivity
 import com.ifyezedev.coslog.R
+import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 
 
-class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnClickListener {
+class ElementFragment : BaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
 
     override fun onStart() {
@@ -37,6 +38,8 @@ class ElementFragment : CosplayBaseFragment<FragmentElementBinding>(), View.OnCl
     }
 
     private fun onFabClicked() {
+        val cosplayController = (activity as CosplayActivity).cosplayController
+
         when (binding.elementsTabLayout.selectedTabPosition) {
             0 -> cosplayController.navigate(R.id.toBuyFragment)
             1 -> cosplayController.navigate(R.id.toMakeFragment)

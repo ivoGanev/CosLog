@@ -12,12 +12,13 @@ import com.ifyezedev.coslog.PictureGalleryFragment.Keys.GALLERY_TAG
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_INDEX
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_PATH
 import com.ifyezedev.coslog.core.builders.buildIntent
+import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.databinding.FragmentPictureGalleryBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding>() {
+class PictureGalleryFragment : BaseFragment<FragmentPictureGalleryBinding>() {
 
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"
@@ -74,13 +75,14 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
                 updateToolbarTitle()
 
                 if (imagePagerAdapter.data.isEmpty())
-                    cosplayController.popBackStack()
+                {}
+                //osplayController.popBackStack()
             }
         }
     }
 
     private fun updateToolbarTitle() {
-        toolbar.title = "Image: ${pagePosition + 1} out of ${imagePagerAdapter.data.size}"
+        activity?.actionBar?.title = "Image: ${pagePosition + 1} out of ${imagePagerAdapter.data.size}"
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -104,7 +106,6 @@ class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding
         when (item.itemId) {
             R.id.shareButton -> onShareButtonClicked()
             R.id.deleteButton -> deleteImage()
-            android.R.id.home -> cosplayController.navigateUp()
         }
 
         return true

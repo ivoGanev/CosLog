@@ -16,4 +16,7 @@
     <string name="app_name">CosLog</string>
     <string name="elements_tab_one_name">To Buy</string>
     <string name="elements_tab_two_name">To Make</string>
+    <string name="add_cosplay">add cosplay</string>
+    <string name="cosplay">Cosplay</string>
+    <string name="cosplay_details">Cosplay Details</string>
 </resources>

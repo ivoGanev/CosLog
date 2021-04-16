@@ -4,14 +4,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
+import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
@@ -22,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
+abstract class ElementsDetailsFragment<T : ViewDataBinding> : BaseFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 
@@ -30,18 +33,20 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayBaseFragmen
 
     abstract override fun bindingLayoutId(): Int
 
-    private lateinit var bottomBinding: ElementBottomBinding
+    lateinit var bottomBinding: ElementBottomBinding
 
     private lateinit var adapter: MiniGalleryAdapter
 
     private lateinit var viewModel: ElementsViewModel
     private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onAfterBindingCreated(view: View) {
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // setup buttons, recycler view, etc.
         setupViews()
@@ -67,7 +72,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayBaseFragmen
         // other one's cache which results in a bug.
         if (savedInstanceState == null) {
             viewModel.clearPendingUriCache()
-            //println("cache cleared")
         } else {
             viewModel.loadBitmapsFromCachedUris(requireContext())
             { bitmapHolders ->
@@ -161,18 +165,13 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayBaseFragmen
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> cosplayController.navigateUp()
-        }
-        return true
-    }
-
     override fun onImageClickedListener(view: View) {
         val bundle = Bundle().apply {
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
             putString(PictureGalleryFragment.Keys.GALLERY_TAG, galleryTag)
         }
+        val cosplayController = (activity as CosplayActivity).cosplayController
+
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
     }
 }

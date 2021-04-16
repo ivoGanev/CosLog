@@ -8,7 +8,11 @@
         android:id="@+id/elementFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ElementFragment"
         android:label="fragment_element"
-        tools:layout="@layout/fragment_element" />
+        tools:layout="@layout/fragment_element" >
+        <action
+            android:id="@+id/action_elementFragment_to_home_nav_graph"
+            app:destination="@id/home_nav_graph" />
+    </fragment>
     <fragment
         android:id="@+id/processFragment"
         android:name="com.ifyezedev.coslog.ProcessFragment"
@@ -65,4 +69,5 @@
         android:id="@+id/homeActivity"
         android:name="com.ifyezedev.coslog.HomeActivity"
         android:label="HomeActivity" />
+    <include app:graph="@navigation/home_nav_graph" />
 </navigation>
