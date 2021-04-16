@@ -15,7 +15,7 @@ import com.ifyezedev.coslog.data.db.entities.*
                 Element::class,
                 Note::class,
                 Task::class,
-                CosplayProcess::class,
+                Process::class,
                 Picture::class,
                 Event::class
                    ],

@@ -15,7 +15,7 @@ interface CosLogDao {
     suspend fun insertPicture(picture: Picture)
 
     @Insert
-    suspend fun insertProcess(process: CosplayProcess)
+    suspend fun insertProcess(process: Process)
 
     @Insert
     suspend fun insertTask(task: Task)
@@ -45,7 +45,7 @@ interface CosLogDao {
     suspend fun updateEvent(event: Event)
 
     @Update
-    suspend fun updateProcess(process: CosplayProcess)
+    suspend fun updateProcess(process: Process)
 
     @Query("SELECT * FROM cosplays")
     suspend fun getAllCosplays() : List<Cosplay>
