@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -12,7 +11,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.*
-import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
@@ -24,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayFragment<T>(),
+abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayBaseFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 

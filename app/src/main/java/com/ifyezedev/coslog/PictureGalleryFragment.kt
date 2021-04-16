@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PictureGalleryFragment : CosplayFragment<FragmentPictureGalleryBinding>() {
+class PictureGalleryFragment : CosplayBaseFragment<FragmentPictureGalleryBinding>() {
 
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"

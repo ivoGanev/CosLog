@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ifyezedev.coslog.CosplayFragment
+import com.ifyezedev.coslog.CosplayBaseFragment
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
 import com.ifyezedev.coslog.databinding.FragmentElementToBuyListBinding
 
-class ElementsToBuyListFragment : CosplayFragment<FragmentElementToBuyListBinding>() {
+class ElementsToBuyListFragment : CosplayBaseFragment<FragmentElementToBuyListBinding>() {
     override fun bindingLayoutId(): Int  = R.layout.fragment_element_to_buy_list
     private lateinit var recyclerView: RecyclerView
 
