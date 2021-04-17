@@ -8,11 +8,7 @@
         android:id="@+id/elementFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ElementFragment"
         android:label="fragment_element"
-        tools:layout="@layout/fragment_element" >
-        <action
-            android:id="@+id/action_elementFragment_to_home_nav_graph"
-            app:destination="@id/home_nav_graph" />
-    </fragment>
+        tools:layout="@layout/fragment_element" />
     <fragment
         android:id="@+id/processFragment"
         android:name="com.ifyezedev.coslog.ProcessFragment"
@@ -44,11 +40,7 @@
     <fragment
         android:id="@+id/toBuyFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ToBuyFragmentDetails"
-        android:label="ToBuyFragment" >
-        <action
-            android:id="@+id/action_toBuyFragment_to_pictureViewerFragment"
-            app:destination="@id/pictureViewerFragment" />
-    </fragment>
+        android:label="ToBuyFragment" />
     <fragment
         android:id="@+id/pictureViewerFragment"
         android:name="com.ifyezedev.coslog.PictureGalleryFragment"
@@ -60,14 +52,9 @@
     <fragment
         android:id="@+id/toMakeFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ToMakeFragmentDetails"
-        android:label="ToMakeFragment" >
-        <action
-            android:id="@+id/action_toMakeFragment_to_pictureViewerFragment"
-            app:destination="@id/pictureViewerFragment" />
-    </fragment>
+        android:label="ToMakeFragment" />
     <activity
         android:id="@+id/homeActivity"
         android:name="com.ifyezedev.coslog.HomeActivity"
         android:label="HomeActivity" />
-    <include app:graph="@navigation/home_nav_graph" />
 </navigation>
