@@ -3,7 +3,10 @@ package com.ifyezedev.coslog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.ifyezedev.coslog.core.common.BaseActivity
 import com.ifyezedev.coslog.core.common.BaseApplication
