@@ -1,7 +1,5 @@
 package com.ifyezedev.coslog
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
@@ -32,7 +30,8 @@ class CosplayFragment : Fragment() {
 
         //go to CosplayDetailsFragment to add a cosplay
         view.findViewById<FloatingActionButton>(R.id.addCosplayBttn).setOnClickListener {
-            it.findNavController().navigate(CosplayFragmentDirections.actionCosplayFragmentToCosplayDetailsFragment(From.BUTTON))
+            it.findNavController().navigate(CosplayFragmentDirections.actionCosplayFragmentToCosplayDetailsFragment(
+                From.BUTTON))
         }
     }
 

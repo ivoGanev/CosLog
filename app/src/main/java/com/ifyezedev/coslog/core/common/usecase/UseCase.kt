@@ -3,10 +3,7 @@ package com.ifyezedev.coslog.core.common.usecase
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
@@ -16,11 +13,11 @@ import kotlinx.coroutines.launch
  * By convention each [UseCase] implementation will execute its job in a background thread
  * (kotlin coroutine) and will post the result in the UI thread.
  */
-abstract class UseCase<out Type, in Params> where Type : Any {
+abstract class UseCase<out ResultType, in Params> where ResultType : Any {
 
-    abstract suspend fun run(params: Params): Either<Failure, Type>
+    protected abstract suspend fun run(params: Params): Either<ResultType, Failure>
 
-    operator fun invoke(scope: LifecycleCoroutineScope, params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
+    operator fun invoke(scope: CoroutineScope, params: Params, onResult: (Either<ResultType, Failure>) -> Unit = {}) {
         val job = scope.async(Dispatchers.IO) { run(params) }
         scope.launch(Dispatchers.Main) { onResult(job.await()) }
     }

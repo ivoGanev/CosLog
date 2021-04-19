@@ -1,9 +1,9 @@
 package com.ifyezedev.coslog.core.di.app
 
 import com.ifyezedev.coslog.core.common.BaseApplication
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import dagger.Module
 import dagger.Provides
 
@@ -12,16 +12,16 @@ class AppModule(val application: BaseApplication) {
 
     @Provides
     @AppScope
-    fun deleteBitmapsFromInternalStorageUseCase(): DeleteBitmapsFromInternalStorageUseCase =
-        DeleteBitmapsFromInternalStorageUseCase()
+    fun deleteBitmapsFromInternalStorageUseCase(): DeleteBitmapsFromInternalStorage =
+        DeleteBitmapsFromInternalStorage()
 
     @Provides
     @AppScope
-    fun loadBitmapsFromInternalStorageUseCase(): LoadBitmapsFromInternalStorageUseCase =
-        LoadBitmapsFromInternalStorageUseCase()
+    fun loadBitmapsFromInternalStorageUseCase(): LoadBitmapsFromInternalStorage =
+        LoadBitmapsFromInternalStorage()
 
     @Provides
     @AppScope
-    fun saveBitmapsToInternalStorageUseCase(): SaveBitmapsToInternalStorageUseCase =
-        SaveBitmapsToInternalStorageUseCase()
+    fun saveBitmapsToInternalStorageUseCase(): SaveBitmapsToInternalStorage =
+        SaveBitmapsToInternalStorage()
 }

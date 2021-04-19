@@ -3,9 +3,9 @@ package com.ifyezedev.coslog.feature.elements
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.*
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.data.BitmapHolder
 import com.ifyezedev.coslog.core.extensions.loadOsGalleryBitmaps
 import com.ifyezedev.coslog.core.extensions.mergeToBitmapHolders
@@ -18,11 +18,11 @@ import kotlinx.coroutines.launch
 
 class ElementsViewModel(
     private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
-    private val deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase,
-    private val loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase,
+    private val deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage,
+    private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
     private val getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase,
-    private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,
-    ) : ViewModel(), LifecycleObserver {
+    private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
+) : ViewModel(), LifecycleObserver {
 
     // TODO: Do we store bitmaps directly to the internal storage?
     private var pendingBitmapCache: BitmapUriCache = BitmapUriCache()
@@ -34,14 +34,16 @@ class ElementsViewModel(
     }
 
     fun deleteBitmapFromInternalStorage(filePath: String) {
-        viewModelScope.launch {
-            deleteBitmapsFromInternalStorageUseCase.invoke(filePath)
-        }
+        deleteBitmapsFromInternalStorage(viewModelScope, filePath)
     }
 
-    fun loadBitmapsFromInternalStorage(context: Context, galleryTag: String, onResult: (List<BitmapHolder>) -> Unit) {
+    fun loadBitmapsFromInternalStorage(
+        context: Context,
+        galleryTag: String,
+        onResult: (List<BitmapHolder>) -> Unit,
+    ) {
         viewModelScope.launch {
-            loadBitmapsFromInternalStorageUseCase.invoke(context, galleryTag) { bitmapHolders ->
+            loadBitmapsFromInternalStorage.invoke(context, galleryTag) { bitmapHolders ->
                 onResult(bitmapHolders)
             }
         }
@@ -59,7 +61,7 @@ class ElementsViewModel(
     fun getBitmapsFromAndroidGallery(
         context: Context,
         intent: Intent,
-        onResult: (List<BitmapHolder>) -> Unit
+        onResult: (List<BitmapHolder>) -> Unit,
     ) {
         viewModelScope.launch {
             getBitmapsFromAndroidGalleryUseCase.invoke(context, intent) { bitmaps, uris ->
@@ -80,7 +82,7 @@ class ElementsViewModel(
         val bitmapHolders = bitmaps.mergeToBitmapHolders(filePaths)
         pendingBitmapCache.data.clear()
         viewModelScope.launch {
-            saveBitmapsToInternalStorageUseCase.invoke(context, tag, bitmapHolders)
+            saveBitmapsToInternalStorage.invoke(context, tag, bitmapHolders)
         }
     }
 
@@ -90,19 +92,19 @@ class ElementsViewModel(
 
     class ElementsViewModelFactory(
         private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
-        private val deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase,
-        private val loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase,
+        private val deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage,
+        private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
         private val getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase,
-        private val saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase,
+        private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ElementsViewModel::class.java)) {
                 return ElementsViewModel(
                     openAndroidImageGalleryUseCase,
-                    deleteBitmapsFromInternalStorageUseCase,
-                    loadBitmapsFromInternalStorageUseCase,
+                    deleteBitmapsFromInternalStorage,
+                    loadBitmapsFromInternalStorage,
                     getBitmapsFromAndroidGalleryUseCase,
-                    saveBitmapsToInternalStorageUseCase,
+                    saveBitmapsToInternalStorage,
                 ) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")

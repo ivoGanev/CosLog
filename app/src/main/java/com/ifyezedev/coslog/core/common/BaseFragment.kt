@@ -4,23 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.fragment.DaggerFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.FragmentComponent
-import javax.inject.Inject
 
 abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
-    lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase
+    lateinit var deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage
 
-    lateinit var loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase
+    lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
-    lateinit var saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase
+    lateinit var saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage
 
     private val baseFragmentComponent: FragmentComponent by lazy {
         DaggerFragmentComponent.builder()
@@ -42,9 +40,9 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        deleteBitmapsFromInternalStorageUseCase = baseFragmentComponent.deleteBitmapsFromInternalStorageUseCase()
-        loadBitmapsFromInternalStorageUseCase = baseFragmentComponent.loadBitmapsFromInternalStorageUseCase()
-        saveBitmapsToInternalStorageUseCase = baseFragmentComponent.saveBitmapsToInternalStorageUseCase()
+        deleteBitmapsFromInternalStorage = baseFragmentComponent.deleteBitmapsFromInternalStorageUseCase()
+        loadBitmapsFromInternalStorage = baseFragmentComponent.loadBitmapsFromInternalStorageUseCase()
+        saveBitmapsToInternalStorage = baseFragmentComponent.saveBitmapsToInternalStorageUseCase()
 
         bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
         val view = bindingAgent.bind()

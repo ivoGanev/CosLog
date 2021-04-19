@@ -1,28 +1,22 @@
 package com.ifyezedev.coslog.core.common
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.ifyezedev.coslog.R
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.activity.BaseActivityComponent
-import com.ifyezedev.coslog.core.di.activity.BaseActivityModule
 import com.ifyezedev.coslog.core.di.activity.DaggerBaseActivityComponent
-import javax.inject.Inject
 
 abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
-    lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase
+    lateinit var deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage
 
-    lateinit var loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase
+    lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
-    lateinit var saveBitmapsToInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase
+    lateinit var saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage
 
     private val baseActivityComponent: BaseActivityComponent by lazy {
         DaggerBaseActivityComponent.builder()
@@ -43,9 +37,9 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deleteBitmapsFromInternalStorageUseCase = baseActivityComponent.deleteBitmapsFromInternalStorageUseCase()
-        loadBitmapsFromInternalStorageUseCase = baseActivityComponent.loadBitmapsFromInternalStorageUseCase()
-        saveBitmapsToInternalStorageUseCase = baseActivityComponent.saveBitmapsToInternalStorageUseCase()
+        deleteBitmapsFromInternalStorage = baseActivityComponent.deleteBitmapsFromInternalStorage()
+        loadBitmapsFromInternalStorage = baseActivityComponent.loadBitmapsFromInternalStorage()
+        saveBitmapsToInternalStorage = baseActivityComponent.saveBitmapsToInternalStorage()
 
         bindingAgent = StandardBindingAgent(bindingLayoutId(), layoutInflater, null)
         setContentView(bindingAgent.bind())

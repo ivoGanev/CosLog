@@ -9,7 +9,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class SaveBitmapsToInternalStorageUseCase  {
+class SaveBitmapsToInternalStorage  {
 
     // TODO: make it return the file path
     suspend fun invoke(context: Context, tag: String, bitmapHolders: List<BitmapHolder>) {

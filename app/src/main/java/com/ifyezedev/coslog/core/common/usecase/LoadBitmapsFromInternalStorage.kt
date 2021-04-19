@@ -10,7 +10,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-class LoadBitmapsFromInternalStorageUseCase {
+class LoadBitmapsFromInternalStorage {
     suspend fun invoke(context: Context, galleryTag: String, onResult: (List<BitmapHolder>) -> Unit) {
         withContext(Dispatchers.IO) {
             val bitmapHolders = mutableListOf<BitmapHolder>()

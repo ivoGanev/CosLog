@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -13,12 +14,15 @@ import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_INDEX
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_PATH
 import com.ifyezedev.coslog.core.builders.buildIntent
 import com.ifyezedev.coslog.core.common.BaseFragment
+import com.ifyezedev.coslog.core.exception.Failure
+import com.ifyezedev.coslog.core.functional.Either
+import com.ifyezedev.coslog.core.functional.onResult
 import com.ifyezedev.coslog.databinding.FragmentPictureGalleryBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PictureGalleryFragment : BaseFragment<FragmentPictureGalleryBinding>() {
+class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGalleryBinding>() {
 
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"
@@ -32,6 +36,11 @@ class PictureGalleryFragment : BaseFragment<FragmentPictureGalleryBinding>() {
     private var pagePosition: Int = -1
 
     private lateinit var imagePagerAdapter: ImagePagerAdapter
+
+    override fun onAfterBindingCreated(view: View) {
+        super.onAfterBindingCreated(view)
+        setHasOptionsMenu(true);
+    }
 
     override fun onStart() {
         super.onStart()
@@ -63,20 +72,22 @@ class PictureGalleryFragment : BaseFragment<FragmentPictureGalleryBinding>() {
         }
 
         updateToolbarTitle()
-
     }
 
     private fun deleteImage() {
+        val deletePath = imagePagerAdapter.data[pagePosition].first
+
+        deleteBitmapsFromInternalStorage(lifecycleScope, deletePath) { result ->
+            result.onResult { println(it) }
+        }
+
         lifecycleScope.launch {
-            val deletePath = imagePagerAdapter.data[pagePosition].first
-            deleteBitmapsFromInternalStorageUseCase.invoke(deletePath)
             launch(Dispatchers.Main) {
                 imagePagerAdapter.removeAt(pagePosition)
                 updateToolbarTitle()
 
                 if (imagePagerAdapter.data.isEmpty())
                 {}
-                //osplayController.popBackStack()
             }
         }
     }
@@ -102,14 +113,14 @@ class PictureGalleryFragment : BaseFragment<FragmentPictureGalleryBinding>() {
         deleteButton.isVisible = true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.shareButton -> onShareButtonClicked()
-            R.id.deleteButton -> deleteImage()
-        }
-
-        return true
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.shareButton -> onShareButtonClicked()
+//            R.id.deleteButton -> deleteImage()
+//        }
+//
+//        return true
+//    }
 
     private fun onShareButtonClicked() {
         val intent = buildIntent {

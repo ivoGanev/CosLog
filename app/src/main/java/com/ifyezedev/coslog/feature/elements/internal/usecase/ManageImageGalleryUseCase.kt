@@ -1,17 +1,17 @@
 package com.ifyezedev.coslog.feature.elements.internal.usecase
 
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorageUseCase
-import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorageUseCase
+import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 
 class ManageImageGalleryUseCase {
     private lateinit var getBitmapsFromAndroidGalleryUseCase: GetBitmapsFromAndroidGalleryUseCase
 
-    private lateinit var loadBitmapsFromInternalStorageUseCase: LoadBitmapsFromInternalStorageUseCase
+    private lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
-    private lateinit var saveBitmapstoInternalStorageUseCase: SaveBitmapsToInternalStorageUseCase
+    private lateinit var saveBitmapstoInternalStorage: SaveBitmapsToInternalStorage
 
-    private lateinit var deleteBitmapsFromInternalStorageUseCase: DeleteBitmapsFromInternalStorageUseCase
+    private lateinit var deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage
 
     private fun inject() {
 //        getBitmapFromAndroidGalleryUseCase = GetBitmapFromAndroidGalleryUseCase(bitmapHolderCache)

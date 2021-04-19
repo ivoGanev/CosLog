@@ -4,10 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
@@ -95,10 +92,10 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : BaseFragment<T>(),
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGalleryUseCase(),
-            deleteBitmapsFromInternalStorageUseCase,
-            loadBitmapsFromInternalStorageUseCase,
+            deleteBitmapsFromInternalStorage,
+            loadBitmapsFromInternalStorage,
             GetBitmapsFromAndroidGalleryUseCase(),
-            saveBitmapsToInternalStorageUseCase,
+            saveBitmapsToInternalStorage,
         )
 
         adapter = MiniGalleryAdapter(mutableListOf())
