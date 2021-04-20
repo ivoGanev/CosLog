@@ -1,6 +1,6 @@
 package com.ifyezedev.coslog.core.di.fragment
 
-import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFilesFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
@@ -11,7 +11,7 @@ import dagger.Component
 @Component(dependencies = [AppComponent::class])
 @FragmentScope
 interface FragmentComponent {
-    fun deleteBitmapsFromInternalStorageUseCase(): DeleteFileFromInternalStorage
+    fun deleteBitmapsFromInternalStorageUseCase(): DeleteFilesFromInternalStorage
     fun loadBitmapsFromInternalStorageUseCase(): LoadBitmapsFromInternalStorage
     fun saveBitmapsToInternalStorageUseCase(): SaveBitmapsToInternalStorage
     fun getBitmapPathsFromAndroidGallery(): LoadBitmapsFromAndroidGallery

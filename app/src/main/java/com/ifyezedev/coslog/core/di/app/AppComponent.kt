@@ -1,6 +1,6 @@
 package com.ifyezedev.coslog.core.di.app
 
-import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFilesFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
@@ -10,7 +10,7 @@ import dagger.Component
 @Component(modules = [AppModule::class])
 @AppScope
 interface AppComponent {
-    fun deleteBitmapsFromInternalStorage(): DeleteFileFromInternalStorage
+    fun deleteFilesFromInternalStorage(): DeleteFilesFromInternalStorage
     fun loadBitmapsFromInternalStorage(): LoadBitmapsFromInternalStorage
     fun saveBitmapsToInternalStorage(): SaveBitmapsToInternalStorage
     fun getBitmapPathsFromAndroidGallery(): LoadBitmapsFromAndroidGallery

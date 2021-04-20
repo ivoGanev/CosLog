@@ -27,4 +27,3 @@ class LoadBitmapsFromAndroidGallery(private val context: Context) :
     }
 }
 
-

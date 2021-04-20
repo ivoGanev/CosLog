@@ -70,7 +70,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
     private fun deleteImage() {
         val deletePath = imagePagerAdapter.getItem(pagePosition)
 
-        deleteFileFromInternalStorage(lifecycleScope, deletePath) { result ->
+        deleteFilesFromInternalStorage(lifecycleScope, deletePath) { result ->
             result.onSuccess {
                 println(it)
                 imagePagerAdapter.removeAt(pagePosition)

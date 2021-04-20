@@ -1,7 +1,7 @@
 package com.ifyezedev.coslog.core.di.app
 
 import com.ifyezedev.coslog.core.common.BaseApplication
-import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFilesFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
@@ -13,8 +13,8 @@ import dagger.Provides
 class AppModule(val application: BaseApplication) {
     @Provides
     @AppScope
-    fun deleteBitmapsFromInternalStorageUseCase(): DeleteFileFromInternalStorage =
-        DeleteFileFromInternalStorage()
+    fun deleteFilesFromInternalStorageUseCase(): DeleteFilesFromInternalStorage =
+        DeleteFilesFromInternalStorage()
 
     @Provides
     @AppScope

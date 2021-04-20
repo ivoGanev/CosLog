@@ -8,7 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFilesFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
@@ -35,7 +35,7 @@ import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
  *
  * */
 abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
-    lateinit var deleteFileFromInternalStorage: DeleteFileFromInternalStorage
+    lateinit var deleteFilesFromInternalStorage: DeleteFilesFromInternalStorage
 
     lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
@@ -69,7 +69,7 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
         application = requireActivity().application as BaseApplication
 
         baseFragmentComponent.apply {
-            deleteFileFromInternalStorage = deleteBitmapsFromInternalStorageUseCase()
+            deleteFilesFromInternalStorage = deleteBitmapsFromInternalStorageUseCase()
             loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorageUseCase()
             saveBitmapsToInternalStorage = saveBitmapsToInternalStorageUseCase()
             loadBitmapsFromAndroidGallery = getBitmapPathsFromAndroidGallery()

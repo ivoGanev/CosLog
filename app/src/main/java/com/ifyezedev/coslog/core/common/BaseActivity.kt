@@ -6,7 +6,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFilesFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.activity.BaseActivityComponent
@@ -31,7 +31,7 @@ import com.ifyezedev.coslog.core.di.activity.DaggerBaseActivityComponent
  *
  * */
 abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
-    lateinit var deleteFileFromInternalStorage: DeleteFileFromInternalStorage
+    lateinit var deleteFilesFromInternalStorage: DeleteFilesFromInternalStorage
 
     lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
@@ -59,7 +59,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // sadly we cannot inject those classes because BaseActivity uses generic parameters
         baseActivityComponent.apply {
-            deleteFileFromInternalStorage = deleteBitmapsFromInternalStorage()
+            deleteFilesFromInternalStorage = deleteBitmapsFromInternalStorage()
             loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorage()
             saveBitmapsToInternalStorage = saveBitmapsToInternalStorage()
         }
