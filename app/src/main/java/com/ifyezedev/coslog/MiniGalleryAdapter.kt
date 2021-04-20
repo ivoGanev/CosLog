@@ -11,11 +11,7 @@ import com.ifyezedev.coslog.core.etc.OnSnapPositionChangeListener
 import com.ifyezedev.coslog.databinding.PictureItemBinding
 import kotlinx.coroutines.CoroutineScope
 
-class MiniGalleryAdapter(
-    private val coroutineScope: CoroutineScope,
-    private val loadBitmapPathsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
-    private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
-) :
+class MiniGalleryAdapter() :
 
     RecyclerView.Adapter<MiniGalleryAdapter.ViewHolderObject>() {
     private val bitmaps = mutableListOf<Pair<String, Bitmap>>()

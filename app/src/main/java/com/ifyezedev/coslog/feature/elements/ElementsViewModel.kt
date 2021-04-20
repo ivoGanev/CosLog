@@ -3,13 +3,10 @@ package com.ifyezedev.coslog.feature.elements
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.*
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
-import com.ifyezedev.coslog.core.functional.onFailure
 import com.ifyezedev.coslog.core.functional.onSuccess
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.extensions.mapToUri
@@ -24,33 +21,60 @@ class ElementsViewModel(
     private val imageFileProvider: ImageFileProvider,
 ) : ViewModel(), LifecycleObserver {
 
+    /**
+     * Emits a list of String and Bitmaps where the string represents the internal storage file path
+     * and the Bitmap is the actual loaded bitmap from that path.
+     * */
+    private val _loadedImagesAndPathsFromInternalStorage =
+        MutableLiveData<List<Pair<String, Bitmap>>>()
+    val loadedImagesAndPathsFromInternalStorage: LiveData<List<Pair<String, Bitmap>>>
+        get() = _loadedImagesAndPathsFromInternalStorage
+
+    private val _loadedImagesAndPathsFromAndroidGallery =
+        MutableLiveData<List<Pair<String, Bitmap>>>()
+    val loadedImagesAndPathsFromAndroidGallery: LiveData<List<Pair<String, Bitmap>>>
+        get() = _loadedImagesAndPathsFromAndroidGallery
+
     fun openAndroidImageGalleryForResult(activityForResult: (Intent, Int) -> Unit) {
         openAndroidImageGalleryUseCase.invoke(activityForResult)
     }
 
-    fun loadBitmapsFromInternalStorage(
-        vararg filePath: String,
-        onResult: (List<Bitmap>) -> Unit,
-    ) {
-        loadBitmapsFromInternalStorage.invoke(viewModelScope, filePath.toList()) { result ->
-            result.onSuccess { onResult(it) }
-            result.onFailure { Log.e(this::class.java.simpleName, it.toString()) }
+    /**
+     * Loads the bitmaps from the internal storage and updates [loadedImagesAndPathsFromInternalStorage] with the result.
+     * The String in the result is the actual internal storage file path, and the Bitmap is the
+     * loaded bitmap.
+     * */
+    fun loadBitmapsFromInternalStorage() {
+        imageFileProvider.getInternalStorageImageFilePaths()?.let { pathsToInternalStorageImages ->
+            loadBitmapsFromInternalStorage(viewModelScope,
+                pathsToInternalStorageImages) { bitmapResult ->
+                bitmapResult.onSuccess { internalStorageBitmaps ->
+                    _loadedImagesAndPathsFromInternalStorage.value =
+                        pathsToInternalStorageImages.zip(internalStorageBitmaps)
+                }
+            }
         }
     }
 
-    fun onFetchImagesFromGallery(
-        intent: Intent,
-        onResult: (List<Uri>) -> Unit,
-    ) {
+    /**
+     * This is loading images directly from the Android gallery. Subscribe to  to get the images
+     * without the need of them to be saved inside the internal storage. This is good when the
+     * user actually cancels the elements entry.
+     * */
+    fun loadImagesFromAndroidGallery(intent: Intent) {
         val uris: MutableList<Uri> = mutableListOf()
         intent.data?.let { uri -> uris.add(uri) }
         intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
 
-        // savePendingBitmapPathCache.addAll(uris.map { uri -> uri.toString() })
-        onResult(uris)
+        loadBitmapsFromAndroidGallery(viewModelScope, uris) { result ->
+            result.onSuccess { bitmaps ->
+                _loadedImagesAndPathsFromAndroidGallery.value =
+                    uris.map { it.toString() }.zip(bitmaps)
+            }
+        }
     }
 
-    fun saveBitmapsToInternalStorageFromCache(bitmapPathPairs: List<Pair<String, Bitmap>>) {
+    fun saveBitmapsToInternalStorage(bitmapPathPairs: List<Pair<String, Bitmap>>) {
         // converting from Uri provider paths to internal storage path and saving the bitmaps
         val onlyInternalStoragePaths = bitmapPathPairs
             .map { it.first }

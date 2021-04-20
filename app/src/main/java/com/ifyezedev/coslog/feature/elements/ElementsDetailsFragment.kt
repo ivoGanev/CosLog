@@ -1,7 +1,6 @@
 package com.ifyezedev.coslog.feature.elements
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
-import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
 import com.ifyezedev.coslog.core.functional.onSuccess
@@ -23,8 +21,6 @@ import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGa
 abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBaseFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
-
-    open val galleryTag: String = "image-gallery"
 
     abstract override fun bindingLayoutId(): Int
 
@@ -46,9 +42,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
         // setup buttons, recycler view, etc.
         setupViews()
-
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(ElementsViewModel::class.java)
     }
 
     private fun setupViews() = bottomBinding.run {
@@ -67,17 +60,17 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             imageFileProvider,
         )
 
-        adapter =
-            MiniGalleryAdapter(
-                lifecycleScope,
-                loadBitmapsFromAndroidGallery,
-                loadBitmapsFromInternalStorage)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(ElementsViewModel::class.java)
+
+        adapter = MiniGalleryAdapter()
+        // set stable ids to make sure we have animations when adding images
         adapter.setHasStableIds(true)
 
         bottomBinding.recyclerView.adapter = adapter
         adapter.clickListener = this@ElementsDetailsFragment
 
-        recyclerView.layoutManager = MyLayoutManager(requireContext())
+        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.addItemDecoration(BoundsOffsetDecoration())
         recyclerView.addOnScrollListener(
             SnapOnScrollListener(
@@ -87,21 +80,21 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        imageFileProvider.getInternalStorageImageFilePaths()?.let { pathsToInternalStorageImages ->
-            loadBitmapsFromInternalStorage(lifecycleScope,
-                pathsToInternalStorageImages) { bitmapResult ->
-                bitmapResult.onSuccess { internalStorageBitmaps ->
-                    adapter.addAll(pathsToInternalStorageImages.zip(internalStorageBitmaps))
-                }
-            }
+        // Whenever we load images from the viewModel.loadBitmapsFromInternalStorage() we
+        // update our adapter to display the bitmaps. This is usually updated when the fragment
+        // starts.
+        viewModel.loadedImagesAndPathsFromInternalStorage.observe(requireActivity()) { loadedImagesAndPaths ->
+            adapter.addAll(loadedImagesAndPaths)
         }
-    }
 
-
-    class MyLayoutManager(context: Context?) : LinearLayoutManager(context, HORIZONTAL, false) {
-        override fun supportsPredictiveItemAnimations(): Boolean {
-            return true
+        // Whenever the user adds an images to the mini gallery we update the adapter to
+        // display the data
+        viewModel.loadedImagesAndPathsFromAndroidGallery.observe(requireActivity()) { loadedImagesAndPathsFromAndroidGallery ->
+            adapter.addAll(loadedImagesAndPathsFromAndroidGallery)
         }
+
+        // on start we load all images from the internal storage
+        viewModel.loadBitmapsFromInternalStorage()
     }
 
     override fun onClick(v: View?) {
@@ -113,14 +106,16 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun onDeleteButtonPressed() {
+        // TODO: delete logic
     }
 
     private fun onSaveButtonPressed() {
-        viewModel.saveBitmapsToInternalStorageFromCache(adapter.getData())
+        viewModel.saveBitmapsToInternalStorage(adapter.getData())
         toastNotify("Successfully saved images to internal storage.")
     }
 
     private fun onAddImageButtonPressed() {
+        // here we delegate the entire business logic to the view model.
         viewModel.openAndroidImageGalleryForResult(::startActivityForResult)
     }
 
@@ -129,23 +124,17 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             requestCode == 0 &&
             intent != null
         ) {
-            viewModel.onFetchImagesFromGallery(intent) { uris ->
-                loadBitmapsFromAndroidGallery(lifecycleScope, uris) { result ->
-                    result.onSuccess { bitmaps ->
-                        adapter.addAll(uris.map { it.toString() }.zip(bitmaps))
-                    }
-                }
-            }
+            // update loaded images from android gallery
+            viewModel.loadImagesFromAndroidGallery(intent)
         }
     }
 
     override fun onImageClickedListener(view: View) {
         val bundle = Bundle().apply {
+            // this is telling the PictureGalleryFragment, the one we are about to navigate to,
+            // on which item position it should move to.
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
-            putString(PictureGalleryFragment.Keys.GALLERY_TAG, galleryTag)
         }
-        val cosplayController = (activity as CosplayActivity).cosplayController
-
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
     }
 }
