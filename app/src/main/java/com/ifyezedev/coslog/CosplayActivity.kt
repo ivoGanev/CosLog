@@ -17,7 +17,7 @@ import javax.inject.Inject
 class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
     override fun bindingLayoutId(): Int = R.layout.activity_cosplay
 
-    private val cosplayActivityComponent: CosplayActivityComponent by lazy {
+    val cosplayActivityComponent: CosplayActivityComponent by lazy {
         DaggerCosplayActivityComponent.builder()
             .cosplayActivityModule(CosplayActivityModule(this))
             .appComponent((application as BaseApplication).appComponent)

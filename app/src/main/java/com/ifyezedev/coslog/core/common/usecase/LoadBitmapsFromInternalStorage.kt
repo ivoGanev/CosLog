@@ -1,43 +1,45 @@
 package com.ifyezedev.coslog.core.common.usecase
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.ifyezedev.coslog.core.data.BitmapHolder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.ifyezedev.coslog.core.exception.Failure
+import com.ifyezedev.coslog.core.functional.Either
 import java.io.File
 import java.io.FileInputStream
-import java.io.IOException
+import java.lang.Exception
 
-class LoadBitmapsFromInternalStorage {
-    suspend fun invoke(context: Context, galleryTag: String, onResult: (List<BitmapHolder>) -> Unit) {
-        withContext(Dispatchers.IO) {
-            val bitmapHolders = mutableListOf<BitmapHolder>()
-            val dir = File(context.filesDir, galleryTag)
-            val files = dir.listFiles()
+class LoadBitmapsFromInternalStorage : UseCase<List<Bitmap>, List<String>>() {
+    // We are using the IODispatcher so suppressing the warning is fine
+    @Suppress("BlockingMethodInNonBlockingContext")
+    /**
+     * Will try to load any number of bitmaps from the internal storage and return them as a result.
+     * Note that you need to provide the full system path, e.g. file://data/data/myfile.png
+     *
+     * @params You can provide either: a single file path, a folder, or multiple files and folders.
+     * */
+    override suspend fun run(params: List<String>): Either<List<Bitmap>, Failure> {
+        val outBitmaps = mutableListOf<Bitmap>()
 
-            files?.let {  filesNotNull ->
+        for (i in params.indices) {
+            val file = File(params[i])
+            val bitmapsFilesToOpen = if (file.isDirectory) {
+                file.listFiles()
+            } else {
+                arrayOf(file)
+            }
+
+            bitmapsFilesToOpen?.let {
                 try {
-                    for (i in files.indices) {
-                        FileInputStream(files[i]).use { stream ->
-                            val bitmap = BitmapFactory.decodeStream(stream)
-                            bitmapHolders.add(BitmapHolder(bitmap, filesNotNull[i].path))
+                    for (i in bitmapsFilesToOpen.indices) {
+                        FileInputStream(bitmapsFilesToOpen[i]).use { stream ->
+                            outBitmaps.add(BitmapFactory.decodeStream(stream))
                         }
                     }
-                } catch (e: IOException) {
-                    //TODO to handle
+                } catch (e: Exception) {
+                    return Either.Failure(Failure.IOError(e.message!!))
                 }
             }
-            onResult(bitmapHolders)
         }
-    }
-
-    suspend fun invoke(filePath: String, onResult: (Bitmap) -> Unit) {
-        withContext(Dispatchers.IO) {
-            FileInputStream(File(filePath)).use { stream ->
-                onResult(BitmapFactory.decodeStream(stream))
-            }
-        }
+        return Either.Success(outBitmaps)
     }
 }

@@ -15,9 +15,9 @@ class DeleteBitmapsFromInternalStorage : UseCase<Boolean, String>() {
             fileIsDeleted = file.delete()
         }
         catch (ex: SecurityException) {
-            return Either.Failure(IOError)
+            return Either.Failure(IOError(ex.message!!))
         }
 
-        return Either.Result(fileIsDeleted)
+        return Either.Success(fileIsDeleted)
     }
 }

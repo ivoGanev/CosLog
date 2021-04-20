@@ -1,36 +1,26 @@
 package com.ifyezedev.coslog.core.common.usecase
 
-import android.content.Context
 import android.graphics.Bitmap
-import com.ifyezedev.coslog.core.data.BitmapHolder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.ifyezedev.coslog.core.exception.Failure
+import com.ifyezedev.coslog.core.functional.Either
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 
-class SaveBitmapsToInternalStorage  {
-
-    // TODO: make it return the file path
-    suspend fun invoke(context: Context, tag: String, bitmapHolders: List<BitmapHolder>) {
-        withContext(Dispatchers.IO) {
-            val dir = File(context.filesDir, tag)
-            dir.mkdirs()
-
-            bitmapHolders.forEach { bitmapHolder ->
-                //println(tag + bitmapHolder.filePath)
-                invoke(bitmapHolder, dir)
+class SaveBitmapsToInternalStorage() : UseCase<Boolean, List<Pair<String, Bitmap>>>()  {
+    override suspend fun run(params: List<Pair<String, Bitmap>>): Either<Boolean, Failure> {
+        params.forEach { path ->
+            //println(tag + bitmapHolder.filePath)
+            try {
+                FileOutputStream(File(path.first)).use { stream ->
+                    path.second.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                }
+            }
+            catch(ex: FileNotFoundException) {
+                return Either.Failure(Failure.IOError(ex.message!!))
             }
         }
-    }
 
-    private fun invoke(bitmapHolder: BitmapHolder, dir: File) {
-        try {
-            FileOutputStream(File(dir, bitmapHolder.filePath)).use { stream ->
-                bitmapHolder.bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
-            }
-        } catch (e: IOException) {
-            //TODO to handle
-        }
+        return Either.Success(true)
     }
 }

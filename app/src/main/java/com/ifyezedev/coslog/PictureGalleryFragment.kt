@@ -9,18 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.ifyezedev.coslog.PictureGalleryFragment.Keys.GALLERY_TAG
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_INDEX
 import com.ifyezedev.coslog.PictureGalleryFragment.Keys.IMAGE_PATH
 import com.ifyezedev.coslog.core.builders.buildIntent
-import com.ifyezedev.coslog.core.common.BaseFragment
-import com.ifyezedev.coslog.core.exception.Failure
-import com.ifyezedev.coslog.core.functional.Either
-import com.ifyezedev.coslog.core.functional.onResult
+import com.ifyezedev.coslog.core.functional.onSuccess
 import com.ifyezedev.coslog.databinding.FragmentPictureGalleryBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
 
 class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGalleryBinding>() {
 
@@ -44,56 +37,53 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
 
     override fun onStart() {
         super.onStart()
-        val dir = File(context?.filesDir, arguments?.getString(GALLERY_TAG))
-        val galleryData = dir.listFiles().mapIndexed { index, file ->
+        val internalStorageImagePaths = imageFileProvider.getInternalStorageImageFilePaths()
 
-          //  println("Mapped ${file.path} to $index")
-            Pair(file.path, index)
+        // if there are any images to display from internal storage
+        if(internalStorageImagePaths!=null) {
+            imagePagerAdapter = ImagePagerAdapter(
+                this@PictureGalleryFragment,
+                internalStorageImagePaths.toMutableList()
+            )
+
+            val imageIndex = requireArguments().getInt(IMAGE_INDEX)
+            pagePosition = imageIndex
+
+            binding {
+                imagePager.adapter = imagePagerAdapter
+                imagePager.setCurrentItem(imageIndex, false)
+
+                imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        pagePosition = position
+                        updateToolbarTitle()
+                    }
+                })
+            }
+
+            updateToolbarTitle()
         }
+        // otherwise inform that there are no images
+        else {
+        }
+    }
 
-        imagePagerAdapter = ImagePagerAdapter(
-            this@PictureGalleryFragment,
-            galleryData as MutableList<Pair<String, Int>>
-        )
+    private fun deleteImage() {
+        val deletePath = imagePagerAdapter.getItem(pagePosition)
 
-        val imageIndex = requireArguments().getInt(IMAGE_INDEX)
-        pagePosition = imageIndex
-
-        binding {
-            imagePager.adapter = imagePagerAdapter
-            imagePager.setCurrentItem(imageIndex, false)
-
-            imagePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    pagePosition = position
-                    updateToolbarTitle()
-                }
-            })
+        deleteBitmapsFromInternalStorage(lifecycleScope, deletePath) { result ->
+            result.onSuccess {
+                println(it)
+                imagePagerAdapter.removeAt(pagePosition)
+            }
         }
 
         updateToolbarTitle()
     }
 
-    private fun deleteImage() {
-        val deletePath = imagePagerAdapter.data[pagePosition].first
-
-        deleteBitmapsFromInternalStorage(lifecycleScope, deletePath) { result ->
-            result.onResult { println(it) }
-        }
-
-        lifecycleScope.launch {
-            launch(Dispatchers.Main) {
-                imagePagerAdapter.removeAt(pagePosition)
-                updateToolbarTitle()
-
-                if (imagePagerAdapter.data.isEmpty())
-                {}
-            }
-        }
-    }
-
     private fun updateToolbarTitle() {
-        activity?.actionBar?.title = "Image: ${pagePosition + 1} out of ${imagePagerAdapter.data.size}"
+        activity?.actionBar?.title =
+            "Image: ${pagePosition + 1} out of ${imagePagerAdapter.getDataSize()}"
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -113,14 +103,15 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
         deleteButton.isVisible = true
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.shareButton -> onShareButtonClicked()
-//            R.id.deleteButton -> deleteImage()
-//        }
-//
-//        return true
-//    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.shareButton -> onShareButtonClicked()
+            R.id.deleteButton -> deleteImage()
+            android.R.id.home -> cosplayController.navigateUp()
+        }
+
+        return true
+    }
 
     private fun onShareButtonClicked() {
         val intent = buildIntent {
@@ -133,28 +124,33 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
 
     class ImagePagerAdapter(
         fragment: Fragment,
-        private val _data: MutableList<Pair<String, Int>>
+        private val data: MutableList<String>,
     ) : FragmentStateAdapter(fragment) {
 
-        val data: List<Pair<String, Int>> get() = _data
-
         fun removeAt(position: Int) {
-            _data.removeAt(position)
+            data.removeAt(position)
             notifyItemRemoved(position)
         }
 
-        override fun getItemCount(): Int = _data.size
+        fun getItem(position: Int) : String {
+            return data[position]
+        }
+
+        fun getDataSize() : Int {
+            return data.size
+        }
+
+        override fun getItemCount(): Int = data.size
 
         override fun getItemId(position: Int): Long {
-            return _data[position].hashCode().toLong()
+            return data[position].hashCode().toLong()
         }
 
         override fun createFragment(position: Int): Fragment {
             // println("Creating fragment: $position with path ${data[position].first}")
             val fragment = PictureItemFragment()
             fragment.arguments = Bundle().apply {
-                putString(IMAGE_PATH, _data[position].first)
-                putInt(IMAGE_INDEX, position + 1)
+                putString(IMAGE_PATH, data[position])
             }
             return fragment
         }

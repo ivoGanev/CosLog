@@ -37,9 +37,12 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deleteBitmapsFromInternalStorage = baseActivityComponent.deleteBitmapsFromInternalStorage()
-        loadBitmapsFromInternalStorage = baseActivityComponent.loadBitmapsFromInternalStorage()
-        saveBitmapsToInternalStorage = baseActivityComponent.saveBitmapsToInternalStorage()
+        // sadly we cannot inject those classes because BaseActivity uses generic parameters
+        baseActivityComponent.apply {
+            deleteBitmapsFromInternalStorage = deleteBitmapsFromInternalStorage()
+            loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorage()
+            saveBitmapsToInternalStorage = saveBitmapsToInternalStorage()
+        }
 
         bindingAgent = StandardBindingAgent(bindingLayoutId(), layoutInflater, null)
         setContentView(bindingAgent.bind())

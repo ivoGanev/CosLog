@@ -8,10 +8,12 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.fragment.DaggerFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.FragmentComponent
+import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
 
 abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
     lateinit var deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage
@@ -19,6 +21,10 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
     lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
     lateinit var saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage
+
+    lateinit var loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery
+
+    lateinit var imageFileProvider: ImageFileProvider
 
     private val baseFragmentComponent: FragmentComponent by lazy {
         DaggerFragmentComponent.builder()
@@ -40,9 +46,15 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        deleteBitmapsFromInternalStorage = baseFragmentComponent.deleteBitmapsFromInternalStorageUseCase()
-        loadBitmapsFromInternalStorage = baseFragmentComponent.loadBitmapsFromInternalStorageUseCase()
-        saveBitmapsToInternalStorage = baseFragmentComponent.saveBitmapsToInternalStorageUseCase()
+        application = requireActivity().application as BaseApplication
+
+        baseFragmentComponent.apply {
+            deleteBitmapsFromInternalStorage = deleteBitmapsFromInternalStorageUseCase()
+            loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorageUseCase()
+            saveBitmapsToInternalStorage = saveBitmapsToInternalStorageUseCase()
+            loadBitmapsFromAndroidGallery = getBitmapPathsFromAndroidGallery()
+            imageFileProvider = imageFilePathProvider()
+        }
 
         bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)
         val view = bindingAgent.bind()
@@ -51,11 +63,6 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
     }
 
     open fun onAfterBindingCreated(view: View) {
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        application = requireActivity().application as BaseApplication
     }
 
     fun binding(init: T.() -> Unit) {

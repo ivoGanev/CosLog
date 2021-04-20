@@ -1,15 +1,24 @@
 package com.ifyezedev.coslog
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ifyezedev.coslog.core.data.BitmapHolder
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
+import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.etc.OnSnapPositionChangeListener
 import com.ifyezedev.coslog.databinding.PictureItemBinding
+import kotlinx.coroutines.CoroutineScope
 
-class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
+class MiniGalleryAdapter(
+    private val coroutineScope: CoroutineScope,
+    private val loadBitmapPathsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
+    private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
+) :
+
     RecyclerView.Adapter<MiniGalleryAdapter.ViewHolderObject>() {
+    private val bitmaps = mutableListOf<Pair<String, Bitmap>>()
 
     private var _currentSelectedImagePosition: Int = RecyclerView.NO_POSITION
     val currentSelectedImagePosition: Int get() = _currentSelectedImagePosition
@@ -20,32 +29,27 @@ class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
 
     lateinit var clickListener: OnClickListener
 
-    fun addAll(data: List<BitmapHolder>) {
-        // insert in a queue fashioned way
-        data.forEach { element ->
-            this.data.add(0, element)
-        }
+    fun addAll(paths: List<Pair<String, Bitmap>>) {
+        // inserting in a queue fashioned way will
+        // ensure that the inserted image will be
+        // the one that is always visible
+        bitmaps.addAll(0, paths)
         notifyDataSetChanged()
     }
 
-    override fun getItemId(position: Int): Long {
-        return data[position].hashCode().toLong()
-    }
+    fun getData() = bitmaps.toList()
 
-    /** @return true if the item has been successfully deleted. */
-    fun removeItemAtCurrentSelectedPosition(): Boolean {
-        if (currentSelectedImagePosition != RecyclerView.NO_POSITION) {
-            data.removeAt(currentSelectedImagePosition)
-            notifyDataSetChanged()
-            return true
-        }
-        return false
+    override fun getItemId(position: Int): Long {
+        return bitmaps[position].hashCode().toLong()
     }
 
     /** @return null when no item is selected */
-    fun getCurrentSelectedItemFilePath(): String? {
-        return if (currentSelectedImagePosition >= 0 && currentSelectedImagePosition != RecyclerView.NO_POSITION)
-            data[currentSelectedImagePosition].filePath
+    fun getCurrentSelectedItemFilePath(): Any? {
+        return if (
+            currentSelectedImagePosition >= 0 &&
+            currentSelectedImagePosition != RecyclerView.NO_POSITION
+        )
+            bitmaps[currentSelectedImagePosition]
         else null
     }
 
@@ -56,17 +60,16 @@ class MiniGalleryAdapter(val data: MutableList<BitmapHolder>) :
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return bitmaps.size
     }
 
     override fun onBindViewHolder(holder: ViewHolderObject, position: Int) {
-        val bitmapHolder = data[position]
-        holder.binding.imageView.setImageBitmap(bitmapHolder.bitmap)
+        holder.binding.imageView.setImageBitmap(bitmaps[position].second)
     }
 
     class ViewHolderObject(
         itemView: View,
-        private val clickListener: OnClickListener
+        private val clickListener: OnClickListener,
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val binding: PictureItemBinding = PictureItemBinding.bind(itemView)
 
