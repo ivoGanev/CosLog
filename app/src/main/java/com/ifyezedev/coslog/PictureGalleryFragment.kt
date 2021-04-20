@@ -20,7 +20,6 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
     object Keys {
         const val IMAGE_PATH = "com.ifyezedev.coslog.keys.fragments.image_path"
         const val IMAGE_INDEX = "com.ifyezedev.coslog.keys.fragments.image_index"
-        const val GALLERY_TAG = "com.ifyezedev.coslog.keys.fragments.gallery_tag"
     }
 
     override fun bindingLayoutId(): Int = R.layout.fragment_picture_gallery
@@ -75,10 +74,9 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
             result.onSuccess {
                 println(it)
                 imagePagerAdapter.removeAt(pagePosition)
+                updateToolbarTitle()
             }
         }
-
-        updateToolbarTitle()
     }
 
     private fun updateToolbarTitle() {

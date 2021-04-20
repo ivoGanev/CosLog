@@ -35,18 +35,12 @@ class MiniGalleryAdapter() :
 
     fun getData() = bitmaps.toList()
 
-    override fun getItemId(position: Int): Long {
-        return bitmaps[position].hashCode().toLong()
+    fun clear() {
+        bitmaps.clear()
     }
 
-    /** @return null when no item is selected */
-    fun getCurrentSelectedItemFilePath(): Any? {
-        return if (
-            currentSelectedImagePosition >= 0 &&
-            currentSelectedImagePosition != RecyclerView.NO_POSITION
-        )
-            bitmaps[currentSelectedImagePosition]
-        else null
+    override fun getItemId(position: Int): Long {
+        return bitmaps[position].hashCode().toLong()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderObject {

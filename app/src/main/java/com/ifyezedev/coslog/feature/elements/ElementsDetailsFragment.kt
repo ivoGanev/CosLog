@@ -41,8 +41,12 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = bottomBinding.run {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setup()
+    }
+
+    private fun setup() = bottomBinding.run {
         // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
 
@@ -86,19 +90,17 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         // Whenever we load images from the viewModel.loadBitmapsFromInternalStorage() we
         // update our adapter to display the bitmaps. This is usually updated when the fragment
         // starts.
-        viewModel.loadedImagesAndPathsFromInternalStorage.observe(requireActivity()) { loadedImagesAndPaths ->
-            adapter.addAll(loadedImagesAndPaths)
+        viewModel.loadBitmapsFromInternalStorage {
+            adapter.addAll(it)
         }
 
-        // Whenever the user adds an images to the mini gallery we update the adapter to
+        // Whenever the user adds images to the mini gallery we update the adapter to
         // display the data
         viewModel.loadedImagesAndPathsFromAndroidGallery.observe(requireActivity()) { loadedImagesAndPathsFromAndroidGallery ->
             adapter.addAll(loadedImagesAndPathsFromAndroidGallery)
         }
-
-        // on start we load all images from the internal storage
-        viewModel.loadBitmapsFromInternalStorage()
     }
+
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -140,6 +142,11 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
+    }
+
+    override fun onDestroyView() {
+        adapter.clear()
+        super.onDestroyView()
     }
 }
 

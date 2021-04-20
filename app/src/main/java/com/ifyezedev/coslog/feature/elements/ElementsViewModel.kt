@@ -21,15 +21,6 @@ class ElementsViewModel(
     private val imageFileProvider: ImageFileProvider,
 ) : ViewModel(), LifecycleObserver {
 
-    /**
-     * Emits a list of String and Bitmap where the String represents the internal storage file path
-     * and the Bitmap is the actual loaded bitmap from that path.
-     * */
-    private val _loadedImagesAndPathsFromInternalStorage =
-        MutableLiveData<List<Pair<String, Bitmap>>>()
-    val loadedImagesAndPathsFromInternalStorage: LiveData<List<Pair<String, Bitmap>>>
-        get() = _loadedImagesAndPathsFromInternalStorage
-
 
     private val _loadedImagesAndPathsFromAndroidGallery =
         MutableLiveData<List<Pair<String, Bitmap>>>()
@@ -44,17 +35,16 @@ class ElementsViewModel(
     }
 
     /**
-     * Loads the bitmaps from the internal storage and updates [loadedImagesAndPathsFromInternalStorage] with the result.
+     * Loads the bitmaps from the internal storage.
      * The String in the result is the actual internal storage file path, and the Bitmap is the
      * loaded bitmap.
      * */
-    fun loadBitmapsFromInternalStorage() {
+    fun loadBitmapsFromInternalStorage(onResult: (List<Pair<String, Bitmap>>) -> Unit) {
         imageFileProvider.getInternalStorageImageFilePaths()?.let { pathsToInternalStorageImages ->
             loadBitmapsFromInternalStorage(viewModelScope,
                 pathsToInternalStorageImages) { bitmapResult ->
                 bitmapResult.onSuccess { internalStorageBitmaps ->
-                    _loadedImagesAndPathsFromInternalStorage.value =
-                        pathsToInternalStorageImages.zip(internalStorageBitmaps)
+                    onResult(pathsToInternalStorageImages.zip(internalStorageBitmaps))
                 }
             }
         }
