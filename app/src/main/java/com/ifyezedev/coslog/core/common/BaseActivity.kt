@@ -2,6 +2,7 @@ package com.ifyezedev.coslog.core.common
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
@@ -35,6 +36,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         binding.init()
     }
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sadly we cannot inject those classes because BaseActivity uses generic parameters

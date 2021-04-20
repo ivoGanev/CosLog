@@ -1,5 +1,6 @@
 package com.ifyezedev.coslog.core.di.fragment
 
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import com.ifyezedev.coslog.core.common.BaseApplication
@@ -14,4 +15,5 @@ import dagger.Component
 interface CosplayFragmentComponent {
     fun cosplayController() : NavController
     fun imageFilePathProvider() : ImageFileProvider
+    fun actionBar() : ActionBar
 }

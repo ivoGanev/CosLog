@@ -1,5 +1,6 @@
 package com.ifyezedev.coslog.core.di.activity
 
+import androidx.appcompat.app.ActionBar
 import androidx.navigation.NavController
 import com.ifyezedev.coslog.CosplayActivity
 import com.ifyezedev.coslog.core.di.app.AppComponent
@@ -10,4 +11,5 @@ import dagger.Component
 interface CosplayActivityComponent {
     fun inject(activity: CosplayActivity)
     fun cosplayController(): NavController
+    fun actionBar() : ActionBar
 }

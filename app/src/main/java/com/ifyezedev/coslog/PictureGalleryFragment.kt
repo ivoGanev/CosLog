@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -40,7 +41,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
         val internalStorageImagePaths = imageFileProvider.getInternalStorageImageFilePaths()
 
         // if there are any images to display from internal storage
-        if(internalStorageImagePaths!=null) {
+        if (internalStorageImagePaths != null) {
             imagePagerAdapter = ImagePagerAdapter(
                 this@PictureGalleryFragment,
                 internalStorageImagePaths.toMutableList()
@@ -82,8 +83,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
     }
 
     private fun updateToolbarTitle() {
-        activity?.actionBar?.title =
-            "Image: ${pagePosition + 1} out of ${imagePagerAdapter.getDataSize()}"
+        actionBar.title = "Image: ${pagePosition + 1} out of ${imagePagerAdapter.getDataSize()}"
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -132,11 +132,11 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
             notifyItemRemoved(position)
         }
 
-        fun getItem(position: Int) : String {
+        fun getItem(position: Int): String {
             return data[position]
         }
 
-        fun getDataSize() : Int {
+        fun getDataSize(): Int {
             return data.size
         }
 

@@ -32,8 +32,6 @@ class CosplayActivity : BaseActivity<ActivityCosplayBinding>() {
         cosplayActivityComponent.inject(this)
 
         binding.bottomNav.setupWithNavController(cosplayController)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

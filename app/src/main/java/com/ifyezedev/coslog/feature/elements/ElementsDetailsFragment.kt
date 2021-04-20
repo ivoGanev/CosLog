@@ -20,7 +20,7 @@ import com.ifyezedev.coslog.feature.elements.internal.*
 import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
 
 
-abstract class ElementsDetailsFragment<T : ViewDataBinding> : BaseFragment<T>(),
+abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBaseFragment<T>(),
     View.OnClickListener,
     MiniGalleryAdapter.OnClickListener {
 
@@ -36,6 +36,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : BaseFragment<T>(),
     private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
 
     override fun onAfterBindingCreated(view: View) {
+        super.onAfterBindingCreated(view)
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
     }

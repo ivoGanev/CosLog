@@ -1,7 +1,10 @@
 package com.ifyezedev.coslog
 
+import android.app.ActionBar
+import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.CallSuper
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -26,9 +29,19 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
 
     lateinit var imageFilePathProvider: ImageFileProvider
 
+    lateinit var actionBar : androidx.appcompat.app.ActionBar
+
+    @CallSuper
     override fun onAfterBindingCreated(view: View) {
         cosplayController = cosplayFragmentComponent.cosplayController()
         imageFilePathProvider = cosplayFragmentComponent.imageFilePathProvider()
+        actionBar = cosplayFragmentComponent.actionBar()
+    }
+
+    @CallSuper
+    override fun onStart() {
+        super.onStart()
+        actionBar.setTitle(R.string.app_name)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

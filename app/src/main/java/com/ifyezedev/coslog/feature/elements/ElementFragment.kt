@@ -8,12 +8,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.CosplayActivity
+import com.ifyezedev.coslog.CosplayActivityBaseFragment
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 
 
-class ElementFragment : BaseFragment<FragmentElementBinding>(), View.OnClickListener {
+class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(), View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
 
     override fun onStart() {
