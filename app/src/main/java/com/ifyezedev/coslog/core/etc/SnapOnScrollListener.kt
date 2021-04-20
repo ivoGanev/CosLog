@@ -3,6 +3,10 @@ package com.ifyezedev.coslog.core.etc
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 
+/**
+ * Helps to get the exact position of the snapped item within the recycler view because by
+ * default it looks like there is no native way.
+ * */
 private fun SnapHelper.getSnapPosition(recyclerView: RecyclerView): Int {
     val layoutManager = recyclerView.layoutManager ?: return RecyclerView.NO_POSITION
     val snapView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION

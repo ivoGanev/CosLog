@@ -11,7 +11,8 @@ interface FilePathProvider {
 }
 
 /**
- * Converts Android gallery URIs to internal storage file path.
+ * Converts Android gallery URIs to internal storage file path. Also contains a quick
+ * way to fetch all image file paths from their directory .
  * */
 class ImageFileProvider(private val context: Context) : FilePathProvider {
     private val delimiter = "$$"

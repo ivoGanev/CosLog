@@ -24,7 +24,11 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     abstract override fun bindingLayoutId(): Int
 
-    lateinit var bottomBinding: ElementBottomBinding
+    /**
+     * This is the bottom part of the layout that contains the save button,
+     * the image gallery recycler view, and the notes.
+     * */
+    protected lateinit var bottomBinding: ElementBottomBinding
 
     private lateinit var adapter: MiniGalleryAdapter
 
@@ -37,19 +41,17 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = bottomBinding.run {
         super.onViewCreated(view, savedInstanceState)
-
         // setup buttons, recycler view, etc.
-        setupViews()
-    }
-
-    private fun setupViews() = bottomBinding.run {
         val snapHelper: SnapHelper = PagerSnapHelper()
 
         buttonAddImage.setOnClickListener(this@ElementsDetailsFragment)
         buttonSave.setOnClickListener(this@ElementsDetailsFragment)
         buttonDelete.setOnClickListener(this@ElementsDetailsFragment)
+
+        // snap helper helps by snapping the images from the image gallery recycler view
+        // when scrolling them
         snapHelper.attachToRecyclerView(recyclerView)
 
         viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
@@ -70,7 +72,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         bottomBinding.recyclerView.adapter = adapter
         adapter.clickListener = this@ElementsDetailsFragment
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.addItemDecoration(BoundsOffsetDecoration())
         recyclerView.addOnScrollListener(
             SnapOnScrollListener(
@@ -119,6 +122,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         viewModel.openAndroidImageGalleryForResult(::startActivityForResult)
     }
 
+    // called when we pick an image from the gallery
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode == Activity.RESULT_OK &&
             requestCode == 0 &&

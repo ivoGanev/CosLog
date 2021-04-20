@@ -22,7 +22,7 @@ class ElementsViewModel(
 ) : ViewModel(), LifecycleObserver {
 
     /**
-     * Emits a list of String and Bitmaps where the string represents the internal storage file path
+     * Emits a list of String and Bitmap where the String represents the internal storage file path
      * and the Bitmap is the actual loaded bitmap from that path.
      * */
     private val _loadedImagesAndPathsFromInternalStorage =
@@ -30,11 +30,15 @@ class ElementsViewModel(
     val loadedImagesAndPathsFromInternalStorage: LiveData<List<Pair<String, Bitmap>>>
         get() = _loadedImagesAndPathsFromInternalStorage
 
+
     private val _loadedImagesAndPathsFromAndroidGallery =
         MutableLiveData<List<Pair<String, Bitmap>>>()
     val loadedImagesAndPathsFromAndroidGallery: LiveData<List<Pair<String, Bitmap>>>
         get() = _loadedImagesAndPathsFromAndroidGallery
 
+    /**
+     * Opens the Android image gallery.
+     * */
     fun openAndroidImageGalleryForResult(activityForResult: (Intent, Int) -> Unit) {
         openAndroidImageGalleryUseCase.invoke(activityForResult)
     }
@@ -74,6 +78,13 @@ class ElementsViewModel(
         }
     }
 
+    /**
+     * Saves the bitmaps to the internal storage.
+     *
+     * @param bitmapPathPairs A pair which contains a list of the bitmap's file path (String)
+     * and Bitmap which is the actual bitmap to save.
+     *
+     * */
     fun saveBitmapsToInternalStorage(bitmapPathPairs: List<Pair<String, Bitmap>>) {
         // converting from Uri provider paths to internal storage path and saving the bitmaps
         val onlyInternalStoragePaths = bitmapPathPairs

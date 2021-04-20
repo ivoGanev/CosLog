@@ -9,6 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.R
 
+/**
+ * This is used to offset the items of the recycler view to start from the middle
+ * instead from the most left side.
+ * */
 class BoundsOffsetDecoration : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect,
                                 view: View,

@@ -7,7 +7,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
-class SaveBitmapsToInternalStorage() : UseCase<Boolean, List<Pair<String, Bitmap>>>()  {
+class SaveBitmapsToInternalStorage : UseCase<Boolean, List<Pair<String, Bitmap>>>()  {
     override suspend fun run(params: List<Pair<String, Bitmap>>): Either<Boolean, Failure> {
         params.forEach { path ->
             //println(tag + bitmapHolder.filePath)

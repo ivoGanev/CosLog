@@ -8,7 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
@@ -16,8 +16,26 @@ import com.ifyezedev.coslog.core.di.fragment.DaggerFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.FragmentComponent
 import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
 
+/**
+ * Inherit from the base fragment when you need access to global services like
+ * deleting, saving and loading bitmaps.
+ *
+ * Another use of the base fragment is to automatically assign a binding between
+ * the layout and the class object and automatically clean it.
+ *
+ * How to use:
+ * If you have an activity just inherit from it like:
+ *
+ * ```
+ * class MyFragment : BaseFragment<MyFragmentBinding> {
+ * ..
+ *   override fun bindingLayoutId(): Int = R.layout.myFragment_layout
+ * }
+ * ```
+ *
+ * */
 abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
-    lateinit var deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage
+    lateinit var deleteFileFromInternalStorage: DeleteFileFromInternalStorage
 
     lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
@@ -51,7 +69,7 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
         application = requireActivity().application as BaseApplication
 
         baseFragmentComponent.apply {
-            deleteBitmapsFromInternalStorage = deleteBitmapsFromInternalStorageUseCase()
+            deleteFileFromInternalStorage = deleteBitmapsFromInternalStorageUseCase()
             loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorageUseCase()
             saveBitmapsToInternalStorage = saveBitmapsToInternalStorageUseCase()
             loadBitmapsFromAndroidGallery = getBitmapPathsFromAndroidGallery()
@@ -64,6 +82,10 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
         return view
     }
 
+    /**
+     * Override this function if you need access to [onCreateView] after the binding has
+     * been created.
+     * */
     open fun onAfterBindingCreated(view: View) {
     }
 

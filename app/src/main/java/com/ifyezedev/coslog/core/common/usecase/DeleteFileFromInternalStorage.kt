@@ -5,8 +5,11 @@ import com.ifyezedev.coslog.core.exception.Failure.*
 import com.ifyezedev.coslog.core.functional.Either
 import java.io.File
 
-class DeleteBitmapsFromInternalStorage : UseCase<Boolean, String>() {
-
+/**
+ * This use case will delete any file from the internal storage with the provided
+ * params path.
+ * */
+class DeleteFileFromInternalStorage : UseCase<Boolean, String>() {
     override suspend fun run(params: String): Either<Boolean, Failure> {
         val file = File(params)
         val fileIsDeleted: Boolean

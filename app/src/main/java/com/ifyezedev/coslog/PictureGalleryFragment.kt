@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -72,7 +71,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
     private fun deleteImage() {
         val deletePath = imagePagerAdapter.getItem(pagePosition)
 
-        deleteBitmapsFromInternalStorage(lifecycleScope, deletePath) { result ->
+        deleteFileFromInternalStorage(lifecycleScope, deletePath) { result ->
             result.onSuccess {
                 println(it)
                 imagePagerAdapter.removeAt(pagePosition)

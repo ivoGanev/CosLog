@@ -6,14 +6,32 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.ifyezedev.coslog.core.common.usecase.DeleteBitmapsFromInternalStorage
+import com.ifyezedev.coslog.core.common.usecase.DeleteFileFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.activity.BaseActivityComponent
 import com.ifyezedev.coslog.core.di.activity.DaggerBaseActivityComponent
 
+/**
+ * Inherit from the base activity when you need access to global services like
+ * deleting, saving and loading bitmaps.
+ *
+ * Another use of the base activity is to automatically assign a binding between
+ * the layout and the class object and automatically clean it.
+ *
+ * How to use:
+ * If you have an activity just inherit from it like:
+ *
+ * ```
+ * class MyActivity : BaseActivity<MyActivityBinding> {
+ * ..
+ *   override fun bindingLayoutId(): Int = R.layout.myActivity_layout
+ * }
+ * ```
+ *
+ * */
 abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
-    lateinit var deleteBitmapsFromInternalStorage: DeleteBitmapsFromInternalStorage
+    lateinit var deleteFileFromInternalStorage: DeleteFileFromInternalStorage
 
     lateinit var loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage
 
@@ -41,7 +59,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // sadly we cannot inject those classes because BaseActivity uses generic parameters
         baseActivityComponent.apply {
-            deleteBitmapsFromInternalStorage = deleteBitmapsFromInternalStorage()
+            deleteFileFromInternalStorage = deleteBitmapsFromInternalStorage()
             loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorage()
             saveBitmapsToInternalStorage = saveBitmapsToInternalStorage()
         }

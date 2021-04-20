@@ -1,8 +1,12 @@
 package com.ifyezedev.coslog.core.functional
 
 /**
- * Represents a value of one of two possible types.
+ * Represents a value of one of two possibilities.
  * Instances of [Either] are either an instance of [Left] or [Right].
+ * By convention we are using [Left] for [Success] and [Right] for [Failure]
+ * Why use Either?
+ *
+ * @see <a href="https://stackoverflow.com/questions/10818427/is-either-the-equivalent-to-checked-exceptions#:~:text=The%20main%20difference%20between%20Either,with%20Either%20is%20always%20explicit.&text=Also%2C%20Either%20does%20not%20capture,be%20used%20for%20control%20flow">Stack-Overflow Either vs Exception</a>
  */
 sealed class Either<out Left, out Right> {
 

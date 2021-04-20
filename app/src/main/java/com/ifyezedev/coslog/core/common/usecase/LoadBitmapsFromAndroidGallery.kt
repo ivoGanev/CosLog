@@ -9,14 +9,12 @@ import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.extensions.mapToUri
 import com.ifyezedev.coslog.core.functional.Either
 
-// load bitmaps out of the system -> needs content resolver and uri
-// load bitmaps out of the local storage -> needs absolute filepath
+/**
+* This use case loads bitmaps from the provided as an argument content provider path's
+* */
 class LoadBitmapsFromAndroidGallery(private val context: Context) :
     UseCase<List<Bitmap>, List<Uri>>() {
 
-    /**
-     *  Returns a list of loaded bitmaps and their content provider Uri address.
-     * */
     override suspend fun run(params: List<Uri>): Either<List<Bitmap>, Failure> {
         val outBitmaps = mutableListOf<Bitmap>()
 
