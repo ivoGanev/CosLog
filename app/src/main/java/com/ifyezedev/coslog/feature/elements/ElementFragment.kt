@@ -1,6 +1,7 @@
 package com.ifyezedev.coslog.feature.elements
 
 import android.content.Context
+import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -30,6 +31,14 @@ class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(), V
                 R.string.elements_tab_one_name, R.string.elements_tab_two_name
             )
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        if (item.itemId == android.R.id.home) {
+            cosplayController.navigate(R.id.homeActivity)
+        }
+        return true
     }
 
     override fun onClick(v: View?) {

@@ -36,6 +36,7 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
         cosplayController = cosplayFragmentComponent.cosplayController()
         imageFilePathProvider = cosplayFragmentComponent.imageFilePathProvider()
         actionBar = cosplayFragmentComponent.actionBar()
+        setHasOptionsMenu(true)
     }
 
     @CallSuper
@@ -45,9 +46,9 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val controller = (activity as CosplayActivity).cosplayController
+        super.onOptionsItemSelected(item)
         if (item.itemId == android.R.id.home) {
-            controller.navigateUp()
+            cosplayController.navigateUp()
         }
         return true
     }
