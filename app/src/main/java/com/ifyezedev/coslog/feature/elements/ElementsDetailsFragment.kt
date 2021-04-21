@@ -93,12 +93,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         viewModel.loadBitmapsFromInternalStorage {
             adapter.addAll(it)
         }
-
-        // Whenever the user adds images to the mini gallery we update the adapter to
-        // display the data
-        viewModel.loadedImagesAndPathsFromAndroidGallery.observe(requireActivity()) { loadedImagesAndPathsFromAndroidGallery ->
-            adapter.addAll(loadedImagesAndPathsFromAndroidGallery)
-        }
     }
 
 
@@ -131,7 +125,9 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             intent != null
         ) {
             // update loaded images from android gallery
-            viewModel.loadImagesFromAndroidGallery(intent)
+            viewModel.loadImagesFromAndroidGallery(intent) {
+                adapter.addAll(it)
+            }
         }
     }
 

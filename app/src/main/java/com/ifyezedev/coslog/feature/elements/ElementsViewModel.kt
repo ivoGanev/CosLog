@@ -55,15 +55,14 @@ class ElementsViewModel(
      * without the need of them to be saved inside the internal storage. This is good when the
      * user actually cancels the elements entry.
      * */
-    fun loadImagesFromAndroidGallery(intent: Intent) {
+    fun loadImagesFromAndroidGallery(intent: Intent, onResult: (List<Pair<String, Bitmap>>) -> Unit) {
         val uris: MutableList<Uri> = mutableListOf()
         intent.data?.let { uri -> uris.add(uri) }
         intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
 
         loadBitmapsFromAndroidGallery(viewModelScope, uris) { result ->
             result.onSuccess { bitmaps ->
-                _loadedImagesAndPathsFromAndroidGallery.value =
-                    uris.map { it.toString() }.zip(bitmaps)
+                onResult(uris.map { it.toString() }.zip(bitmaps))
             }
         }
     }
