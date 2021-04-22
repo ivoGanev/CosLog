@@ -7,13 +7,11 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
-import com.ifyezedev.coslog.core.functional.onSuccess
+import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.feature.elements.internal.*
 import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
@@ -24,6 +22,18 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     MiniGalleryAdapter.OnClickListener {
 
     abstract override fun bindingLayoutId(): Int
+
+    companion object {
+        private const val BUNDLE_ITEM = "com.ifyezedev.coslog.keys.fragments.new_item"
+
+        /**
+         * When navigating to this fragment, we need to make sure that we pass this bundle, to
+         * know whether to load or insert the data into the database.
+         * */
+        fun getNewItemBundle(element: Element?): Bundle = Bundle().apply {
+            putParcelable(BUNDLE_ITEM, element)
+        }
+    }
 
     /**
      * This is the bottom part of the layout that contains the save button,
@@ -44,8 +54,23 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val createNewItem = arguments?.getParcelable<Element>(BUNDLE_ITEM)
+        if (createNewItem == null) {
+            setUpForNewItem()
+        } else {
+            setupToUpdateItem(createNewItem)
+        }
+
         setup()
         // TODO: check if we need to load from the database or its a new element
+    }
+
+    protected open fun setupToUpdateItem(element: Element) {
+        println(element)
+    }
+
+    protected open fun setUpForNewItem() {
+        println("new item")
     }
 
     private fun setup() = bottomBinding.run {
@@ -150,7 +175,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         // and not being destroyed; this leads to subtle live data bugs like, for example, refreshing
         // some old data that was meant to be stored and updated only for configuration change in a
         // specific fragment.
-        if(!requireActivity().isChangingConfigurations)
+        if (!requireActivity().isChangingConfigurations)
             viewModelStore.clear()
         super.onDestroyView()
     }
