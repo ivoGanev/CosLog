@@ -26,7 +26,6 @@ import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
  *      destinations that are not withing the cosplay nav controller, e.g. HomeActivity)
  * */
 abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T>() {
-
     private val cosplayFragmentComponent: CosplayFragmentComponent by lazy {
         DaggerCosplayFragmentComponent.builder()
             .cosplayActivityComponent((requireActivity() as CosplayActivity).cosplayActivityComponent)
@@ -38,7 +37,7 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
 
     lateinit var imageFilePathProvider: ImageFileProvider
 
-    lateinit var actionBar : androidx.appcompat.app.ActionBar
+    lateinit var actionBar: androidx.appcompat.app.ActionBar
 
     @CallSuper
     override fun onAfterBindingCreated(view: View) {
@@ -57,7 +56,6 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
         if (item.itemId == android.R.id.home) {
             cosplayController.navigateUp()
         }

@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -104,10 +105,13 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
         when (item.itemId) {
             R.id.shareButton -> onShareButtonClicked()
             R.id.deleteButton -> deleteImage()
-            android.R.id.home -> cosplayController.navigateUp()
+            else -> return super.onOptionsItemSelected(item)
         }
-
         return true
+    }
+
+    private fun onBackButtonPressed() {
+        cosplayController.navigateUp()
     }
 
     private fun onShareButtonClicked() {

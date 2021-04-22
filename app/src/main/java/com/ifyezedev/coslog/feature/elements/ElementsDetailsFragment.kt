@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
@@ -44,7 +45,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
-
         // TODO: check if we need to load from the database or its a new element
     }
 
@@ -57,9 +57,10 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             imageFileProvider,
         )
 
-        viewModel = ViewModelProvider(viewModelStore, viewModelFactory)
+        viewModel = ViewModelProvider(
+            viewModelStore,
+            viewModelFactory)
             .get(ElementsViewModel::class.java)
-
         // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
 
@@ -89,7 +90,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        viewModel.loadedImagesAndPathsFromAndroidGallery.observe(requireActivity()) {
+        viewModel.loadedImagesAndPathsFromAndroidGallery.observe(cosplayController.currentBackStackEntry!!) {
             adapter.addAll(it)
         }
         // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
@@ -141,6 +142,17 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
+    }
+
+    override fun onDestroyView() {
+        // We have to make sure that we clear the viewModelStore because when navigating
+        // forward to any fragment, all view models get stored in the current associated fragment manager
+        // and not being destroyed; this leads to subtle live data bugs like, for example, refreshing
+        // some old data that was meant to be stored and updated only for configuration change in a
+        // specific fragment.
+        if(!requireActivity().isChangingConfigurations)
+            viewModelStore.clear()
+        super.onDestroyView()
     }
 }
 

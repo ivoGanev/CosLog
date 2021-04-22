@@ -22,7 +22,6 @@ class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(), V
         super.onStart()
         binding {
             fab.setOnClickListener(this@ElementFragment)
-
             initTabLayout(
                 requireContext(),
                 elementsTabLayout,
