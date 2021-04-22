@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
+import com.ifyezedev.coslog.data.db.CosLogDao
+import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
+import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.feature.elements.internal.*
 import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
@@ -43,8 +46,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     private lateinit var adapter: MiniGalleryAdapter
 
-    private lateinit var viewModel: ElementsViewModel
-    private lateinit var viewModelFactory: ElementsViewModel.ElementsViewModelFactory
+    protected lateinit var detailsViewModel: ElementsDetailsViewModel
+    private lateinit var detailsViewModelFactory: ElementsDetailsViewModel.ElementsViewModelFactory
 
     override fun onAfterBindingCreated(view: View) {
         super.onAfterBindingCreated(view)
@@ -54,23 +57,24 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val createNewItem = arguments?.getParcelable<Element>(BUNDLE_ITEM)
-        if (createNewItem == null) {
-            setUpForNewItem()
+        val element  = arguments?.getParcelable<Element>(BUNDLE_ITEM)
+
+        if (element == null) {
+            setUpEmpty()
         } else {
-            setupToUpdateItem(createNewItem)
+            setUpWithElement(element)
         }
 
         setup()
     }
 
-    protected open fun setupToUpdateItem(element: Element) {
+    protected open fun setUpWithElement(element: Element) {
         bottomBinding.buttonDelete.visibility = View.VISIBLE
         bottomBinding.buttonsLayout.weightSum = 2F
         println(element)
     }
 
-    protected open fun setUpForNewItem() {
+    protected open fun setUpEmpty() {
         bottomBinding.buttonDelete.visibility = View.GONE
         bottomBinding.buttonsLayout.weightSum = 1F
 
@@ -78,18 +82,19 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun setup() = bottomBinding.run {
-        viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
+        detailsViewModelFactory = ElementsDetailsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGalleryUseCase(),
             loadBitmapsFromInternalStorage,
             loadBitmapsFromAndroidGallery,
             saveBitmapsToInternalStorage,
             imageFileProvider,
+            CosLogDatabase.getDatabase(requireContext()).cosLogDao
         )
 
-        viewModel = ViewModelProvider(
+        detailsViewModel = ViewModelProvider(
             viewModelStore,
-            viewModelFactory)
-            .get(ElementsViewModel::class.java)
+            detailsViewModelFactory)
+            .get(ElementsDetailsViewModel::class.java)
         // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
 
@@ -119,13 +124,13 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        viewModel.loadedImagesAndPathsFromAndroidGallery.observe(cosplayController.currentBackStackEntry!!) {
+        detailsViewModel.loadedImagesAndPathsFromAndroidGallery.observe(cosplayController.currentBackStackEntry!!) {
             adapter.addAll(it)
         }
         // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
         // update our adapter to display the bitmaps and store their respective file paths.
         // This is usually updated when the fragment is created.
-        viewModel.loadBitmapsFromInternalStorage {
+        detailsViewModel.loadBitmapsFromInternalStorage {
             adapter.addAll(it)
         }
     }
@@ -143,14 +148,15 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         // TODO: delete logic
     }
 
-    private fun onSaveButtonPressed() {
-        viewModel.saveBitmapsToInternalStorage(adapter.getData())
+    protected open fun onSaveButtonPressed() {
+        detailsViewModel.saveBitmapsToInternalStorage(adapter.getData())
+
         toastNotify("Successfully saved images to internal storage.")
     }
 
     private fun onAddImageButtonPressed() {
         // here we delegate the entire business logic to the view model.
-        viewModel.openAndroidImageGalleryForResult(::startActivityForResult)
+        detailsViewModel.openAndroidImageGalleryForResult(::startActivityForResult)
     }
 
     // called when we pick an image from the gallery
@@ -160,7 +166,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             intent != null
         ) {
             // the result is observed through viewModel.loadedImagesAndPathsFromAndroidGallery
-            viewModel.loadImagesFromAndroidGallery(intent)
+            detailsViewModel.loadImagesFromAndroidGallery(intent)
         }
     }
 

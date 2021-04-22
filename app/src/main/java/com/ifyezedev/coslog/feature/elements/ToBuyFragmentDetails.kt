@@ -3,6 +3,7 @@ package com.ifyezedev.coslog.feature.elements
 import android.os.Bundle
 import android.view.View
 import com.ifyezedev.coslog.R
+import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 
 /**
@@ -16,5 +17,13 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bottomBinding.recyclerView
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onSaveButtonPressed() {
+        super.onSaveButtonPressed()
+        detailsViewModel.insertElement(elementsBuilder {
+            name = binding.nameValue.text.toString()
+            //cost = binding.costValue.text.toString().toDouble()
+        })
     }
 }

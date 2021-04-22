@@ -11,20 +11,20 @@ data class Element(
     @PrimaryKey(autoGenerate = true)
     val eid: Long = 0L,
 
-    val cosplay_id: Long,
+    val cosplay_id: Long = 0,
 
-    var name: String,
+    var name: String = "",
 
     @ColumnInfo(name = "is_buy")
-    var isBuy: Boolean,
+    var isBuy: Boolean = false,
 
-    var cost: Double,
+    var cost: Double = 0.00,
 
-    var time: Long,
+    var time: Long = 0,
 
-    var source: String,
+    var source: String = "",
 
-    var notes: String
+    var notes: String = "",
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -61,4 +61,10 @@ data class Element(
             return arrayOfNulls(size)
         }
     }
+}
+
+fun elementsBuilder(block: Element.() -> Unit): Element {
+    val e = Element()
+    e.block()
+    return e
 }

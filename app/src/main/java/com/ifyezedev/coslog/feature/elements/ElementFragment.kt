@@ -4,12 +4,14 @@ import android.content.Context
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ifyezedev.coslog.CosplayActivityBaseFragment
 import com.ifyezedev.coslog.R
+import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 
 
@@ -19,8 +21,15 @@ class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
 
     private lateinit var adapter: ElementsFragmentStateAdapter
 
+    private lateinit var viewModel: ElementsViewModel
+
     override fun onStart() {
         super.onStart()
+
+        val viewModelFactory =
+            ElementsViewModel.ElementsViewModelFactory(CosLogDatabase.getDatabase(requireContext()).cosLogDao)
+        viewModel =
+            ViewModelProvider(viewModelStore, viewModelFactory).get(ElementsViewModel::class.java)
 
         adapter = ElementsFragmentStateAdapter(this)
         binding {
@@ -54,7 +63,7 @@ class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
             childFragmentManager.findFragmentByTag("f" + binding.elementsViewPager.currentItem)
 
         when (fragment) {
-            is ElementsToBuyListFragment -> fragment.navigateToBuyDetailsFragmentNewItem()
+            is ElementsToBuyListFragment -> fragment.navigateToBuyDetailsFragmentForNewItem()
             is ElementsToMakeListFragment -> fragment.navigateToMakeDetailsFragment()
         }
     }

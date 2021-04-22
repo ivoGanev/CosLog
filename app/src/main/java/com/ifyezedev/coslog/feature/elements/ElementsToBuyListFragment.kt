@@ -34,7 +34,7 @@ class ElementsToBuyListFragment : BaseFragment<FragmentElementToBuyListBinding>(
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 
-    fun navigateToBuyDetailsFragmentNewItem() {
+    fun navigateToBuyDetailsFragmentForNewItem() {
         cosplayController.navigate(R.id.toBuyFragment,
             ElementsDetailsFragment.getNewItemBundle(null))
     }

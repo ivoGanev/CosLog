@@ -49,4 +49,7 @@ interface CosLogDao {
 
     @Query("SELECT * FROM cosplays")
     suspend fun getAllCosplays() : List<Cosplay>
+
+    @Query("SELECT * FROM elements")
+    suspend fun getAllElements() : List<Element>
 }
