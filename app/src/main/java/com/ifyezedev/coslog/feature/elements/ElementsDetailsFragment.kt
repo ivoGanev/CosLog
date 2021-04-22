@@ -62,14 +62,18 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         }
 
         setup()
-        // TODO: check if we need to load from the database or its a new element
     }
 
     protected open fun setupToUpdateItem(element: Element) {
+        bottomBinding.buttonDelete.visibility = View.VISIBLE
+        bottomBinding.buttonsLayout.weightSum = 2F
         println(element)
     }
 
     protected open fun setUpForNewItem() {
+        bottomBinding.buttonDelete.visibility = View.GONE
+        bottomBinding.buttonsLayout.weightSum = 1F
+
         println("new item")
     }
 
