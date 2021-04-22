@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 class MiniGalleryAdapter() :
 
     RecyclerView.Adapter<MiniGalleryAdapter.ViewHolderObject>() {
+
     private val bitmaps = mutableListOf<Pair<String, Bitmap>>()
 
     private var _currentSelectedImagePosition: Int = RecyclerView.NO_POSITION

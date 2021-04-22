@@ -51,18 +51,17 @@ class ElementsViewModel(
     }
 
     /**
-     * This is loading images directly from the Android gallery. Subscribe to  to get the images
-     * without the need of them to be saved inside the internal storage. This is good when the
-     * user actually cancels the elements entry.
+     * By subscribing to [loadedImagesAndPathsFromAndroidGallery] and calling this function, you can
+     * get images and their respective content provider Uri paths from the Android gallery.
      * */
-    fun loadImagesFromAndroidGallery(intent: Intent, onResult: (List<Pair<String, Bitmap>>) -> Unit) {
+    fun loadImagesFromAndroidGallery(intent: Intent) {
         val uris: MutableList<Uri> = mutableListOf()
         intent.data?.let { uri -> uris.add(uri) }
         intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
 
         loadBitmapsFromAndroidGallery(viewModelScope, uris) { result ->
             result.onSuccess { bitmaps ->
-                onResult(uris.map { it.toString() }.zip(bitmaps))
+                _loadedImagesAndPathsFromAndroidGallery.value = (uris.map { it.toString() }.zip(bitmaps))
             }
         }
     }

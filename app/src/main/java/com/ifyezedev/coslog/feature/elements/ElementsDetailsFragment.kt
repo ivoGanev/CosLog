@@ -44,9 +44,22 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
+
+        // TODO: check if we need to load from the database or its a new element
     }
 
     private fun setup() = bottomBinding.run {
+        viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
+            OpenAndroidImageGalleryUseCase(),
+            loadBitmapsFromInternalStorage,
+            loadBitmapsFromAndroidGallery,
+            saveBitmapsToInternalStorage,
+            imageFileProvider,
+        )
+
+        viewModel = ViewModelProvider(viewModelStore, viewModelFactory)
+            .get(ElementsViewModel::class.java)
+
         // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
 
@@ -57,17 +70,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         // snap helper helps by snapping the images from the image gallery recycler view
         // when scrolling them
         snapHelper.attachToRecyclerView(recyclerView)
-
-        viewModelFactory = ElementsViewModel.ElementsViewModelFactory(
-            OpenAndroidImageGalleryUseCase(),
-            loadBitmapsFromInternalStorage,
-            loadBitmapsFromAndroidGallery,
-            saveBitmapsToInternalStorage,
-            imageFileProvider,
-        )
-
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(ElementsViewModel::class.java)
 
         adapter = MiniGalleryAdapter()
         // set stable ids to make sure we have animations when adding images
@@ -87,9 +89,12 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        // Whenever we load images from the viewModel.loadBitmapsFromInternalStorage() we
-        // update our adapter to display the bitmaps. This is usually updated when the fragment
-        // starts.
+        viewModel.loadedImagesAndPathsFromAndroidGallery.observe(requireActivity()) {
+            adapter.addAll(it)
+        }
+        // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
+        // update our adapter to display the bitmaps and store their respective file paths.
+        // This is usually updated when the fragment is created.
         viewModel.loadBitmapsFromInternalStorage {
             adapter.addAll(it)
         }
@@ -124,10 +129,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             requestCode == 0 &&
             intent != null
         ) {
-            // update loaded images from android gallery
-            viewModel.loadImagesFromAndroidGallery(intent) {
-                adapter.addAll(it)
-            }
+            // the result is observed through viewModel.loadedImagesAndPathsFromAndroidGallery
+            viewModel.loadImagesFromAndroidGallery(intent)
         }
     }
 
@@ -138,11 +141,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
-    }
-
-    override fun onDestroyView() {
-        adapter.clear()
-        super.onDestroyView()
     }
 }
 
