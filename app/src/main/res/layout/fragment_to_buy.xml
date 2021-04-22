@@ -37,10 +37,12 @@
                     app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
 
                 <EditText
-                    android:hint="Enter Name"
                     android:id="@+id/nameValue"
-                    android:layout_width="50dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/elements_text_input_width"
+                    android:layout_height="@dimen/elements_text_input_height"
+                    android:hint="Enter Name"
+                    android:inputType="text"
+                    android:maxLines="1"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
                     app:layout_constraintTop_toTopOf="@+id/name"
                     tools:text="Value" />
@@ -55,12 +57,12 @@
                     app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
 
                 <EditText
-                    android:hint="Enter Source"
                     android:id="@+id/sourceValue"
-                    android:layout_width="50dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/elements_text_input_width"
+                    android:layout_height="@dimen/elements_text_input_height"
+                    android:hint="Enter Source"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/source"
+                    app:layout_constraintTop_toBottomOf="@+id/nameValue"
                     tools:text="Value" />
 
                 <TextView
@@ -73,12 +75,12 @@
                     app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
 
                 <EditText
-                    android:hint="0$"
                     android:id="@+id/costValue"
-                    android:layout_width="50dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/elements_text_input_width"
+                    android:layout_height="@dimen/elements_text_input_height"
+                    android:hint="0$"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/cost"
+                    app:layout_constraintTop_toBottomOf="@+id/sourceValue"
                     tools:text="Value" />
 
                 <LinearLayout
@@ -120,6 +122,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layout_constraintGuide_begin="198dp" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

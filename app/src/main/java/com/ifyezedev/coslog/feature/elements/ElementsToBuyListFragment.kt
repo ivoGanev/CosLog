@@ -56,7 +56,7 @@ private class Adapter(val data: List<Element>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.toBuyPriceText.text = data[position].toString()
+        holder.binding.toBuyPriceText.text = data[position].name
     }
 
     override fun getItemCount(): Int {

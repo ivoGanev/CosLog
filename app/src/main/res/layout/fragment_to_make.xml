@@ -38,12 +38,12 @@
                     app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
 
                 <EditText
+                    android:id="@+id/nameValue"
+                    android:layout_width="@dimen/elements_text_input_width"
+                    android:layout_height="@dimen/elements_text_input_height"
+                    android:hint="Enter Name"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:id="@+id/nameValue"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:hint="Enter Name"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
                     app:layout_constraintTop_toTopOf="@+id/name"
                     tools:text="Value" />
@@ -57,14 +57,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/name" />
 
                 <EditText
+                    android:id="@+id/timeValue"
+                    android:layout_width="@dimen/elements_text_input_width"
+                    android:layout_height="@dimen/elements_text_input_height"
+                    android:hint="Time"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:id="@+id/timeValue"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:hint="Time"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toBottomOf="@+id/name"
+                    app:layout_constraintTop_toBottomOf="@+id/nameValue"
                     tools:text="Value" />
 
                 <TextView
@@ -76,14 +76,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/time" />
 
                 <EditText
+                    android:id="@+id/progressValue"
+                    android:layout_width="@dimen/elements_text_input_width"
+                    android:layout_height="@dimen/elements_text_input_height"
+                    android:hint="Progress"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:id="@+id/progressValue"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Progress"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/progress"
+                    app:layout_constraintTop_toBottomOf="@+id/timeValue"
                     tools:text="Value" />
 
                 <LinearLayout

@@ -57,7 +57,7 @@ private class ElementsAdapter(val data: List<Element>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.durationTextView.text = data[position].toString()
+        holder.binding.durationTextView.text = data[position].name
     }
 
     override fun getItemCount(): Int {
