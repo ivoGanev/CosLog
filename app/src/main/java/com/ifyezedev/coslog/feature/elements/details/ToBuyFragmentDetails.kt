@@ -3,6 +3,7 @@ package com.ifyezedev.coslog.feature.elements.details
 import android.os.Bundle
 import android.view.View
 import com.ifyezedev.coslog.R
+import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
@@ -24,7 +25,18 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
         super.onSaveButtonPressed()
         detailsViewModel.insertElement(elementsBuilder {
             name = binding.nameValue.text.toString()
-            //cost = binding.costValue.text.toString().toDouble()
+            source = binding.source.text.toString()
+            cost = binding.costValue.text.toString().toDouble()
+            notes = binding.bottomView.notes.text.toString()
+            isBuy = true
         })
+    }
+
+    override fun setUpWithElement(element: Element) {
+        super.setUpWithElement(element)
+        binding.nameValue.setText(element.name)
+        binding.sourceValue.setText(element.source)
+        binding.costValue.setText(element.cost.toString())
+        binding.bottomView.notes.setText(element.notes)
     }
 }

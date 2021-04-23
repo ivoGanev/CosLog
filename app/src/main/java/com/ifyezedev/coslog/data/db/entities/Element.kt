@@ -3,8 +3,6 @@ package com.ifyezedev.coslog.data.db.entities
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.*
-import com.ifyezedev.coslog.data.db.entities.*
-import androidx.room.ForeignKey.CASCADE
 
 @Entity(tableName = "elements")
 data class Element(
@@ -25,6 +23,9 @@ data class Element(
     var source: String = "",
 
     var notes: String = "",
+
+    var progress: Float = 0.0F
+
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -34,7 +35,8 @@ data class Element(
         parcel.readDouble(),
         parcel.readLong(),
         parcel.readString()!!,
-        parcel.readString()!!) {
+        parcel.readString()!!,
+        parcel.readFloat()) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -46,6 +48,7 @@ data class Element(
         parcel.writeLong(time)
         parcel.writeString(source)
         parcel.writeString(notes)
+        parcel.writeFloat(progress)
     }
 
     override fun describeContents(): Int {
@@ -62,6 +65,7 @@ data class Element(
         }
     }
 }
+
 
 fun elementsBuilder(block: Element.() -> Unit): Element {
     val e = Element()

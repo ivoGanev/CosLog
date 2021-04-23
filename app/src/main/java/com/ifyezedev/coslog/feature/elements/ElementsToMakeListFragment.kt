@@ -29,7 +29,8 @@ class ElementsToMakeListFragment : ElementsListBaseFragment<FragmentElementToMak
     }
 
     override fun onElementsUpdated(elements: List<Element>) {
-        adapter.setElements(elements)
+        // Will display only elements that are only to be made.
+        adapter.setElements(elements.filter { element -> !element.isBuy })
     }
 
     fun navigateToMakeDetailsFragment() {

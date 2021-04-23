@@ -29,7 +29,8 @@ class ElementsToBuyListFragment : ElementsListBaseFragment<FragmentElementToBuyL
     }
 
     override fun onElementsUpdated(elements: List<Element>) {
-        adapter.setElements(elements)
+        // Will display only elements that are only to be bought.
+        adapter.setElements(elements.filter { element -> element.isBuy })
     }
 
     fun navigateToBuyDetailsFragmentForNewItem() {

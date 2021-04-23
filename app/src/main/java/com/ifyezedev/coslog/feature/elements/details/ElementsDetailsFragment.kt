@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
@@ -66,17 +67,16 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         setup()
     }
 
+    @CallSuper
     protected open fun setUpWithElement(element: Element) {
         bottomBinding.buttonDelete.visibility = View.VISIBLE
         bottomBinding.buttonsLayout.weightSum = 2F
-        println(element)
     }
 
+    @CallSuper
     protected open fun setUpEmpty() {
         bottomBinding.buttonDelete.visibility = View.GONE
         bottomBinding.buttonsLayout.weightSum = 1F
-
-        println("new item")
     }
 
     private fun setup() = bottomBinding.run {
