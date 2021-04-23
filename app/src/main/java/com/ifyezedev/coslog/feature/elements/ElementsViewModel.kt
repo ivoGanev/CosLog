@@ -1,31 +1,19 @@
 package com.ifyezedev.coslog.feature.elements
 
 import androidx.lifecycle.*
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
-import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.data.db.CosLogDao
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
-import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
 import kotlinx.coroutines.launch
 
 class ElementsViewModel(private val db: CosLogDao) : ViewModel() {
     private val _elements = MutableLiveData<List<Element>>()
-    val elements: LiveData<List<Element>> get() = elements
+    val elements: LiveData<List<Element>> get() = _elements
 
-    fun insertElement(element: Element) {
+    fun updateElementsLiveDataFromDb() {
         viewModelScope.launch {
-            db.insertElement(element)
+            _elements.postValue(db.getAllElements())
         }
     }
-
-    fun loadElements() {
-        viewModelScope.launch {
-            _elements.value = db.getAllElements()
-        }
-    }
-
 
     class ElementsViewModelFactory(
         private val db: CosLogDao,

@@ -3,7 +3,7 @@ package com.ifyezedev.coslog.feature.elements.internal.usecase
 import android.content.Intent
 import com.ifyezedev.coslog.core.builders.buildIntent
 
-class OpenAndroidImageGalleryUseCase {
+class OpenAndroidImageGallery {
     private val intentChooserTitle = "Select Picture"
 
     fun invoke(startActivityForResult: (Intent, Int) -> Unit) {

@@ -15,25 +15,27 @@ import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.databinding.FragmentElementBinding
 
 
-class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
+class ElementsFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
     View.OnClickListener {
     override fun bindingLayoutId() = R.layout.fragment_element
 
     private lateinit var adapter: ElementsFragmentStateAdapter
 
-    private lateinit var viewModel: ElementsViewModel
+    lateinit var viewModel: ElementsViewModel
 
-    override fun onStart() {
-        super.onStart()
-
+    override fun onAfterBindingCreated(view: View) {
+        super.onAfterBindingCreated(view)
         val viewModelFactory =
             ElementsViewModel.ElementsViewModelFactory(CosLogDatabase.getDatabase(requireContext()).cosLogDao)
         viewModel =
             ViewModelProvider(viewModelStore, viewModelFactory).get(ElementsViewModel::class.java)
+    }
 
+    override fun onStart() {
+        super.onStart()
         adapter = ElementsFragmentStateAdapter(this)
         binding {
-            fab.setOnClickListener(this@ElementFragment)
+            fab.setOnClickListener(this@ElementsFragment)
             initTabLayout(
                 requireContext(),
                 elementsTabLayout,
@@ -42,6 +44,8 @@ class ElementFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
                 R.string.elements_tab_one_name, R.string.elements_tab_two_name
             )
         }
+
+        viewModel.updateElementsLiveDataFromDb()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,10 +1,11 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.details
 
 import android.os.Bundle
 import android.view.View
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
+import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
 
 /**
  * This is the to-buy elements fragment which contains both the top and bottom parts of

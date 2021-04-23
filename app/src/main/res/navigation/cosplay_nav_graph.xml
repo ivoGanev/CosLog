@@ -6,7 +6,7 @@
     app:startDestination="@id/elementFragment">
     <fragment
         android:id="@+id/elementFragment"
-        android:name="com.ifyezedev.coslog.feature.elements.ElementFragment"
+        android:name="com.ifyezedev.coslog.feature.elements.ElementsFragment"
         android:label="fragment_element"
         tools:layout="@layout/fragment_element" />
     <fragment
@@ -39,7 +39,7 @@
         app:destination="@id/summaryFragment" />
     <fragment
         android:id="@+id/toBuyFragment"
-        android:name="com.ifyezedev.coslog.feature.elements.ToBuyFragmentDetails"
+        android:name="com.ifyezedev.coslog.feature.elements.details.ToBuyFragmentDetails"
         android:label="ToBuyFragment" />
     <fragment
         android:id="@+id/pictureViewerFragment"
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/toMakeFragment"
-        android:name="com.ifyezedev.coslog.feature.elements.ToMakeFragmentDetails"
+        android:name="com.ifyezedev.coslog.feature.elements.details.ToMakeFragmentDetails"
         android:label="ToMakeFragment" />
     <activity
         android:id="@+id/homeActivity"

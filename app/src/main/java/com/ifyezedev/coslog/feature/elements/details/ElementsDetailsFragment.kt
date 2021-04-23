@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.details
 
 import android.app.Activity
 import android.content.Intent
@@ -11,13 +11,11 @@ import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
 import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
-import com.ifyezedev.coslog.data.db.CosLogDao
 import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.feature.elements.internal.*
-import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
+import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGallery
 
 
 abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBaseFragment<T>(),
@@ -83,7 +81,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     private fun setup() = bottomBinding.run {
         detailsViewModelFactory = ElementsDetailsViewModel.ElementsViewModelFactory(
-            OpenAndroidImageGalleryUseCase(),
+            OpenAndroidImageGallery(),
             loadBitmapsFromInternalStorage,
             loadBitmapsFromAndroidGallery,
             saveBitmapsToInternalStorage,

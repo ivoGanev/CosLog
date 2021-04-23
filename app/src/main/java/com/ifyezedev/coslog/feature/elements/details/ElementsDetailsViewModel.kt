@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements
+package com.ifyezedev.coslog.feature.elements.details
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -11,14 +11,13 @@ import com.ifyezedev.coslog.core.functional.onSuccess
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.extensions.mapToUri
 import com.ifyezedev.coslog.data.db.CosLogDao
-import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
-import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGalleryUseCase
+import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGallery
 import kotlinx.coroutines.launch
 
 class ElementsDetailsViewModel(
-    private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
+    private val openAndroidImageGallery: OpenAndroidImageGallery,
     private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
     private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
     private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
@@ -46,7 +45,7 @@ class ElementsDetailsViewModel(
      * Opens the Android image gallery.
      * */
     fun openAndroidImageGalleryForResult(activityForResult: (Intent, Int) -> Unit) {
-        openAndroidImageGalleryUseCase.invoke(activityForResult)
+        openAndroidImageGallery.invoke(activityForResult)
     }
 
     /**
@@ -103,7 +102,7 @@ class ElementsDetailsViewModel(
     }
 
     class ElementsViewModelFactory(
-        private val openAndroidImageGalleryUseCase: OpenAndroidImageGalleryUseCase,
+        private val openAndroidImageGallery: OpenAndroidImageGallery,
         private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
         private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
         private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
@@ -114,7 +113,7 @@ class ElementsDetailsViewModel(
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ElementsDetailsViewModel::class.java)) {
                 return ElementsDetailsViewModel(
-                    openAndroidImageGalleryUseCase,
+                    openAndroidImageGallery,
                     loadBitmapsFromInternalStorage,
                     loadBitmapsFromAndroidGallery,
                     saveBitmapsToInternalStorage,
