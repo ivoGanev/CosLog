@@ -52,4 +52,7 @@ interface CosLogDao {
 
     @Query("SELECT * FROM elements")
     suspend fun getAllElements() : List<Element>
+
+    @Delete
+    suspend fun deleteElement(element: Element)
 }

@@ -34,9 +34,13 @@ class ElementsDetailsViewModel(
     fun insertElement(element: Element) {
         viewModelScope.launch {
             db.insertElement(element)
-            val l = db.getAllElements()
-            l.forEach {
-                println(it)
+        }
+    }
+
+    fun deleteElement(element: Element?) {
+        viewModelScope.launch {
+            element?.let {
+                db.deleteElement(element)
             }
         }
     }

@@ -46,22 +46,25 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     private lateinit var adapter: MiniGalleryAdapter
 
     protected lateinit var detailsViewModel: ElementsDetailsViewModel
+
     private lateinit var detailsViewModelFactory: ElementsDetailsViewModel.ElementsViewModelFactory
+
+    private var element: Element? = null
 
     override fun onAfterBindingCreated(view: View) {
         super.onAfterBindingCreated(view)
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
+        element = arguments?.getParcelable(BUNDLE_ITEM)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val element  = arguments?.getParcelable<Element>(BUNDLE_ITEM)
 
         if (element == null) {
             setUpEmpty()
         } else {
-            setUpWithElement(element)
+            setUpWithElement(element!!)
         }
 
         setup()
@@ -143,7 +146,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun onDeleteButtonPressed() {
-        // TODO: delete logic
+        detailsViewModel.deleteElement(element)
+        cosplayController.navigateUp()
     }
 
     protected open fun onSaveButtonPressed() {
