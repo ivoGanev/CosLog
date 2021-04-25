@@ -2,9 +2,7 @@ package com.ifyezedev.coslog.data.db
 
 import android.content.Context
 import android.util.Log
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import com.ifyezedev.coslog.data.db.entities.*
 
 
@@ -21,6 +19,7 @@ import com.ifyezedev.coslog.data.db.entities.*
                    ],
         version = 1,
         exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class CosLogDatabase : RoomDatabase() {
 
         abstract val cosLogDao: CosLogDao

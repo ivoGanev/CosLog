@@ -7,20 +7,22 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
-class SaveBitmapsToInternalStorage : UseCase<Boolean, List<Pair<String, Bitmap>>>()  {
-    override suspend fun run(params: List<Pair<String, Bitmap>>): Either<Boolean, Failure> {
-        params.forEach { path ->
-            //println(tag + bitmapHolder.filePath)
+class SaveBitmapsToInternalStorage : UseCase<List<String>, List<Pair<String, Bitmap>>>()  {
+    override suspend fun run(params: List<Pair<String, Bitmap>>): Either<List<String>, Failure> {
+        val paths = mutableListOf<String>()
+
+        params.forEach { bitmapPathPair ->
             try {
-                FileOutputStream(File(path.first)).use { stream ->
-                    path.second.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                FileOutputStream(File(bitmapPathPair.first)).use { stream ->
+                    bitmapPathPair.second.compress(Bitmap.CompressFormat.PNG, 90, stream)
                 }
             }
             catch(ex: FileNotFoundException) {
                 return Either.Failure(Failure.IOError(ex.message!!))
             }
+            paths.add(bitmapPathPair.first)
         }
 
-        return Either.Success(true)
+        return Either.Success(paths)
     }
 }

@@ -3,7 +3,6 @@ package com.ifyezedev.coslog.feature.elements.details
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.core.net.toUri
 import androidx.lifecycle.*
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
@@ -57,13 +56,13 @@ class ElementsDetailsViewModel(
      * The String in the result is the actual internal storage file path, and the Bitmap is the
      * loaded bitmap.
      * */
-    fun loadBitmapsFromInternalStorage(onResult: (List<Pair<String, Bitmap>>) -> Unit) {
-        imageFileProvider.getInternalStorageImageFilePaths()?.let { pathsToInternalStorageImages ->
-            loadBitmapsFromInternalStorage(viewModelScope,
-                pathsToInternalStorageImages) { bitmapResult ->
-                bitmapResult.onSuccess { internalStorageBitmaps ->
-                    onResult(pathsToInternalStorageImages.zip(internalStorageBitmaps))
-                }
+    fun loadElementBitmapsFromInternalStorage(
+        element: Element,
+        onResult: (List<Pair<String, Bitmap>>) -> Unit,
+    ) {
+        loadBitmapsFromInternalStorage(viewModelScope, element.images) { bitmapResult ->
+            bitmapResult.onSuccess { internalStorageBitmaps ->
+                onResult(element.images.zip(internalStorageBitmaps))
             }
         }
     }
@@ -88,21 +87,24 @@ class ElementsDetailsViewModel(
     /**
      * Saves the bitmaps to the internal storage.
      *
-     * @param bitmapPathPairs A pair which contains a list of the bitmap's file path (String)
+     * @param bitmapUris A pair which contains a list of the bitmap's file path (String)
      * and Bitmap which is the actual bitmap to save.
      *
      * */
-    fun saveBitmapsToInternalStorage(bitmapPathPairs: List<Pair<String, Bitmap>>) {
+    fun saveBitmapsToInternalStorage(
+        bitmapUris: List<Pair<Uri, Bitmap>>,
+        onSuccessfulSave: (List<String>) -> Unit,
+    ) {
         // converting from Uri provider paths to internal storage path and saving the bitmaps
-        val onlyInternalStoragePaths = bitmapPathPairs
-            .map { it.first }
-            .filter { it.contains("content://") }
-            .map { it.toUri() }
+        val bitmapsOnly = bitmapUris
+            .map { imageFileProvider.from(it.first) }
+            .zip(bitmapUris.map { bitmapUri -> bitmapUri.second })
 
-        val uriImagePathsToFilePaths = imageFileProvider.from(onlyInternalStoragePaths)
-        val bitmapsOnly = bitmapPathPairs.map { it.second }
-
-        saveBitmapsToInternalStorage(viewModelScope, uriImagePathsToFilePaths.zip(bitmapsOnly))
+        saveBitmapsToInternalStorage(viewModelScope, bitmapsOnly) { result ->
+            result.onSuccess {
+                onSuccessfulSave(it)
+            }
+        }
     }
 
     class ElementsViewModelFactory(

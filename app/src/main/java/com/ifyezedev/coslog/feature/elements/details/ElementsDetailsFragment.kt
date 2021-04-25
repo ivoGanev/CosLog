@@ -43,19 +43,33 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
      * */
     protected lateinit var bottomBinding: ElementBottomBinding
 
-    private lateinit var adapter: MiniGalleryAdapter
+    protected lateinit var adapter: MiniGalleryAdapter
 
     protected lateinit var detailsViewModel: ElementsDetailsViewModel
 
     private lateinit var detailsViewModelFactory: ElementsDetailsViewModel.ElementsViewModelFactory
 
-    private var element: Element? = null
+    protected var element: Element? = null
 
     override fun onAfterBindingCreated(view: View) {
         super.onAfterBindingCreated(view)
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
         element = arguments?.getParcelable(BUNDLE_ITEM)
+
+        detailsViewModelFactory = ElementsDetailsViewModel.ElementsViewModelFactory(
+            OpenAndroidImageGallery(),
+            loadBitmapsFromInternalStorage,
+            loadBitmapsFromAndroidGallery,
+            saveBitmapsToInternalStorage,
+            imageFileProvider,
+            CosLogDatabase.getDatabase(requireContext()).cosLogDao
+        )
+
+        detailsViewModel = ViewModelProvider(
+            viewModelStore,
+            detailsViewModelFactory)
+            .get(ElementsDetailsViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +88,13 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     protected open fun setUpWithElement(element: Element) {
         bottomBinding.buttonDelete.visibility = View.VISIBLE
         bottomBinding.buttonsLayout.weightSum = 2F
+
+        // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
+        // update our adapter to display the bitmaps and store their respective file paths.
+        // This is usually updated when the fragment is created.
+        detailsViewModel.loadElementBitmapsFromInternalStorage(element) {
+            adapter.setData(it)
+        }
     }
 
     @CallSuper
@@ -83,19 +104,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun setup() = bottomBinding.run {
-        detailsViewModelFactory = ElementsDetailsViewModel.ElementsViewModelFactory(
-            OpenAndroidImageGallery(),
-            loadBitmapsFromInternalStorage,
-            loadBitmapsFromAndroidGallery,
-            saveBitmapsToInternalStorage,
-            imageFileProvider,
-            CosLogDatabase.getDatabase(requireContext()).cosLogDao
-        )
 
-        detailsViewModel = ViewModelProvider(
-            viewModelStore,
-            detailsViewModelFactory)
-            .get(ElementsDetailsViewModel::class.java)
         // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
 
@@ -128,12 +137,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         detailsViewModel.loadedImagesAndPathsFromAndroidGallery.observe(cosplayController.currentBackStackEntry!!) {
             adapter.addAll(it)
         }
-        // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
-        // update our adapter to display the bitmaps and store their respective file paths.
-        // This is usually updated when the fragment is created.
-        detailsViewModel.loadBitmapsFromInternalStorage {
-            adapter.addAll(it)
-        }
     }
 
 
@@ -151,9 +154,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     protected open fun onSaveButtonPressed() {
-        detailsViewModel.saveBitmapsToInternalStorage(adapter.getData())
-
-        toastNotify("Successfully saved images to internal storage.")
     }
 
     private fun onAddImageButtonPressed() {

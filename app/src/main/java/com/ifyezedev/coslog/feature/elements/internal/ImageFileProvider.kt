@@ -19,12 +19,17 @@ class ImageFileProvider(private val context: Context) : FilePathProvider {
     private val formatSuffix = ".jpeg"
     private val directoryName = "image-gallery"
 
-    private val imageDirectory get() =  "${context.filesDir}/$directoryName/"
+    private val imageDirectory get() = "${context.filesDir}/$directoryName/"
 
-    fun getInternalStorageImageFilePaths() : List<String>? {
+    fun getInternalStorageImageFilePaths(): List<String>? {
         val files = File(imageDirectory)
         return files.listFiles()?.map { file -> file.path }
     }
+
+    fun getInternalStorageImages(paths: List<String>) =
+        getInternalStorageImageFilePaths()?.filter { internalStoragePath ->
+            paths.any { it == internalStoragePath }
+        }
 
     override fun from(uri: Uri): String {
         val originalFileName = uri.toString().substringAfterLast("/")

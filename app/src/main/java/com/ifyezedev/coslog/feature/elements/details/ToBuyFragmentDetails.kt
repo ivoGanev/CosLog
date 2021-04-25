@@ -22,14 +22,16 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     }
 
     override fun onSaveButtonPressed() {
-        super.onSaveButtonPressed()
-        detailsViewModel.insertElement(elementsBuilder {
-            name = binding.nameValue.text.toString()
-            source = binding.source.text.toString()
-            cost = binding.costValue.text.toString().toDouble()
-            notes = binding.bottomView.notes.text.toString()
-            isBuy = true
-        })
+        detailsViewModel.saveBitmapsToInternalStorage(adapter.filterCachedBitmaps()) { savedFilesPath ->
+            detailsViewModel.insertElement(elementsBuilder {
+                name = binding.nameValue.text.toString()
+                source = binding.sourceValue.text.toString()
+                cost = binding.costValue.text.toString().toDouble()
+                notes = binding.bottomView.notes.text.toString()
+                images = ArrayList(savedFilesPath)
+                isBuy = true
+            })
+        }
     }
 
     override fun setUpWithElement(element: Element) {

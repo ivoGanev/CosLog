@@ -24,9 +24,11 @@ data class Element(
 
     var notes: String = "",
 
-    var progress: Float = 0.0F
+    var progress: Float = 0.0F,
 
-) : Parcelable {
+    var images: ArrayList<String> = arrayListOf(),
+
+    ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readLong(),
@@ -36,7 +38,8 @@ data class Element(
         parcel.readLong(),
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readFloat()) {
+        parcel.readFloat(),
+        parcel.createStringArrayList()!!) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -49,6 +52,7 @@ data class Element(
         parcel.writeString(source)
         parcel.writeString(notes)
         parcel.writeFloat(progress)
+        parcel.writeStringList(images)
     }
 
     override fun describeContents(): Int {
