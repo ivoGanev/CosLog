@@ -2,13 +2,17 @@ package com.ifyezedev.coslog.core.common.usecase
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.core.net.toUri
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
+import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
 import java.io.File
 import java.io.FileInputStream
 import java.lang.Exception
 
-class LoadBitmapsFromInternalStorage : UseCase<List<Bitmap>, List<String>>() {
+class LoadBitmapsFromInternalStorage(
+    private val filePathProvider: FilePathProvider,
+) : UseCase<List<Bitmap>, List<String>>() {
     // We are using the IODispatcher so suppressing the warning is fine
     @Suppress("BlockingMethodInNonBlockingContext")
     /**
@@ -22,6 +26,7 @@ class LoadBitmapsFromInternalStorage : UseCase<List<Bitmap>, List<String>>() {
 
         for (i in params.indices) {
             val file = File(params[i])
+
             val bitmapsFilesToOpen = if (file.isDirectory) {
                 file.listFiles()
             } else {

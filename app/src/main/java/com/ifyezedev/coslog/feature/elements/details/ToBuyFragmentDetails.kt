@@ -21,18 +21,14 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     }
 
     override fun onSaveButtonPressed() {
-        // First we try and save the bitmaps that are stored in the adapter and
-        // if there is no error we can safely insert them into the database.
-        detailsViewModel.saveBitmapsToInternalStorage(adapter.filterCachedBitmaps()) { savedFilesPath ->
-            detailsViewModel.insertElementInDatabase(elementsBuilder {
-                name = binding.nameValue.text.toString()
-                source = binding.sourceValue.text.toString()
-                cost = binding.costValue.text.toString().toDouble()
-                notes = binding.bottomView.notes.text.toString()
-                images = ArrayList(savedFilesPath)
-                isBuy = true
-            })
-        }
+        detailsViewModel.insertElementInDatabase(elementsBuilder {
+            name = binding.nameValue.text.toString()
+            source = binding.sourceValue.text.toString()
+            cost = binding.costValue.text.toString().toDouble()
+            notes = binding.bottomView.notes.text.toString()
+            images = ArrayList(adapter.getFilePaths())
+            isBuy = true
+        })
     }
 
     // This method will get executed from the base fragment [ElementsDetailsFragment] if we

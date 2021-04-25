@@ -15,16 +15,14 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_make
 
     override fun onSaveButtonPressed() {
-        detailsViewModel.saveBitmapsToInternalStorage(adapter.filterCachedBitmaps()) { savedFilesPath ->
-            detailsViewModel.insertElementInDatabase(elementsBuilder {
-                name = binding.nameValue.text.toString()
-                time = binding.timeValue.text.toString().toLong()
-                progress = binding.progressValue.text.toString().toFloat()
-                notes = binding.bottomView.notes.text.toString()
-                images = ArrayList(savedFilesPath)
-                isBuy = false
-            })
-        }
+        detailsViewModel.insertElementInDatabase(elementsBuilder {
+            name = binding.nameValue.text.toString()
+            time = binding.timeValue.text.toString().toLong()
+            progress = binding.progressValue.text.toString().toFloat()
+            notes = binding.bottomView.notes.text.toString()
+            images = ArrayList(adapter.getFilePaths())
+            isBuy = false
+        })
     }
 
     override fun setUpWithElement(element: Element) {

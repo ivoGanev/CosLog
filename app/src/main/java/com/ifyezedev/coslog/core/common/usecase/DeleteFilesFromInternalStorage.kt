@@ -8,6 +8,8 @@ import java.io.File
 /**
  * This use case will delete any file from the internal storage with the provided
  * params path.
+ *
+ * params: the file to delete
  * */
 class DeleteFilesFromInternalStorage : UseCase<Boolean, String>() {
     override suspend fun run(params: String): Either<Boolean, Failure> {

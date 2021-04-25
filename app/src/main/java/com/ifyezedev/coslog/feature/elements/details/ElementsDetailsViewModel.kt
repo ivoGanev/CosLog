@@ -3,15 +3,17 @@ package com.ifyezedev.coslog.feature.elements.details
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.*
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.functional.onSuccess
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.extensions.mapToUri
+import com.ifyezedev.coslog.core.functional.onFailure
 import com.ifyezedev.coslog.data.db.CosLogDao
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
+import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
 import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGallery
 import kotlinx.coroutines.launch
 
@@ -20,13 +22,13 @@ class ElementsDetailsViewModel(
     private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
     private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
     private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
-    private val imageFileProvider: ImageFileProvider,
+    private val filePathProvider: FilePathProvider,
     private val db: CosLogDao,
 ) : ViewModel() {
 
     private val _loadedImagesAndPathsFromAndroidGallery =
-        MutableLiveData<List<Pair<String, Bitmap>>>()
-    val loadedImagesAndPathsFromAndroidGallery: LiveData<List<Pair<String, Bitmap>>>
+        MutableLiveData<List<Pair<Uri, Bitmap>>>()
+    val loadedImagesAndPathsFromAndroidGallery: LiveData<List<Pair<Uri, Bitmap>>>
         get() = _loadedImagesAndPathsFromAndroidGallery
 
 
@@ -78,35 +80,28 @@ class ElementsDetailsViewModel(
 
         loadBitmapsFromAndroidGallery(viewModelScope, uris) { result ->
             result.onSuccess { bitmaps ->
-                _loadedImagesAndPathsFromAndroidGallery.value =
-                    (uris.map { it.toString() }.zip(bitmaps))
+                _loadedImagesAndPathsFromAndroidGallery.value = uris.zip(bitmaps)
             }
         }
     }
 
     /**
-     * Saves the bitmaps to the internal storage by converting the content provider Uri path
-     * to an actual file path and using [saveBitmapsToInternalStorage] use case.
-     *
-     * @param bitmapUris A pair which contains a list of the bitmap's file path [String]
+     * @param bitmapFilePaths A pair which contains a list of the bitmap's file path [String]
      * and [Bitmap] which is the actual bitmap to save.
      *
      * When the bitmaps are successfully saved, we return the file paths. This is useful when we need to be sure
      * that the files are saved before storing the actual file path in the database.
      * */
     fun saveBitmapsToInternalStorage(
-        bitmapUris: List<Pair<Uri, Bitmap>>,
+        bitmapFilePaths: List<Pair<Uri, Bitmap>>,
         onSuccessfulSave: (List<String>) -> Unit,
     ) {
-        // converting from Uri provider paths to internal storage path and pairing them
-        // with the actual bitmaps.
-        val bitmapsOnly = bitmapUris
-            .map { imageFileProvider.from(it.first) }
-            .zip(bitmapUris.map { bitmapUri -> bitmapUri.second })
-
-        saveBitmapsToInternalStorage(viewModelScope, bitmapsOnly) { result ->
+        saveBitmapsToInternalStorage(viewModelScope, bitmapFilePaths) { result ->
             result.onSuccess {
                 onSuccessfulSave(it)
+            }
+            result.onFailure {
+                Log.e(this::class.java.simpleName, it.toString())
             }
         }
     }
@@ -116,7 +111,7 @@ class ElementsDetailsViewModel(
         private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
         private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
         private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
-        private val imageFileProvider: ImageFileProvider,
+        private val filePathProvider: FilePathProvider,
         private val db: CosLogDao,
 
         ) : ViewModelProvider.Factory {
@@ -127,7 +122,7 @@ class ElementsDetailsViewModel(
                     loadBitmapsFromInternalStorage,
                     loadBitmapsFromAndroidGallery,
                     saveBitmapsToInternalStorage,
-                    imageFileProvider,
+                    filePathProvider,
                     db
                 ) as T
             }

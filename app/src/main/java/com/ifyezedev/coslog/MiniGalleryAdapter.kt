@@ -61,6 +61,9 @@ class MiniGalleryAdapter(data: List<Pair<String, Bitmap>> = listOf()) :
         holder.binding.imageView.setImageBitmap(_data[position].second)
     }
 
+    fun  getFilePaths(): List<String> = _data
+        .map { it.first }
+
     class ViewHolderObject(
         itemView: View,
         private val clickListener: OnClickListener,

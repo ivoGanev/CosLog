@@ -62,7 +62,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             loadBitmapsFromInternalStorage,
             loadBitmapsFromAndroidGallery,
             saveBitmapsToInternalStorage,
-            imageFileProvider,
+            filePathProvider,
             CosLogDatabase.getDatabase(requireContext()).cosLogDao
         )
 
@@ -134,8 +134,10 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        detailsViewModel.loadedImagesAndPathsFromAndroidGallery.observe(cosplayController.currentBackStackEntry!!) {
-            adapter.addAll(it)
+        detailsViewModel.loadedImagesAndPathsFromAndroidGallery.observe(viewLifecycleOwner) { bitmapUris->
+            detailsViewModel.saveBitmapsToInternalStorage(bitmapUris) { successfullyStoredPaths ->
+                adapter.addAll(successfullyStoredPaths.zip(bitmapUris.map { it.second }))
+            }
         }
     }
 
@@ -180,6 +182,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             // this is telling the PictureGalleryFragment, the one we are about to navigate to,
             // on which item position it should move to.
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
+            putStringArrayList(PictureGalleryFragment.Keys.IMAGE_PATH, ArrayList(adapter.getFilePaths()))
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
     }

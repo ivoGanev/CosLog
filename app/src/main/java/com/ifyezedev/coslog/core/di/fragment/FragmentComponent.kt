@@ -5,7 +5,7 @@ import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.app.AppComponent
-import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
+import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
 import dagger.Component
 
 @Component(dependencies = [AppComponent::class])
@@ -15,5 +15,5 @@ interface FragmentComponent {
     fun loadBitmapsFromInternalStorageUseCase(): LoadBitmapsFromInternalStorage
     fun saveBitmapsToInternalStorageUseCase(): SaveBitmapsToInternalStorage
     fun getBitmapPathsFromAndroidGallery(): LoadBitmapsFromAndroidGallery
-    fun imageFilePathProvider() : ImageFileProvider
+    fun imageFilePathProvider() : FilePathProvider
 }

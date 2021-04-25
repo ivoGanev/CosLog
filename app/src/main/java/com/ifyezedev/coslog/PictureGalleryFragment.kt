@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -37,7 +36,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
 
     override fun onStart() {
         super.onStart()
-        val internalStorageImagePaths = imageFileProvider.getInternalStorageImageFilePaths()
+        val internalStorageImagePaths = arguments?.getStringArrayList(IMAGE_PATH)
 
         // if there are any images to display from internal storage
         if (internalStorageImagePaths != null) {
@@ -63,7 +62,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
 
             updateToolbarTitle()
         }
-        // otherwise inform that there are no images
+        // otherwise make the user aware that there are no images in the gallery
         else {
         }
     }
