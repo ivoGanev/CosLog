@@ -149,7 +149,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun onDeleteButtonPressed() {
-        detailsViewModel.deleteElement(element)
+        detailsViewModel.deleteElementFromDatabase(element)
         cosplayController.navigateUp()
     }
 
@@ -172,7 +172,10 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         }
     }
 
-    override fun onImageClickedListener(view: View) {
+    /**
+     * This gets executed when a picture from the mini image gallery is clicked.
+     * */
+    override fun onPictureClicked(view: View) {
         val bundle = Bundle().apply {
             // this is telling the PictureGalleryFragment, the one we are about to navigate to,
             // on which item position it should move to.
@@ -183,7 +186,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     override fun onDestroyView() {
         // We have to make sure that we clear the viewModelStore because when navigating
-        // forward to any fragment, all view models get stored in the current associated fragment manager
+        // to any fragment, all view models get stored in the current associated fragment manager
         // and not being destroyed; this leads to subtle live data bugs like, for example, refreshing
         // some old data that was meant to be stored and updated only for configuration change in a
         // specific fragment.

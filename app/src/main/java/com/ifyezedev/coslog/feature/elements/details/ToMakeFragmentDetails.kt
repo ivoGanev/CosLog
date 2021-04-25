@@ -4,7 +4,6 @@ import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.FragmentToMakeBinding
-import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
 
 /**
  * This is the to-make details fragment which contains both the top and bottom parts of
@@ -17,7 +16,7 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
 
     override fun onSaveButtonPressed() {
         detailsViewModel.saveBitmapsToInternalStorage(adapter.filterCachedBitmaps()) { savedFilesPath ->
-            detailsViewModel.insertElement(elementsBuilder {
+            detailsViewModel.insertElementInDatabase(elementsBuilder {
                 name = binding.nameValue.text.toString()
                 time = binding.timeValue.text.toString().toLong()
                 progress = binding.progressValue.text.toString().toFloat()

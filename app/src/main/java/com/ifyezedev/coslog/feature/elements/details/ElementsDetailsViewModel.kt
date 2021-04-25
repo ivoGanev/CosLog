@@ -30,13 +30,13 @@ class ElementsDetailsViewModel(
         get() = _loadedImagesAndPathsFromAndroidGallery
 
 
-    fun insertElement(element: Element) {
+    fun insertElementInDatabase(element: Element) {
         viewModelScope.launch {
             db.insertElement(element)
         }
     }
 
-    fun deleteElement(element: Element?) {
+    fun deleteElementFromDatabase(element: Element?) {
         viewModelScope.launch {
             element?.let {
                 db.deleteElement(element)
@@ -52,9 +52,8 @@ class ElementsDetailsViewModel(
     }
 
     /**
-     * Loads the bitmaps from the internal storage.
-     * The String in the result is the actual internal storage file path, and the Bitmap is the
-     * loaded bitmap.
+     * Loads the bitmaps from the provided [element] images variable.
+     * The result is paired [String] (The file path) and [Bitmap] (The actual bitmap loaded from the path).
      * */
     fun loadElementBitmapsFromInternalStorage(
         element: Element,
@@ -68,7 +67,8 @@ class ElementsDetailsViewModel(
     }
 
     /**
-     * By subscribing to [loadedImagesAndPathsFromAndroidGallery] and calling this function, you can
+     * By subscribing to [loadedImagesAndPathsFromAndroidGallery] and calling this function
+     * from onActivityResult(..) (in order to provide the gallery intent), you can
      * get images and their respective content provider Uri paths from the Android gallery.
      * */
     fun loadImagesFromAndroidGallery(intent: Intent) {
@@ -85,17 +85,21 @@ class ElementsDetailsViewModel(
     }
 
     /**
-     * Saves the bitmaps to the internal storage.
+     * Saves the bitmaps to the internal storage by converting the content provider Uri path
+     * to an actual file path and using [saveBitmapsToInternalStorage] use case.
      *
-     * @param bitmapUris A pair which contains a list of the bitmap's file path (String)
-     * and Bitmap which is the actual bitmap to save.
+     * @param bitmapUris A pair which contains a list of the bitmap's file path [String]
+     * and [Bitmap] which is the actual bitmap to save.
      *
+     * When the bitmaps are successfully saved, we return the file paths. This is useful when we need to be sure
+     * that the files are saved before storing the actual file path in the database.
      * */
     fun saveBitmapsToInternalStorage(
         bitmapUris: List<Pair<Uri, Bitmap>>,
         onSuccessfulSave: (List<String>) -> Unit,
     ) {
-        // converting from Uri provider paths to internal storage path and saving the bitmaps
+        // converting from Uri provider paths to internal storage path and pairing them
+        // with the actual bitmaps.
         val bitmapsOnly = bitmapUris
             .map { imageFileProvider.from(it.first) }
             .zip(bitmapUris.map { bitmapUri -> bitmapUri.second })

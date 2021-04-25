@@ -7,12 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
-import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.etc.OnSnapPositionChangeListener
 import com.ifyezedev.coslog.databinding.PictureItemBinding
-import com.ifyezedev.coslog.feature.elements.internal.ImageFileProvider
-import kotlinx.coroutines.CoroutineScope
 
 class MiniGalleryAdapter(data: List<Pair<String, Bitmap>> = listOf()) :
 
@@ -77,12 +73,12 @@ class MiniGalleryAdapter(data: List<Pair<String, Bitmap>> = listOf()) :
 
         override fun onClick(v: View?) {
             when (v?.id) {
-                binding.imageView.id -> clickListener.onImageClickedListener(binding.imageView)
+                binding.imageView.id -> clickListener.onPictureClicked(binding.imageView)
             }
         }
     }
 
     interface OnClickListener {
-        fun onImageClickedListener(view: View)
+        fun onPictureClicked(view: View)
     }
 }

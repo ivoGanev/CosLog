@@ -6,7 +6,6 @@ import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
-import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
 
 /**
  * This is the to-buy elements fragment which contains both the top and bottom parts of
@@ -22,8 +21,10 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     }
 
     override fun onSaveButtonPressed() {
+        // First we try and save the bitmaps that are stored in the adapter and
+        // if there is no error we can safely insert them into the database.
         detailsViewModel.saveBitmapsToInternalStorage(adapter.filterCachedBitmaps()) { savedFilesPath ->
-            detailsViewModel.insertElement(elementsBuilder {
+            detailsViewModel.insertElementInDatabase(elementsBuilder {
                 name = binding.nameValue.text.toString()
                 source = binding.sourceValue.text.toString()
                 cost = binding.costValue.text.toString().toDouble()
@@ -34,6 +35,8 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
         }
     }
 
+    // This method will get executed from the base fragment [ElementsDetailsFragment] if we
+    // are updating the fragment - when we click over an element from the elements list.
     override fun setUpWithElement(element: Element) {
         super.setUpWithElement(element)
         binding.nameValue.setText(element.name)
