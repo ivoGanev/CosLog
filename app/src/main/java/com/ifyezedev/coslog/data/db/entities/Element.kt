@@ -7,7 +7,7 @@ import androidx.room.*
 @Entity(tableName = "elements")
 data class Element(
     @PrimaryKey(autoGenerate = true)
-    val eid: Long = 0L,
+    var eid: Long = 0L,
 
     val cosplay_id: Long = 0,
 

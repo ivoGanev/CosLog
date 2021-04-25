@@ -21,14 +21,23 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     }
 
     override fun onSaveButtonPressed() {
-        detailsViewModel.insertElementInDatabase(elementsBuilder {
+        val elementTmp = elementsBuilder {
+            if(element!=null)
+                eid = element!!.eid
+
             name = binding.nameValue.text.toString()
             source = binding.sourceValue.text.toString()
             cost = binding.costValue.text.toString().toDouble()
             notes = binding.bottomView.notes.text.toString()
             images = ArrayList(adapter.getFilePaths())
             isBuy = true
-        })
+        }
+
+        if (element == null)
+            detailsViewModel.insertElementInDatabase(elementTmp)
+        else {
+            detailsViewModel.updateElementInDatabase(elementTmp)
+        }
     }
 
     // This method will get executed from the base fragment [ElementsDetailsFragment] if we

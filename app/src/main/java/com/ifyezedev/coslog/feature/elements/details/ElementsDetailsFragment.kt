@@ -62,7 +62,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             loadBitmapsFromInternalStorage,
             loadBitmapsFromAndroidGallery,
             saveBitmapsToInternalStorage,
-            filePathProvider,
             CosLogDatabase.getDatabase(requireContext()).cosLogDao
         )
 

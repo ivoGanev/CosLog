@@ -15,14 +15,22 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_make
 
     override fun onSaveButtonPressed() {
-        detailsViewModel.insertElementInDatabase(elementsBuilder {
+        val elementTmp = elementsBuilder {
+            if (element != null)
+                eid = element!!.eid
             name = binding.nameValue.text.toString()
             time = binding.timeValue.text.toString().toLong()
             progress = binding.progressValue.text.toString().toFloat()
             notes = binding.bottomView.notes.text.toString()
             images = ArrayList(adapter.getFilePaths())
             isBuy = false
-        })
+        }
+
+        if (element == null)
+            detailsViewModel.insertElementInDatabase(elementTmp)
+        else {
+            detailsViewModel.updateElementInDatabase(elementTmp)
+        }
     }
 
     override fun setUpWithElement(element: Element) {

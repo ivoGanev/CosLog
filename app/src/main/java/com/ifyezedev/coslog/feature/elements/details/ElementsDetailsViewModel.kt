@@ -22,7 +22,6 @@ class ElementsDetailsViewModel(
     private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
     private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
     private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
-    private val filePathProvider: FilePathProvider,
     private val db: CosLogDao,
 ) : ViewModel() {
 
@@ -31,6 +30,11 @@ class ElementsDetailsViewModel(
     val loadedImagesAndPathsFromAndroidGallery: LiveData<List<Pair<Uri, Bitmap>>>
         get() = _loadedImagesAndPathsFromAndroidGallery
 
+    fun updateElementInDatabase(element: Element) {
+        viewModelScope.launch {
+            db.updateElement(element)
+        }
+    }
 
     fun insertElementInDatabase(element: Element) {
         viewModelScope.launch {
@@ -111,7 +115,6 @@ class ElementsDetailsViewModel(
         private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
         private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
         private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
-        private val filePathProvider: FilePathProvider,
         private val db: CosLogDao,
 
         ) : ViewModelProvider.Factory {
@@ -122,7 +125,6 @@ class ElementsDetailsViewModel(
                     loadBitmapsFromInternalStorage,
                     loadBitmapsFromAndroidGallery,
                     saveBitmapsToInternalStorage,
-                    filePathProvider,
                     db
                 ) as T
             }
