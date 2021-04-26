@@ -4,7 +4,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.navigation.NavController
 import com.ifyezedev.coslog.core.di.activity.CosplayActivityComponent
 import com.ifyezedev.coslog.core.di.app.AppComponent
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
+import com.ifyezedev.coslog.core.common.ImageFilePathProvider
 import dagger.Component
 
 @Component(dependencies = [CosplayActivityComponent::class, AppComponent:: class])

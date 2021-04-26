@@ -16,7 +16,7 @@ import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.feature.elements.internal.*
-import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGallery
+import com.ifyezedev.coslog.core.common.usecase.OpenAndroidImageGallery
 
 
 abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBaseFragment<T>(),
@@ -88,12 +88,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     protected open fun initializeWithElement(element: Element) {
         bottomBinding.buttonDelete.visibility = View.VISIBLE
         bottomBinding.buttonsLayout.weightSum = 2F
-
-        // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
-        // update our adapter to display the bitmaps and store their respective file paths.
-        // This is usually updated when the fragment is created.
-        //  detailsViewModel.prepareInternalStorageBitmapsForLoading(element) {
-        // }
     }
 
     @CallSuper
@@ -185,17 +179,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
                 ArrayList(adapter.getFilePaths()))
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
-    }
-
-    override fun onDestroyView() {
-        // We have to make sure that we clear the viewModelStore because when navigating
-        // to any fragment, all view models get stored in the current associated fragment manager
-        // and not being destroyed; this leads to subtle live data bugs like, for example, refreshing
-        // some old data that was meant to be stored and updated only for configuration change in a
-        // specific fragment.
-        //if (!requireActivity().isChangingConfigurations)
-        //     viewModelStore.clear()
-        super.onDestroyView()
     }
 }
 

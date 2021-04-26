@@ -4,7 +4,7 @@ import com.ifyezedev.coslog.core.common.usecase.DeleteFilesFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromAndroidGallery
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
+import com.ifyezedev.coslog.core.common.ImageFilePathProvider
 import dagger.Component
 
 @Component(modules = [AppModule::class])

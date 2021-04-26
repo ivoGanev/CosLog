@@ -14,7 +14,6 @@ import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.fragment.DaggerFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.FragmentComponent
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
 
 /**
  * Inherit from the base fragment when you need access to global services like

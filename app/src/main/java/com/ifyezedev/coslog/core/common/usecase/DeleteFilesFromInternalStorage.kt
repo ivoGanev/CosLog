@@ -1,5 +1,6 @@
 package com.ifyezedev.coslog.core.common.usecase
 
+import com.ifyezedev.coslog.core.common.usecase.core.UseCase
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.exception.Failure.*
 import com.ifyezedev.coslog.core.functional.Either

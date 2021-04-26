@@ -1,4 +1,4 @@
-package com.ifyezedev.coslog.feature.elements.internal
+package com.ifyezedev.coslog.core.common
 
 import android.content.Context
 import android.net.Uri

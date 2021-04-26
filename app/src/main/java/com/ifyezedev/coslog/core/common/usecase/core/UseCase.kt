@@ -1,6 +1,5 @@
-package com.ifyezedev.coslog.core.common.usecase
+package com.ifyezedev.coslog.core.common.usecase.core
 
-import androidx.lifecycle.LifecycleCoroutineScope
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
 import kotlinx.coroutines.*

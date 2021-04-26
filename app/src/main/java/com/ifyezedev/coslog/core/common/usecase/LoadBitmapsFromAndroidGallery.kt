@@ -3,11 +3,10 @@ package com.ifyezedev.coslog.core.common.usecase
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.ExifInterface
 import android.net.Uri
+import com.ifyezedev.coslog.core.common.usecase.core.UseCase
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
-import java.io.File
 
 
 /**

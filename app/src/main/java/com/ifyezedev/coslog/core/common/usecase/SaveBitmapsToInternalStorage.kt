@@ -1,10 +1,10 @@
 package com.ifyezedev.coslog.core.common.usecase
 
 import android.graphics.Bitmap
-import android.net.Uri
+import com.ifyezedev.coslog.core.common.usecase.core.UseCase
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
+import com.ifyezedev.coslog.core.common.ImageFilePathProvider
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream

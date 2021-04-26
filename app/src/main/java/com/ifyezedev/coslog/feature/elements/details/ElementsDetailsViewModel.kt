@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
-import com.ifyezedev.coslog.MiniGalleryAdapter
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.functional.onSuccess
@@ -14,8 +13,8 @@ import com.ifyezedev.coslog.core.extensions.mapToUri
 import com.ifyezedev.coslog.core.functional.onFailure
 import com.ifyezedev.coslog.data.db.CosLogDao
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
-import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGallery
+import com.ifyezedev.coslog.core.common.ImageFilePathProvider
+import com.ifyezedev.coslog.core.common.usecase.OpenAndroidImageGallery
 import kotlinx.coroutines.launch
 
 class ElementsDetailsViewModel(
@@ -56,7 +55,7 @@ class ElementsDetailsViewModel(
      * Opens the Android image gallery.
      * */
     fun openAndroidImageGalleryForResult(activityForResult: (Intent, Int) -> Unit) {
-        openAndroidImageGallery.invoke(activityForResult)
+        openAndroidImageGallery(viewModelScope, activityForResult)
     }
 
     fun prepareImagesFromAndroidGalleryForLoading(intent: Intent) {

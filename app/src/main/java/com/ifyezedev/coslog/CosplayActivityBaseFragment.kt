@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.core.di.fragment.CosplayFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.DaggerCosplayFragmentComponent
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
+import com.ifyezedev.coslog.core.common.ImageFilePathProvider
 
 /**
  * This fragment should be used by all of the fragments that are residing in the [CosplayActivity].

@@ -2,9 +2,10 @@ package com.ifyezedev.coslog.core.common.usecase
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.ifyezedev.coslog.core.common.usecase.core.UseCase
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
-import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
+import com.ifyezedev.coslog.core.common.ImageFilePathProvider
 import java.io.File
 import java.io.FileInputStream
 import java.lang.Exception
