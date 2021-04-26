@@ -42,8 +42,8 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
 
     // This method will get executed from the base fragment [ElementsDetailsFragment] if we
     // are updating the fragment - when we click over an element from the elements list.
-    override fun setUpWithElement(element: Element) {
-        super.setUpWithElement(element)
+    override fun initializeWithElement(element: Element) {
+        super.initializeWithElement(element)
         binding.nameValue.setText(element.name)
         binding.sourceValue.setText(element.source)
         binding.costValue.setText(element.cost.toString())

@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.core.di.fragment.CosplayFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.DaggerCosplayFragmentComponent
-import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
+import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
 
 /**
  * This fragment should be used by all of the fragments that are residing in the [CosplayActivity].
@@ -29,14 +29,14 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
 
     lateinit var cosplayController: NavController
 
-    lateinit var filePathPathProvider: FilePathProvider
+    lateinit var imageFilePathPathProvider: ImageFilePathProvider
 
     lateinit var actionBar: androidx.appcompat.app.ActionBar
 
     @CallSuper
     override fun onAfterBindingCreated(view: View) {
         cosplayController = cosplayFragmentComponent.cosplayController()
-        filePathPathProvider = cosplayFragmentComponent.imageFilePathProvider()
+        imageFilePathPathProvider = cosplayFragmentComponent.imageFilePathProvider()
         actionBar = cosplayFragmentComponent.actionBar()
         setHasOptionsMenu(true)
     }

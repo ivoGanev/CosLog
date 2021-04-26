@@ -1,27 +1,19 @@
 package com.ifyezedev.coslog.feature.elements.internal
 
-import android.content.ContentResolver
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import androidx.core.database.getIntOrNull
-import java.util.*
 
 
-/**
- * Converts Android gallery URIs to internal storage file path. Also contains a quick
- * way to fetch all image file paths from their directory .
- * */
-class FilePathProvider(private val context: Context) {
+class ImageFilePathProvider(private val context: Context) {
     private val directoryName = "image-gallery"
 
-    fun getInternalStorageFilePath(fileUri: Uri) =
-        getDefaultImageDirectory() + getImageRealName(fileUri)
+    fun toInternalStorageFilePath(fileUri: Uri) =
+        getDefaultImageDirectory() + toAndroidGalleryName(fileUri)
 
     fun getDefaultImageDirectory() = "${context.filesDir}/$directoryName/"
 
-    private fun getImageRealName(path: Uri): String {
+    private fun toAndroidGalleryName(path: Uri): String {
         val projection = arrayOf(
             MediaStore.Images.Media.DISPLAY_NAME,
         )
@@ -32,7 +24,4 @@ class FilePathProvider(private val context: Context) {
                 return cursor.getString(nameColumn)
             }
     }
-
-    fun extractFileNameFromContentProviderUriPath(uri: Uri): String =
-        uri.toString().substringAfterLast("/")
 }

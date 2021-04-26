@@ -33,8 +33,8 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
         }
     }
 
-    override fun setUpWithElement(element: Element) {
-        super.setUpWithElement(element)
+    override fun initializeWithElement(element: Element) {
+        super.initializeWithElement(element)
         binding.nameValue.setText(element.name)
         binding.timeValue.setText(element.time.toString())
         binding.progressValue.setText(element.progress.toString())

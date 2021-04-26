@@ -4,29 +4,30 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
-import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
+import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
 class SaveBitmapsToInternalStorage(
-    private val filePathProvider: FilePathProvider,
-) : UseCase<List<String>, List<Pair<Uri, Bitmap>>>() {
+    private val imageFilePathProvider: ImageFilePathProvider,
+) : UseCase<List<String>, List<Pair<String, Bitmap>>>() {
 
-    override suspend fun run(params: List<Pair<Uri, Bitmap>>): Either<List<String>, Failure> {
+    override suspend fun run(params: List<Pair<String, Bitmap>>): Either<List<String>, Failure> {
         val paths = mutableListOf<String>()
         // make sure the image directory exists
-        val file = File(filePathProvider.getDefaultImageDirectory())
+        val file = File(imageFilePathProvider.getDefaultImageDirectory())
         if (!file.exists())
             file.mkdirs()
 
         params.forEach { bitmapPathPair ->
             try {
-                val path = filePathProvider.getInternalStorageFilePath(bitmapPathPair.first)
+                //val path = imageFilePathProvider.toInternalStorageFilePath(bitmapPathPair.first)
+                val path = bitmapPathPair.first
                 val newFile = File(path)
                 paths.add(path)
 
-                if(newFile.exists()) {
+                if (newFile.exists()) {
                     return@forEach
                 }
 

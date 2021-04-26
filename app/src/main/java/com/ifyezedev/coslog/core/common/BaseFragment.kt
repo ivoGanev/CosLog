@@ -14,7 +14,7 @@ import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.di.fragment.DaggerFragmentComponent
 import com.ifyezedev.coslog.core.di.fragment.FragmentComponent
-import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
+import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
 
 /**
  * Inherit from the base fragment when you need access to global services like
@@ -43,7 +43,7 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
 
     lateinit var loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery
 
-    lateinit var filePathProvider: FilePathProvider
+    lateinit var imageFilePathProvider: ImageFilePathProvider
 
     private val baseFragmentComponent: FragmentComponent by lazy {
         DaggerFragmentComponent.builder()
@@ -73,7 +73,7 @@ abstract class BaseFragment<T : ViewDataBinding> :Fragment() {
             loadBitmapsFromInternalStorage = loadBitmapsFromInternalStorageUseCase()
             saveBitmapsToInternalStorage = saveBitmapsToInternalStorageUseCase()
             loadBitmapsFromAndroidGallery = getBitmapPathsFromAndroidGallery()
-            filePathProvider = imageFilePathProvider()
+            imageFilePathProvider = imageFilePathProvider()
         }
 
         bindingAgent = StandardBindingAgent(bindingLayoutId(), inflater, container)

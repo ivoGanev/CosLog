@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
+import com.ifyezedev.coslog.MiniGalleryAdapter
 import com.ifyezedev.coslog.core.common.usecase.LoadBitmapsFromInternalStorage
 import com.ifyezedev.coslog.core.common.usecase.SaveBitmapsToInternalStorage
 import com.ifyezedev.coslog.core.functional.onSuccess
@@ -13,7 +14,7 @@ import com.ifyezedev.coslog.core.extensions.mapToUri
 import com.ifyezedev.coslog.core.functional.onFailure
 import com.ifyezedev.coslog.data.db.CosLogDao
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.feature.elements.internal.FilePathProvider
+import com.ifyezedev.coslog.feature.elements.internal.ImageFilePathProvider
 import com.ifyezedev.coslog.feature.elements.internal.usecase.OpenAndroidImageGallery
 import kotlinx.coroutines.launch
 
@@ -22,13 +23,14 @@ class ElementsDetailsViewModel(
     private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
     private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
     private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
+    private val imageFilePathProvider: ImageFilePathProvider,
     private val db: CosLogDao,
 ) : ViewModel() {
 
-    private val _loadedImagesAndPathsFromAndroidGallery =
-        MutableLiveData<List<Pair<Uri, Bitmap>>>()
-    val loadedImagesAndPathsFromAndroidGallery: LiveData<List<Pair<Uri, Bitmap>>>
-        get() = _loadedImagesAndPathsFromAndroidGallery
+    private val _preparedPicturePaths =
+        MutableLiveData<List<String>>(mutableListOf())
+    val preparedPicturePaths: LiveData<List<String>>
+        get() = _preparedPicturePaths
 
     fun updateElementInDatabase(element: Element) {
         viewModelScope.launch {
@@ -57,52 +59,47 @@ class ElementsDetailsViewModel(
         openAndroidImageGallery.invoke(activityForResult)
     }
 
-    /**
-     * Loads the bitmaps from the provided [element] images variable.
-     * The result is paired [String] (The file path) and [Bitmap] (The actual bitmap loaded from the path).
-     * */
-    fun loadElementBitmapsFromInternalStorage(
-        element: Element,
-        onResult: (List<Pair<String, Bitmap>>) -> Unit,
-    ) {
-        loadBitmapsFromInternalStorage(viewModelScope, element.images) { bitmapResult ->
-            bitmapResult.onSuccess { internalStorageBitmaps ->
-                onResult(element.images.zip(internalStorageBitmaps))
-            }
-        }
-    }
-
-    /**
-     * By subscribing to [loadedImagesAndPathsFromAndroidGallery] and calling this function
-     * from onActivityResult(..) (in order to provide the gallery intent), you can
-     * get images and their respective content provider Uri paths from the Android gallery.
-     * */
-    fun loadImagesFromAndroidGallery(intent: Intent) {
+    fun prepareImagesFromAndroidGalleryForLoading(intent: Intent) {
         val uris: MutableList<Uri> = mutableListOf()
         intent.data?.let { uri -> uris.add(uri) }
         intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
 
         loadBitmapsFromAndroidGallery(viewModelScope, uris) { result ->
-            result.onSuccess { bitmaps ->
-                _loadedImagesAndPathsFromAndroidGallery.value = uris.zip(bitmaps)
+            result.onSuccess { loadedBitmaps ->
+                val internalStoragePaths = uris.map { uri ->
+                    imageFilePathProvider.toInternalStorageFilePath(uri)
+                }
+
+                saveBitmapsToInternalStorage(viewModelScope, internalStoragePaths.zip(loadedBitmaps)) { savedResult ->
+                    savedResult.onSuccess { internalStoragePaths ->
+                        val preparedPicturePaths: MutableList<String> =
+                            _preparedPicturePaths.value as MutableList<String>
+
+                        preparedPicturePaths.addAll(internalStoragePaths)
+                        _preparedPicturePaths.value = preparedPicturePaths
+                    }
+
+                    savedResult.onFailure {
+                        Log.e(this::class.java.simpleName, it.toString())
+                    }
+                }
+            }
+            result.onFailure {
+                Log.e(this::class.java.simpleName, it.toString())
             }
         }
     }
 
-    /**
-     * @param bitmapFilePaths A pair which contains a list of the bitmap's file path [String]
-     * and [Bitmap] which is the actual bitmap to save.
-     *
-     * When the bitmaps are successfully saved, we return the file paths. This is useful when we need to be sure
-     * that the files are saved before storing the actual file path in the database.
-     * */
-    fun saveBitmapsToInternalStorage(
-        bitmapFilePaths: List<Pair<Uri, Bitmap>>,
-        onSuccessfulSave: (List<String>) -> Unit,
-    ) {
-        saveBitmapsToInternalStorage(viewModelScope, bitmapFilePaths) { result ->
-            result.onSuccess {
-                onSuccessfulSave(it)
+    fun loadCachedPicturePathsWithElement(element: Element?, onResult: (List<Pair<String, Bitmap>>) -> Unit) {
+        val cachedPaths = mutableListOf<String>()
+        cachedPaths.addAll(preparedPicturePaths.value!!)
+
+        if(element!=null) {
+            cachedPaths.addAll(element.images)
+        }
+        loadBitmapsFromInternalStorage(viewModelScope, cachedPaths) { result ->
+            result.onSuccess { bitmaps ->
+                onResult(cachedPaths.zip(bitmaps))
             }
             result.onFailure {
                 Log.e(this::class.java.simpleName, it.toString())
@@ -115,6 +112,7 @@ class ElementsDetailsViewModel(
         private val loadBitmapsFromInternalStorage: LoadBitmapsFromInternalStorage,
         private val loadBitmapsFromAndroidGallery: LoadBitmapsFromAndroidGallery,
         private val saveBitmapsToInternalStorage: SaveBitmapsToInternalStorage,
+        private val imageFilePathProvider: ImageFilePathProvider,
         private val db: CosLogDao,
 
         ) : ViewModelProvider.Factory {
@@ -125,6 +123,7 @@ class ElementsDetailsViewModel(
                     loadBitmapsFromInternalStorage,
                     loadBitmapsFromAndroidGallery,
                     saveBitmapsToInternalStorage,
+                    imageFilePathProvider,
                     db
                 ) as T
             }

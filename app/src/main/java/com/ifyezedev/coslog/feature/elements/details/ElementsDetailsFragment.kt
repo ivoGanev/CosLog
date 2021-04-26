@@ -62,6 +62,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             loadBitmapsFromInternalStorage,
             loadBitmapsFromAndroidGallery,
             saveBitmapsToInternalStorage,
+            imageFilePathProvider,
             CosLogDatabase.getDatabase(requireContext()).cosLogDao
         )
 
@@ -75,34 +76,33 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         super.onViewCreated(view, savedInstanceState)
 
         if (element == null) {
-            setUpEmpty()
+            initializeEmpty()
         } else {
-            setUpWithElement(element!!)
+            initializeWithElement(element!!)
         }
 
-        setup()
+        initialize()
     }
 
     @CallSuper
-    protected open fun setUpWithElement(element: Element) {
+    protected open fun initializeWithElement(element: Element) {
         bottomBinding.buttonDelete.visibility = View.VISIBLE
         bottomBinding.buttonsLayout.weightSum = 2F
 
         // Whenever we load images by using viewModel.loadBitmapsFromInternalStorage() we
         // update our adapter to display the bitmaps and store their respective file paths.
         // This is usually updated when the fragment is created.
-        detailsViewModel.loadElementBitmapsFromInternalStorage(element) {
-            adapter.setData(it)
-        }
+        //  detailsViewModel.prepareInternalStorageBitmapsForLoading(element) {
+        // }
     }
 
     @CallSuper
-    protected open fun setUpEmpty() {
+    protected open fun initializeEmpty() {
         bottomBinding.buttonDelete.visibility = View.GONE
         bottomBinding.buttonsLayout.weightSum = 1F
     }
 
-    private fun setup() = bottomBinding.run {
+    private fun initialize() = bottomBinding.run {
 
         // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
@@ -133,9 +133,9 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        detailsViewModel.loadedImagesAndPathsFromAndroidGallery.observe(viewLifecycleOwner) { bitmapUris->
-            detailsViewModel.saveBitmapsToInternalStorage(bitmapUris) { successfullyStoredPaths ->
-                adapter.addAll(successfullyStoredPaths.zip(bitmapUris.map { it.second }))
+        detailsViewModel.preparedPicturePaths.observe(viewLifecycleOwner) {
+            detailsViewModel.loadCachedPicturePathsWithElement(element) {
+                adapter.setData(it)
             }
         }
     }
@@ -169,7 +169,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             intent != null
         ) {
             // the result is observed through viewModel.loadedImagesAndPathsFromAndroidGallery
-            detailsViewModel.loadImagesFromAndroidGallery(intent)
+            detailsViewModel.prepareImagesFromAndroidGalleryForLoading(intent)
         }
     }
 
@@ -181,7 +181,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             // this is telling the PictureGalleryFragment, the one we are about to navigate to,
             // on which item position it should move to.
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
-            putStringArrayList(PictureGalleryFragment.Keys.IMAGE_PATH, ArrayList(adapter.getFilePaths()))
+            putStringArrayList(PictureGalleryFragment.Keys.IMAGE_PATH,
+                ArrayList(adapter.getFilePaths()))
         }
         cosplayController.navigate(R.id.pictureViewerFragment, bundle)
     }
@@ -192,8 +193,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         // and not being destroyed; this leads to subtle live data bugs like, for example, refreshing
         // some old data that was meant to be stored and updated only for configuration change in a
         // specific fragment.
-        if (!requireActivity().isChangingConfigurations)
-            viewModelStore.clear()
+        //if (!requireActivity().isChangingConfigurations)
+        //     viewModelStore.clear()
         super.onDestroyView()
     }
 }
