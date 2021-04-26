@@ -2,6 +2,7 @@ package com.ifyezedev.coslog.core.common.usecase
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.ExifInterface
 import androidx.core.net.toUri
 import com.ifyezedev.coslog.core.exception.Failure
 import com.ifyezedev.coslog.core.functional.Either
