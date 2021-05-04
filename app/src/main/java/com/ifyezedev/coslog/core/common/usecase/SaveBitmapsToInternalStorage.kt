@@ -16,7 +16,7 @@ class SaveBitmapsToInternalStorage(
     override suspend fun run(params: List<Pair<String, Bitmap>>): Either<List<String>, Failure> {
         val paths = mutableListOf<String>()
         // make sure the image directory exists
-        val file = File(imageFilePathProvider.getDefaultImageDirectory())
+        val file = File(imageFilePathProvider.getDefaultImageDirectoryPath())
         if (!file.exists())
             file.mkdirs()
 

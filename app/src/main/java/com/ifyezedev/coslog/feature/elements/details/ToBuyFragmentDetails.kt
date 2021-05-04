@@ -38,12 +38,17 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
         else {
             detailsViewModel.updateElementInDatabase(elementTmp)
         }
+
+        super.onSaveButtonPressed()
     }
 
-    // This method will get executed from the base fragment [ElementsDetailsFragment] if we
-    // are updating the fragment - when we click over an element from the elements list.
-    override fun initializeWithElement(element: Element) {
-        super.initializeWithElement(element)
+    /**
+     * This method would initialize all of the fragment`s UI input fields.
+     * The method itself is called in onCreateView() in the super class only if
+     * we are about to update an [Element].
+     * */
+    override fun onUpdateElement(element: Element) {
+        super.onUpdateElement(element)
         binding.nameValue.setText(element.name)
         binding.sourceValue.setText(element.source)
         binding.costValue.setText(element.cost.toString())

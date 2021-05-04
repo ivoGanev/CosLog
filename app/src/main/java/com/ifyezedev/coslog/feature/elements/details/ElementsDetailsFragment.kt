@@ -15,7 +15,6 @@ import com.ifyezedev.coslog.core.etc.SnapOnScrollListener
 import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
-import com.ifyezedev.coslog.feature.elements.internal.*
 import com.ifyezedev.coslog.core.common.usecase.OpenAndroidImageGallery
 
 
@@ -76,22 +75,28 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         super.onViewCreated(view, savedInstanceState)
 
         if (element == null) {
-            initializeEmpty()
+            onInsertNewElement()
         } else {
-            initializeWithElement(element!!)
+            onUpdateElement(element!!)
         }
 
         initialize()
     }
 
     @CallSuper
-    protected open fun initializeWithElement(element: Element) {
+    /**
+     * This method will be called on fragment start when an element is to be updated.
+    * */
+    protected open fun onUpdateElement(element: Element) {
         bottomBinding.buttonDelete.visibility = View.VISIBLE
         bottomBinding.buttonsLayout.weightSum = 2F
     }
 
     @CallSuper
-    protected open fun initializeEmpty() {
+    /**
+     * This method will be called on fragment start when a new element is to be added.
+     * */
+    protected open fun onInsertNewElement() {
         bottomBinding.buttonDelete.visibility = View.GONE
         bottomBinding.buttonsLayout.weightSum = 1F
     }
@@ -118,6 +123,8 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        // the recycler view items are positioned to the most left,but this makes them to start
+        // in the middle.
         recyclerView.addItemDecoration(BoundsOffsetDecoration())
         recyclerView.addOnScrollListener(
             SnapOnScrollListener(
@@ -149,6 +156,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     protected open fun onSaveButtonPressed() {
+        cosplayController.navigateUp()
     }
 
     private fun onAddImageButtonPressed() {

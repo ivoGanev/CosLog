@@ -63,8 +63,8 @@ class ElementsDetailsViewModel(
         intent.data?.let { uri -> uris.add(uri) }
         intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
 
-        loadBitmapsFromAndroidGallery(viewModelScope, uris) { result ->
-            result.onSuccess { loadedBitmaps ->
+        loadBitmapsFromAndroidGallery(viewModelScope, uris) { loadBitmaps ->
+            loadBitmaps.onSuccess { loadedBitmaps ->
                 val internalStoragePaths = uris.map { uri ->
                     imageFilePathProvider.toInternalStorageFilePath(uri)
                 }
@@ -83,7 +83,7 @@ class ElementsDetailsViewModel(
                     }
                 }
             }
-            result.onFailure {
+            loadBitmaps.onFailure {
                 Log.e(this::class.java.simpleName, it.toString())
             }
         }

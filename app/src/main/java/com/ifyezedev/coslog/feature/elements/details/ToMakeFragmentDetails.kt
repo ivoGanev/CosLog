@@ -31,10 +31,12 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
         else {
             detailsViewModel.updateElementInDatabase(elementTmp)
         }
+
+        super.onSaveButtonPressed()
     }
 
-    override fun initializeWithElement(element: Element) {
-        super.initializeWithElement(element)
+    override fun onUpdateElement(element: Element) {
+        super.onUpdateElement(element)
         binding.nameValue.setText(element.name)
         binding.timeValue.setText(element.time.toString())
         binding.progressValue.setText(element.progress.toString())
