@@ -11,7 +11,9 @@ import java.io.File
  * params path.
  *
  * params: the file to delete
+ *
  * */
+// TODO: Clarify is it a path
 class DeleteFilesFromInternalStorage : UseCase<Boolean, String>() {
     override suspend fun run(params: String): Either<Boolean, Failure> {
         val file = File(params)

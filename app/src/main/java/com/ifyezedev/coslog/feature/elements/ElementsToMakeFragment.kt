@@ -1,19 +1,15 @@
 package com.ifyezedev.coslog.feature.elements
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
 import com.ifyezedev.coslog.databinding.ElementItemToMakeBinding
 import com.ifyezedev.coslog.databinding.FragmentElementToMakeListBinding
 import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
 
-class ElementsToMakeListFragment : ElementsListBaseFragment<FragmentElementToMakeListBinding>(), ElementsListAdapter.OnClickListener {
+class ElementsToMakeFragment : ElementsListBaseFragment<FragmentElementToMakeListBinding>(), ElementsListAdapter.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make_list
     private lateinit var adapter: Adapter
 
@@ -34,12 +30,12 @@ class ElementsToMakeListFragment : ElementsListBaseFragment<FragmentElementToMak
     }
 
     fun navigateToMakeDetailsFragment() {
-        cosplayController.navigate(R.id.toMakeFragment,
+        cosplayController.navigate(R.id.toMakeFragmentDetails,
             ElementsDetailsFragment.getNewItemBundle(null))
     }
 
     override fun onEntireElementClickedListener(position: Int) {
-        cosplayController.navigate(R.id.toMakeFragment,
+        cosplayController.navigate(R.id.toMakeFragmentDetails,
             ElementsDetailsFragment.getNewItemBundle(adapter.elements[position]))
     }
 

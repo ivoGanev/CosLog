@@ -25,13 +25,11 @@ class ImageFilePathProvider(private val context: Context) {
     fun getDefaultImageDirectoryPath() = "${context.filesDir}/$directoryName/"
 
     /**
-     *
      * The main idea behind this method is to convert the content provider file path to internal storage
      * path using the system's provided unique file name.
      *
      * The content provider path coming from Android looks like:
      * content://com.android.providers.media.documents/document/image%3A26,
-     *
      * */
     private fun toAndroidGalleryName(path: Uri): String {
         val projection = arrayOf(

@@ -67,8 +67,8 @@ class ElementsFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
             childFragmentManager.findFragmentByTag("f" + binding.elementsViewPager.currentItem)
 
         when (fragment) {
-            is ElementsToBuyListFragment -> fragment.navigateToBuyDetailsFragmentForNewItem()
-            is ElementsToMakeListFragment -> fragment.navigateToMakeDetailsFragment()
+            is ElementsToBuyFragment -> fragment.navigateToBuyDetailsFragmentForNewItem()
+            is ElementsToMakeFragment -> fragment.navigateToMakeDetailsFragment()
         }
     }
 

@@ -17,7 +17,7 @@ class LoadBitmapsFromInternalStorage(
     @Suppress("BlockingMethodInNonBlockingContext")
     /**
      * Will try to load any number of bitmaps from the internal storage and return them as a result.
-     * Note that you need to provide the full path, e.g. /data/data/myfile.png
+     * Note that you need to provide the full path, e.g. /data/data/images/myfile.png
      *
      * @params You can provide either: a single file path, a folder, or multiple files and folders.
      * */

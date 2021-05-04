@@ -103,7 +103,7 @@ class CosplayDetailsFragment : Fragment() {
     }
 
 
-
+    
 
     //intent for picking an image from the gallery when button is clicked
     fun getImageIntent() {

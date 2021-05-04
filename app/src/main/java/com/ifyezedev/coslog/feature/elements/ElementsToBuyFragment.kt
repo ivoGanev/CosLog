@@ -1,20 +1,16 @@
 package com.ifyezedev.coslog.feature.elements
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.databinding.ElementItemToBuyBinding
 import com.ifyezedev.coslog.databinding.FragmentElementToBuyListBinding
 import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
+import com.ifyezedev.coslog.feature.elements.details.ToBuyFragmentDetailsDirections
 
-class ElementsToBuyListFragment : ElementsListBaseFragment<FragmentElementToBuyListBinding>(),
+class ElementsToBuyFragment : ElementsListBaseFragment<FragmentElementToBuyListBinding>(),
     ElementsListAdapter.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_element_to_buy_list
     private lateinit var adapter: Adapter
@@ -34,18 +30,18 @@ class ElementsToBuyListFragment : ElementsListBaseFragment<FragmentElementToBuyL
     }
 
     fun navigateToBuyDetailsFragmentForNewItem() {
-        cosplayController.navigate(R.id.toBuyFragment,
+        cosplayController.navigate(R.id.toBuyFragmentDetails,
             ElementsDetailsFragment.getNewItemBundle(null))
     }
 
     override fun onEntireElementClickedListener(position: Int) {
-        cosplayController.navigate(R.id.toBuyFragment,
+        cosplayController.navigate(R.id.toBuyFragmentDetails,
             ElementsDetailsFragment.getNewItemBundle(adapter.elements[position]))
     }
 
     private class Adapter(
         data: List<Element>,
-        override val layoutId: Int = R.layout.element_item_to_buy
+        override val layoutId: Int = R.layout.element_item_to_buy,
     ) :
         ElementsListAdapter<ElementItemToBuyBinding>(data) {
 
@@ -57,5 +53,4 @@ class ElementsToBuyListFragment : ElementsListBaseFragment<FragmentElementToBuyL
             cost.text = elements[position].cost.toString()
         }
     }
-
 }

@@ -8,7 +8,14 @@
         android:id="@+id/elementFragment"
         android:name="com.ifyezedev.coslog.feature.elements.ElementsFragment"
         android:label="fragment_element"
-        tools:layout="@layout/fragment_element" />
+        tools:layout="@layout/fragment_element" >
+        <action
+            android:id="@+id/action_elementFragment_to_toBuyFragmentDetails"
+            app:destination="@id/toBuyFragmentDetails" />
+        <action
+            android:id="@+id/action_elementFragment_to_toMakeFragmentDetails"
+            app:destination="@id/toMakeFragmentDetails" />
+    </fragment>
     <fragment
         android:id="@+id/processFragment"
         android:name="com.ifyezedev.coslog.ProcessFragment"
@@ -38,9 +45,13 @@
         android:id="@+id/action_global_summaryFragment"
         app:destination="@id/summaryFragment" />
     <fragment
-        android:id="@+id/toBuyFragment"
+        android:id="@+id/toBuyFragmentDetails"
         android:name="com.ifyezedev.coslog.feature.elements.details.ToBuyFragmentDetails"
-        android:label="ToBuyFragment" />
+        android:label="ToBuyFragment" >
+        <argument
+            android:name="element"
+            app:argType="com.ifyezedev.coslog.data.db.entities.Element" />
+    </fragment>
     <fragment
         android:id="@+id/pictureViewerFragment"
         android:name="com.ifyezedev.coslog.PictureGalleryFragment"
@@ -50,9 +61,14 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/toMakeFragment"
+        android:id="@+id/toMakeFragmentDetails"
         android:name="com.ifyezedev.coslog.feature.elements.details.ToMakeFragmentDetails"
-        android:label="ToMakeFragment" />
+        android:label="ToMakeFragment" >
+        <argument
+            android:name="element"
+            app:argType="com.ifyezedev.coslog.data.db.entities.Element"
+            app:nullable="true" />
+    </fragment>
     <activity
         android:id="@+id/homeActivity"
         android:name="com.ifyezedev.coslog.HomeActivity"
