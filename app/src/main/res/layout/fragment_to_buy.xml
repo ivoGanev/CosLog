@@ -3,129 +3,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_margin="@dimen/medium_margin"
+            android:id="@+id/nameValueLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameValue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:hint="Enter Name (Required)" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:id="@+id/titleText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:gravity="center_horizontal"
-                    android:text="To Buy"
-                    android:textAlignment="center"
-                    android:textSize="20dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteX="16dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_margin="@dimen/medium_margin"
+            android:id="@+id/sourceValueLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameValueLayout">
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="50dp"
-                    android:layout_height="16dp"
-                    android:layout_marginTop="4dp"
-                    android:text="Name :"
-                    app:layout_constraintStart_toStartOf="@+id/leftmostGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/sourceValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Enter Source" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/nameValue"
-                    android:layout_width="@dimen/elements_text_input_width"
-                    android:layout_height="@dimen/elements_text_input_height"
-                    android:hint="Enter Name"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/name"
-                    tools:text="Value" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_margin="@dimen/medium_margin"
+            android:id="@+id/costValueLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sourceValueLayout">
 
-                <TextView
-                    android:id="@+id/source"
-                    android:layout_width="50dp"
-                    android:layout_height="16dp"
-                    android:layout_marginTop="36dp"
-                    android:text="Source :"
-                    app:layout_constraintStart_toStartOf="@+id/leftmostGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/costValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Enter Cost"
+                android:inputType="numberSigned" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/sourceValue"
-                    android:layout_width="@dimen/elements_text_input_width"
-                    android:layout_height="@dimen/elements_text_input_height"
-                    android:hint="Enter Source"
-                    app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toBottomOf="@+id/nameValue"
-                    tools:text="Value" />
+        <LinearLayout
+            android:layout_margin="@dimen/medium_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/costValueLayout">
 
-                <TextView
-                    android:id="@+id/cost"
-                    android:layout_width="50dp"
-                    android:layout_height="16dp"
-                    android:layout_marginTop="66dp"
-                    android:text="Cost :"
-                    app:layout_constraintStart_toStartOf="@+id/leftmostGuideline"
-                    app:layout_constraintTop_toTopOf="@+id/topHorizontalGuideline" />
-
-                <EditText
-                    android:id="@+id/costValue"
-                    android:layout_width="@dimen/elements_text_input_width"
-                    android:layout_height="@dimen/elements_text_input_height"
-                    android:inputType="number"
-                    android:text="@string/default_cost"
-                    app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
-                    app:layout_constraintTop_toBottomOf="@+id/sourceValue"
-                    tools:text="Value" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline2">
-
-                    <include
-                        android:id="@+id/bottomView"
-                        layout="@layout/element_bottom" />
-
-                </LinearLayout>
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/topHorizontalGuideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="62dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/leftmostGuideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="49dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/secondLeftGuideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="176dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="198dp" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
-    </FrameLayout>
+            <include
+                android:id="@+id/bottomView"
+                layout="@layout/element_bottom" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

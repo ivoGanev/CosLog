@@ -2,4 +2,5 @@
 <resources>
     <dimen name="elements_text_input_width">150dp</dimen>
     <dimen name="elements_text_input_height">40dp</dimen>
+    <dimen name="medium_margin">16dp</dimen>
 </resources>
