@@ -1,6 +1,7 @@
 package com.ifyezedev.coslog.feature.elements.details
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
@@ -27,6 +28,10 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
                 binding.costValue.setText(R.string.default_cost)
         }
 
+        // make sure that the title is set after the view has been created
+        // because by default we are setting it to the app's name in onAfterBindingCreated()
+        // in the base fragment
+        actionBar.setTitle(R.string.to_buy_title)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -61,6 +66,7 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
 
         super.onSaveButtonPressed()
     }
+
 
     /**
      * This method would initialize all of the fragment`s UI input fields.

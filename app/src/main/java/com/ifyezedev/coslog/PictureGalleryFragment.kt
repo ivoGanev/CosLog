@@ -84,14 +84,7 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val item1 = menu.findItem(R.id.edit_cosplay)
-        val item2 = menu.findItem(R.id.mark_completed)
-        val item3 = menu.findItem(R.id.view_summary)
-        if (item1 != null && item2 != null && item3 != null) {
-            item1.isVisible = false
-            item2.isVisible = false
-            item3.isVisible = false
-        }
+        hideOverflowMenu(menu)
 
         val shareButton = menu.findItem(R.id.shareButton)
         val deleteButton = menu.findItem(R.id.deleteButton)
@@ -107,10 +100,6 @@ class PictureGalleryFragment : CosplayActivityBaseFragment<FragmentPictureGaller
             else -> return super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    private fun onBackButtonPressed() {
-        cosplayController.navigateUp()
     }
 
     private fun onShareButtonClicked() {

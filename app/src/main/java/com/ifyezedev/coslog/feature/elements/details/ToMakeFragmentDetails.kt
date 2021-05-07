@@ -1,7 +1,9 @@
 package com.ifyezedev.coslog.feature.elements.details
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -21,6 +23,14 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_make
 
     private val nameInputIsEmpty get() = binding.nameValue.text.toString().isEmpty()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // make sure that the title is set after the view has been created
+        // because by default we are setting it to the app's name in onAfterBindingCreated()
+        // in the base fragment
+        actionBar.setTitle(R.string.to_make_title)
+    }
 
     override fun onAfterBindingCreated(view: View) {
         super.onAfterBindingCreated(view)

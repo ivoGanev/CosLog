@@ -49,6 +49,11 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
         cosplayController = cosplayFragmentComponent.cosplayController()
         imageFilePathPathProvider = cosplayFragmentComponent.imageFilePathProvider()
         actionBar = cosplayFragmentComponent.actionBar()
+        // Mote that when we navigate to a new fragment the
+        // action bar will be automatically reset to the app name.
+        // If the title needs to be set to another we need to make sure that
+        // we don't do it in this method.
+        actionBar.setTitle(R.string.app_name)
     }
 
     @CallSuper
@@ -60,9 +65,7 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
     @CallSuper
     override fun onStart() {
         super.onStart()
-        // because the PictureGalleryFragment overrides the menu we need to make
-        // sure to reset it to it's default state.
-        actionBar.setTitle(R.string.app_name)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

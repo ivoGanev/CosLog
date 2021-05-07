@@ -41,7 +41,7 @@ class ElementsFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
                 elementsTabLayout,
                 elementsViewPager,
                 adapter,
-                R.string.elements_tab_one_name, R.string.elements_tab_two_name
+                R.string.to_buy_title, R.string.to_make_title
             )
         }
 
