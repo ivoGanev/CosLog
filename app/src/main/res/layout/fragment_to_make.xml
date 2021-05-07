@@ -3,68 +3,77 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_margin="@dimen/medium_margin"
-            android:id="@+id/nameValueLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Name"
-            app:endIconContentDescription="Enter time"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nameValue"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="0:00" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_margin="@dimen/medium_margin"
-            android:id="@+id/timeValueLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:endIconContentDescription="Enter time"
-            android:hint="Time"
-            app:endIconDrawable="@drawable/ic_event"
-            app:endIconMode="custom"
-            app:layout_constraintTop_toBottomOf="@+id/nameValueLayout">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameValueLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:hint="Name"
+                    app:endIconContentDescription="Enter time"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/timeValue"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:enabled="false"
-                android:text="0:00" />
-        </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nameValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="0:00" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:layout_margin="@dimen/medium_margin"
-            android:id="@+id/progressValue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/timeValueLayout"
-            tools:text="Value" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/timeValueLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:hint="Time"
+                    app:endIconContentDescription="Enter time"
+                    app:endIconDrawable="@drawable/ic_event"
+                    app:endIconMode="custom"
+                    app:layout_constraintTop_toBottomOf="@+id/nameValueLayout">
 
-        <LinearLayout
-            android:layout_margin="@dimen/medium_margin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressValue">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/timeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:enabled="false"
+                        android:text="0:00" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <include
-                android:id="@+id/bottomView"
-                layout="@layout/element_bottom" />
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/progressValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/timeValueLayout"
+                    tools:text="Value" />
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/progressValue">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <include
+                        android:id="@+id/bottomView"
+                        layout="@layout/element_bottom" />
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 </layout>
