@@ -10,9 +10,6 @@ import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.data.db.entities.elementsBuilder
 import com.ifyezedev.coslog.databinding.FragmentToMakeBinding
 import java.lang.NumberFormatException
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 /**
  * This is the to-make details fragment which contains both the top and bottom parts of
@@ -22,6 +19,8 @@ import java.time.format.DateTimeFormatter
  * */
 class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_make
+
+    private val nameInputIsEmpty get() = binding.nameValue.text.toString().isEmpty()
 
     override fun onAfterBindingCreated(view: View) {
         super.onAfterBindingCreated(view)
@@ -45,6 +44,11 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
     }
 
     override fun onSaveButtonPressed() = with(binding) {
+        if (nameInputIsEmpty) {
+            toastNotify("Name field cannot be empty")
+            return
+        }
+
         val elementTmp = elementsBuilder {
             if (element != null)
                 eid = element!!.eid
@@ -71,6 +75,7 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
 
         super.onSaveButtonPressed()
     }
+
 
     override fun onUpdateElement(element: Element) = with(binding) {
         super.onUpdateElement(element)

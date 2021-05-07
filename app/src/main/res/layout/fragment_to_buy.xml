@@ -79,7 +79,7 @@
                     android:layout_width="@dimen/elements_text_input_width"
                     android:layout_height="@dimen/elements_text_input_height"
                     android:inputType="number"
-                    android:hint="0$"
+                    android:text="@string/default_cost"
                     app:layout_constraintStart_toStartOf="@+id/secondLeftGuideline"
                     app:layout_constraintTop_toBottomOf="@+id/sourceValue"
                     tools:text="Value" />

@@ -2,6 +2,8 @@ package com.ifyezedev.coslog.feature.elements.details
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.data.db.entities.elementsBuilder
@@ -15,21 +17,38 @@ import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_buy
 
+    private val nameInputIsEmpty get() = binding.nameValue.text.toString().isEmpty()
+    private val costInputIsEmpty get() = binding.costValue.text.toString().isEmpty()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bottomBinding.recyclerView
+        binding.costValue.onFocusChangeListener = View.OnFocusChangeListener { _, _ ->
+            if (costInputIsEmpty)
+                binding.costValue.setText(R.string.default_cost)
+        }
+
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun onSaveButtonPressed() {
+    override fun onSaveButtonPressed() = with(binding) {
+        if (nameInputIsEmpty) {
+            toastNotify("Name input field cannot be empty")
+            return
+        }
+        if (costInputIsEmpty) {
+            toastNotify("Cost input field cannot be empty")
+            return
+        }
+
         val elementTmp = elementsBuilder {
             // if we are not creating a new element then we should keep the old element id
-            if(!willInsertNewElement)
+            if (!willInsertNewElement)
                 eid = element!!.eid
 
-            name = binding.nameValue.text.toString()
-            source = binding.sourceValue.text.toString()
-            cost = binding.costValue.text.toString().toDouble()
-            notes = binding.bottomView.notes.text.toString()
+            name = nameValue.text.toString()
+            source = sourceValue.text.toString()
+            cost = costValue.text.toString().toDouble()
+            notes = bottomView.notes.text.toString()
             images = ArrayList(adapter.getFilePaths())
             isBuy = true
         }
