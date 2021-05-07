@@ -13,7 +13,6 @@ class SaveBitmapsToInternalStorage(
     private val imageFilePathProvider: ImageFilePathProvider,
 ) : UseCase<List<String>, List<Pair<String, Bitmap>>>() {
 
-
     override suspend fun run(params: List<Pair<String, Bitmap>>): Either<List<String>, Failure> {
         val paths = mutableListOf<String>()
         // make sure the image directory exists

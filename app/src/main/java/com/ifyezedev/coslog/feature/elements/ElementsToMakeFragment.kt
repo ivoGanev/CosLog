@@ -5,18 +5,17 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.databinding.ElementItemToMakeBinding
 import com.ifyezedev.coslog.databinding.FragmentElementToMakeListBinding
 import com.ifyezedev.coslog.feature.elements.details.ElementsDetailsFragment
 
-class ElementsToMakeFragment : ElementsListBaseFragment<FragmentElementToMakeListBinding>(), ElementsListAdapter.OnClickListener {
+class ElementsToMakeFragment : ElementsBaseFragment<FragmentElementToMakeListBinding>(), ElementsAdapter.OnClickListener {
     override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make_list
-    private lateinit var adapter: Adapter
+    private lateinit var adapter: ElementsToMakeAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = Adapter(listOf())
+        adapter = ElementsToMakeAdapter(listOf())
         adapter.clickListener = this
 
         binding.recyclerView.adapter = adapter
@@ -39,18 +38,4 @@ class ElementsToMakeFragment : ElementsListBaseFragment<FragmentElementToMakeLis
             ElementsDetailsFragment.getNewItemBundle(adapter.elements[position]))
     }
 
-    private class Adapter(
-        data: List<Element>,
-        override val layoutId: Int = R.layout.element_item_to_make
-    ) :
-        ElementsListAdapter<ElementItemToMakeBinding>(data) {
-
-        override fun onBindViewHolder(
-            holder: ElementsViewHolder<ElementItemToMakeBinding>,
-            position: Int,
-        ) = with(holder.binding) {
-            name.text = elements[position].name
-            time.text = elements[position].time.toString()
-        }
-    }
 }

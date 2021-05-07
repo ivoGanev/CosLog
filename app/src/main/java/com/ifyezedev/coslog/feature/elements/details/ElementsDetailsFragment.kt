@@ -3,6 +3,8 @@ package com.ifyezedev.coslog.feature.elements.details
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingUtil
@@ -48,13 +50,16 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     private lateinit var detailsViewModelFactory: ElementsDetailsViewModel.ElementsViewModelFactory
 
-    protected var element: Element? = null
+    protected val element: Element? by lazy {
+        arguments?.getParcelable(BUNDLE_ITEM)
+    }
+
+    protected val willInsertNewElement get() = element == null
 
     override fun onAfterBindingCreated(view: View) {
         super.onAfterBindingCreated(view)
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
-        element = arguments?.getParcelable(BUNDLE_ITEM)
 
         detailsViewModelFactory = ElementsDetailsViewModel.ElementsViewModelFactory(
             OpenAndroidImageGallery(),
@@ -74,7 +79,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (element == null) {
+        if (willInsertNewElement) {
             onInsertNewElement()
         } else {
             onUpdateElement(element!!)
@@ -83,22 +88,16 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         initialize()
     }
 
-    @CallSuper
     /**
      * This method will be called on fragment start when an element is to be updated.
-    * */
+     * */
     protected open fun onUpdateElement(element: Element) {
-        bottomBinding.buttonDelete.visibility = View.VISIBLE
-        bottomBinding.buttonsLayout.weightSum = 2F
     }
 
-    @CallSuper
     /**
      * This method will be called on fragment start when a new element is to be added.
      * */
     protected open fun onInsertNewElement() {
-        bottomBinding.buttonDelete.visibility = View.GONE
-        bottomBinding.buttonsLayout.weightSum = 1F
     }
 
     private fun initialize() = bottomBinding.run {
@@ -107,8 +106,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         val snapHelper: SnapHelper = PagerSnapHelper()
 
         buttonAddImage.setOnClickListener(this@ElementsDetailsFragment)
-        buttonSave.setOnClickListener(this@ElementsDetailsFragment)
-        buttonDelete.setOnClickListener(this@ElementsDetailsFragment)
 
         // snap helper helps by snapping the images from the image gallery recycler view
         // when scrolling them
@@ -141,12 +138,30 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        hideOverflowMenu(menu)
+
+        val saveButton = menu.findItem(R.id.saveButton)
+        saveButton.isVisible = true
+
+        if (!willInsertNewElement) {
+            val deleteButton = menu.findItem(R.id.deleteButton)
+            deleteButton.isVisible = true
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.saveButton -> onSaveButtonPressed()
+            R.id.deleteButton -> onDeleteButtonPressed()
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.buttonAddImage -> onAddImageButtonPressed()
-            R.id.buttonSave -> onSaveButtonPressed()
-            R.id.buttonDelete -> onDeleteButtonPressed()
         }
     }
 

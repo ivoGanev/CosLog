@@ -22,7 +22,8 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
 
     override fun onSaveButtonPressed() {
         val elementTmp = elementsBuilder {
-            if(element!=null)
+            // if we are not creating a new element then we should keep the old element id
+            if(!willInsertNewElement)
                 eid = element!!.eid
 
             name = binding.nameValue.text.toString()
@@ -33,7 +34,7 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
             isBuy = true
         }
 
-        if (element == null)
+        if (willInsertNewElement)
             detailsViewModel.insertElementInDatabase(elementTmp)
         else {
             detailsViewModel.updateElementInDatabase(elementTmp)

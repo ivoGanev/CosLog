@@ -39,10 +39,6 @@ class MiniGalleryAdapter(data: List<Pair<String, Bitmap>> = listOf()) :
         addAll(paths)
     }
 
-    fun filterCachedBitmaps(): List<Pair<Uri, Bitmap>> = _data
-        .filter { it.first.contains("content://") }
-        .map { Pair(it.first.toUri(), it.second) }
-
     override fun getItemId(position: Int): Long {
         return _data[position].hashCode().toLong()
     }

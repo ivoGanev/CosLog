@@ -16,6 +16,13 @@
         android:icon="@drawable/ic_delete" />
 
     <item
+        android:visible="false"
+        android:id="@+id/saveButton"
+        android:title="Save"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_save" />
+
+    <item
         android:id="@+id/edit_cosplay"
         android:title="@string/edit_cosplay"
         app:showAsAction="never" />

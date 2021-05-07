@@ -5,51 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
-import com.ifyezedev.coslog.core.common.BaseFragment
 import com.ifyezedev.coslog.data.db.entities.Element
-import com.ifyezedev.coslog.feature.elements.ElementsListAdapter.ElementsViewHolder
-import java.lang.ClassCastException
+
 
 /**
- * A base fragment that contains service dependencies for the element
- * list fragments contained within the view pager in [ElementsFragment]
+ * Reusable behavior for recycler view that stores a list of elements.
+ * 'To Buy' and 'To Make' recycler views share a lot of common logic but have
+ * slightly different views to display for the user, hence this class is created to
+ * inherit the common functionality.
  * */
-abstract class ElementsListBaseFragment<T : ViewDataBinding> :
-    BaseFragment<T>() {
-    abstract override fun bindingLayoutId(): Int
-
-    protected lateinit var cosplayController: NavController
-    protected lateinit var elementsViewModel : ElementsViewModel
-
-    override fun onAfterBindingCreated(view: View) {
-        super.onAfterBindingCreated(view)
-        val elementsFragment: ElementsFragment
-        try {
-            elementsFragment = parentFragment as ElementsFragment
-        }
-        catch(ex: ClassCastException) {
-            throw ClassCastException("This class depends on ElementFragment to be its parent.")
-        }
-
-        cosplayController = elementsFragment.cosplayController
-        elementsViewModel = elementsFragment.viewModel
-
-        elementsViewModel.elements.observe(viewLifecycleOwner) { elementsData ->
-            onElementsUpdated(elementsData)
-        }
-    }
-
-    /**
-     * This method provides the list of database elements when they are being updated.
-     * */
-    protected open fun onElementsUpdated(elements: List<Element>) {
-    }
-}
-
-abstract class ElementsListAdapter<Binding: ViewDataBinding>(elements: List<Element>) :
-    RecyclerView.Adapter<ElementsViewHolder<Binding>>() {
+abstract class ElementsAdapter<Binding: ViewDataBinding>(elements: List<Element>) :
+    RecyclerView.Adapter<ElementsAdapter.ElementsViewHolder<Binding>>() {
 
     val elements : List<Element> get() = _elements
     private val _elements = elements.toMutableList()
@@ -74,6 +41,9 @@ abstract class ElementsListAdapter<Binding: ViewDataBinding>(elements: List<Elem
         notifyDataSetChanged()
     }
 
+    /**
+     * Holds the binding and listens for when the root view is clicked.
+     * */
     class ElementsViewHolder<Binding : ViewDataBinding>(
         itemView: View,
         private val clickListener: OnClickListener?,

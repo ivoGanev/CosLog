@@ -24,7 +24,7 @@ data class Element(
 
     var notes: String = "",
 
-    var progress: Float = 0.0F,
+    var progress: String = "",
 
     var images: ArrayList<String> = arrayListOf(),
 
@@ -38,7 +38,7 @@ data class Element(
         parcel.readLong(),
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readFloat(),
+        parcel.readString()!!,
         parcel.createStringArrayList()!!) {
     }
 
@@ -51,7 +51,7 @@ data class Element(
         parcel.writeLong(time)
         parcel.writeString(source)
         parcel.writeString(notes)
-        parcel.writeFloat(progress)
+        parcel.writeString(progress)
         parcel.writeStringList(images)
     }
 

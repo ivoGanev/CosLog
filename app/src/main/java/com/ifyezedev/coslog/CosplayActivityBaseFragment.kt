@@ -1,7 +1,7 @@
 package com.ifyezedev.coslog
 
-import android.view.MenuItem
-import android.view.View
+import android.os.Bundle
+import android.view.*
 import androidx.annotation.CallSuper
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.NavController
@@ -33,11 +33,27 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
 
     lateinit var actionBar: androidx.appcompat.app.ActionBar
 
+    protected fun hideOverflowMenu(menu: Menu) {
+        val item1 = menu.findItem(R.id.edit_cosplay)
+        val item2 = menu.findItem(R.id.mark_completed)
+        val item3 = menu.findItem(R.id.view_summary)
+        if (item1 != null && item2 != null && item3 != null) {
+            item1.isVisible = false
+            item2.isVisible = false
+            item3.isVisible = false
+        }
+    }
+
     @CallSuper
     override fun onAfterBindingCreated(view: View) {
         cosplayController = cosplayFragmentComponent.cosplayController()
         imageFilePathPathProvider = cosplayFragmentComponent.imageFilePathProvider()
         actionBar = cosplayFragmentComponent.actionBar()
+    }
+
+    @CallSuper
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
 
