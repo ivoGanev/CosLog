@@ -1,18 +1,17 @@
-package com.ifyezedev.coslog
+package com.ifyezedev.coslog.feature.elements.details
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.ifyezedev.coslog.R
 import com.ifyezedev.coslog.core.etc.OnSnapPositionChangeListener
 import com.ifyezedev.coslog.databinding.PictureItemBinding
 
-class MiniGalleryAdapter(data: List<Pair<String, Bitmap>> = listOf()) :
+class ElementsGalleryAdapter(data: List<Pair<String, Bitmap>> = listOf()) :
 
-    RecyclerView.Adapter<MiniGalleryAdapter.ViewHolderObject>() {
+    RecyclerView.Adapter<ElementsGalleryAdapter.ViewHolderObject>() {
 
     private val _data: MutableList<Pair<String,Bitmap>> = data.toMutableList()
     val data: List<Pair<String,Bitmap>> get() = _data

@@ -3,13 +3,14 @@ package com.ifyezedev.coslog.feature.elements.details
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
@@ -18,11 +19,13 @@ import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.core.common.usecase.OpenAndroidImageGallery
+import com.ifyezedev.coslog.core.functional.onFailure
+import com.ifyezedev.coslog.core.functional.onSuccess
 
 
 abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBaseFragment<T>(),
     View.OnClickListener,
-    MiniGalleryAdapter.OnClickListener {
+    ElementsGalleryAdapter.OnClickListener {
 
     abstract override fun bindingLayoutId(): Int
 
@@ -44,7 +47,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
      * */
     protected lateinit var bottomBinding: ElementBottomBinding
 
-    protected lateinit var adapter: MiniGalleryAdapter
+    protected lateinit var adapter: ElementsGalleryAdapter
 
     protected lateinit var detailsViewModel: ElementsDetailsViewModel
 
@@ -74,6 +77,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             viewModelStore,
             detailsViewModelFactory)
             .get(ElementsDetailsViewModel::class.java)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,7 +88,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         } else {
             onUpdateElement(element!!)
         }
-
         initialize()
     }
 
@@ -101,8 +104,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun initialize() = bottomBinding.run {
-
-        // setup buttons, recycler view, etc.
         val snapHelper: SnapHelper = PagerSnapHelper()
 
         buttonAddImage.setOnClickListener(this@ElementsDetailsFragment)
@@ -111,7 +112,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         // when scrolling them
         snapHelper.attachToRecyclerView(recyclerView)
 
-        adapter = MiniGalleryAdapter()
+        adapter = ElementsGalleryAdapter()
         // set stable ids to make sure we have animations when adding images
         adapter.setHasStableIds(true)
 
@@ -120,9 +121,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        // the recycler view items are positioned to the most left,but this makes them to start
-        // in the middle.
-        recyclerView.addItemDecoration(BoundsOffsetDecoration())
+
         recyclerView.addOnScrollListener(
             SnapOnScrollListener(
                 snapHelper,
@@ -131,11 +130,28 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
-        detailsViewModel.preparedPicturePaths.observe(viewLifecycleOwner) {
-            detailsViewModel.loadCachedPicturePathsWithElement(element) {
+        binding.root.post {
+            recyclerView.addItemDecoration(BoundsOffsetDecoration())
+        }
+
+        detailsViewModel.imageData.observe(viewLifecycleOwner) {
+            if (element != null) {
+                loadBitmapsFromInternalStorage(lifecycleScope, element!!.images) { result ->
+                    result.onSuccess { bitmaps ->
+                        adapter.setData(element!!.images.zip(bitmaps))
+                    }
+                    result.onFailure {
+                        Log.e(this::class.java.simpleName, it.toString())
+                    }
+                }
+            }
+            else {
                 adapter.setData(it)
             }
+            // the recycler view items are positioned to the most left,but this makes them to start
+            // in the middle.
         }
+
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -186,7 +202,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             intent != null
         ) {
             // the result is observed through viewModel.loadedImagesAndPathsFromAndroidGallery
-            detailsViewModel.prepareImagesFromAndroidGalleryForLoading(intent)
+            detailsViewModel.addImageData(intent)
         }
     }
 

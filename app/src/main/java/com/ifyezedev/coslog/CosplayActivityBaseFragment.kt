@@ -65,7 +65,6 @@ abstract class CosplayActivityBaseFragment<T : ViewDataBinding> : BaseFragment<T
     @CallSuper
     override fun onStart() {
         super.onStart()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -26,10 +26,10 @@ class ElementsDetailsViewModel(
     private val db: CosLogDao,
 ) : ViewModel() {
 
-    private val _preparedPicturePaths =
-        MutableLiveData<List<String>>(mutableListOf())
-    val preparedPicturePaths: LiveData<List<String>>
-        get() = _preparedPicturePaths
+    private val _imageData =
+        MutableLiveData<List<Pair<String,Bitmap>>>(mutableListOf())
+    val imageData: LiveData<List<Pair<String,Bitmap>>>
+        get() = _imageData
 
     fun updateElementInDatabase(element: Element) {
         viewModelScope.launch {
@@ -58,52 +58,54 @@ class ElementsDetailsViewModel(
         openAndroidImageGallery(viewModelScope, activityForResult)
     }
 
-    fun prepareImagesFromAndroidGalleryForLoading(intent: Intent) {
-        val uris: MutableList<Uri> = mutableListOf()
-        intent.data?.let { uri -> uris.add(uri) }
-        intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
+    /**
+     * This function will open all the images selected from the Android gallery intent,
+     * try to save them in the internal storage and if it successfully does then it
+     * will notify all observers attached to [imageData].
+     *
+     * TODO:// Too many responsibilities for one method - separate the concerns.
+     * */
+    fun addImageData(intent: Intent) {
+        val uris = collectAllUrisFromGalleryIntent(intent)
 
         loadBitmapsFromAndroidGallery(viewModelScope, uris) { loadBitmaps ->
             loadBitmaps.onSuccess { loadedBitmaps ->
-                val internalStoragePaths = uris.map { uri ->
+                // create internal storage path name from the android gallery uris
+                val internalStoragePathNames = uris.map { uri ->
                     imageFilePathProvider.toInternalStorageFilePath(uri)
                 }
 
-                saveBitmapsToInternalStorage(viewModelScope, internalStoragePaths.zip(loadedBitmaps)) { savedResult ->
-                    savedResult.onSuccess { internalStoragePaths ->
-                        val preparedPicturePaths: MutableList<String> =
-                            _preparedPicturePaths.value as MutableList<String>
+                // pack together the file names and bitmaps
+                val bitmapData = internalStoragePathNames.zip(loadedBitmaps)
 
-                        preparedPicturePaths.addAll(internalStoragePaths)
-                        _preparedPicturePaths.value = preparedPicturePaths
+                // save all bitmaps to the internal storage
+                saveBitmapsToInternalStorage(viewModelScope, bitmapData) { savedResult ->
+                    savedResult.onSuccess { internalStoragePaths ->
+                        // only if we are successfully able to save the bitmap images
+                        // then we can notify all observers
+                        val preparedImageData = _imageData.value as MutableList
+                        preparedImageData.addAll(internalStoragePaths.zip(loadedBitmaps))
+                        _imageData.value = preparedImageData
                     }
 
+                    // if we cannot save the bitmaps to the internal storage
                     savedResult.onFailure {
                         Log.e(this::class.java.simpleName, it.toString())
                     }
                 }
             }
+            // if we can't load the bitmaps
             loadBitmaps.onFailure {
                 Log.e(this::class.java.simpleName, it.toString())
             }
         }
     }
 
-    fun loadCachedPicturePathsWithElement(element: Element?, onResult: (List<Pair<String, Bitmap>>) -> Unit) {
-        val cachedPaths = mutableListOf<String>()
-        cachedPaths.addAll(preparedPicturePaths.value!!)
-
-        if(element!=null) {
-            cachedPaths.addAll(element.images)
-        }
-        loadBitmapsFromInternalStorage(viewModelScope, cachedPaths) { result ->
-            result.onSuccess { bitmaps ->
-                onResult(cachedPaths.zip(bitmaps))
-            }
-            result.onFailure {
-                Log.e(this::class.java.simpleName, it.toString())
-            }
-        }
+    private fun collectAllUrisFromGalleryIntent(intent: Intent) : List<Uri> {
+        val uris: MutableList<Uri> = mutableListOf()
+        intent.data?.let { uri -> uris.add(uri) }
+        intent.clipData?.let { clipData -> uris.addAll(clipData.mapToUri()) }
+        return uris
     }
 
     class ElementsViewModelFactory(
