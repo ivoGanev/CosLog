@@ -14,6 +14,8 @@ class ElementsToBuyFragment : ElementsBaseFragment<FragmentElementToBuyListBindi
 
     private lateinit var adapter: ElementsToBuyAdapter
 
+    private val nextNavigationDestination = R.id.toBuyGraph
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = ElementsToBuyAdapter(listOf())
@@ -29,12 +31,12 @@ class ElementsToBuyFragment : ElementsBaseFragment<FragmentElementToBuyListBindi
     }
 
     fun navigateToBuyDetailsFragmentForNewItem() {
-        cosplayController.navigate(R.id.toBuyFragmentDetails,
+        cosplayController.navigate(nextNavigationDestination,
             ElementsDetailsFragment.getNewItemBundle(null))
     }
 
     override fun onEntireElementClickedListener(position: Int) {
-        cosplayController.navigate(R.id.toBuyFragmentDetails,
+        cosplayController.navigate(nextNavigationDestination,
             ElementsDetailsFragment.getNewItemBundle(adapter.elements[position]))
     }
 }

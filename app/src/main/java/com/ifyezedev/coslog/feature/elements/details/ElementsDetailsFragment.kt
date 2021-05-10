@@ -3,14 +3,13 @@ package com.ifyezedev.coslog.feature.elements.details
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.*
 import com.ifyezedev.coslog.*
 import com.ifyezedev.coslog.core.etc.BoundsOffsetDecoration
@@ -19,8 +18,7 @@ import com.ifyezedev.coslog.data.db.CosLogDatabase
 import com.ifyezedev.coslog.data.db.entities.Element
 import com.ifyezedev.coslog.databinding.ElementBottomBinding
 import com.ifyezedev.coslog.core.common.usecase.OpenAndroidImageGallery
-import com.ifyezedev.coslog.core.functional.onFailure
-import com.ifyezedev.coslog.core.functional.onSuccess
+import com.ifyezedev.coslog.feature.gallery.PictureGalleryFragment
 
 
 abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBaseFragment<T>(),
@@ -49,9 +47,21 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
 
     protected lateinit var adapter: ElementsGalleryAdapter
 
-    protected lateinit var detailsViewModel: ElementsDetailsViewModel
+    protected abstract val sourceNavGraphId: Int
 
-    private lateinit var detailsViewModelFactory: ElementsDetailsViewModel.ElementsViewModelFactory
+    protected val detailsViewModel: ElementsDetailsViewModel by navGraphViewModels(sourceNavGraphId) {
+        ElementsViewModelFactory(
+            OpenAndroidImageGallery(),
+            loadBitmapsFromInternalStorage,
+            loadBitmapsFromAndroidGallery,
+            saveBitmapsToInternalStorage,
+            imageFilePathProvider,
+            deleteFilesFromInternalStorage,
+            CosLogDatabase.getDatabase(requireContext()).cosLogDao
+        )
+    }
+
+    private lateinit var detailsViewModelFactory: ElementsViewModelFactory
 
     protected val element: Element? by lazy {
         arguments?.getParcelable(BUNDLE_ITEM)
@@ -63,21 +73,6 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         super.onAfterBindingCreated(view)
         bottomBinding =
             DataBindingUtil.bind(view.findViewById(R.id.bottomView))!!
-
-        detailsViewModelFactory = ElementsDetailsViewModel.ElementsViewModelFactory(
-            OpenAndroidImageGallery(),
-            loadBitmapsFromInternalStorage,
-            loadBitmapsFromAndroidGallery,
-            saveBitmapsToInternalStorage,
-            imageFilePathProvider,
-            CosLogDatabase.getDatabase(requireContext()).cosLogDao
-        )
-
-        detailsViewModel = ViewModelProvider(
-            viewModelStore,
-            detailsViewModelFactory)
-            .get(ElementsDetailsViewModel::class.java)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -130,28 +125,19 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             )
         )
 
+        // we need to post this in order all the view dimensions to be calculated
         binding.root.post {
+            // the recycler view items are positioned to the most left,but this makes them to start
+            // in the middle.
             recyclerView.addItemDecoration(BoundsOffsetDecoration())
         }
 
-        detailsViewModel.imageData.observe(viewLifecycleOwner) {
-            if (element != null) {
-                loadBitmapsFromInternalStorage(lifecycleScope, element!!.images) { result ->
-                    result.onSuccess { bitmaps ->
-                        adapter.setData(element!!.images.zip(bitmaps))
-                    }
-                    result.onFailure {
-                        Log.e(this::class.java.simpleName, it.toString())
-                    }
-                }
-            }
-            else {
-                adapter.setData(it)
-            }
-            // the recycler view items are positioned to the most left,but this makes them to start
-            // in the middle.
+        detailsViewModel.loadAllImagesFromElement(element)
+        detailsViewModel.imageData.observe(viewLifecycleOwner) { imageData->
+            adapter.setData(imageData)
+            // make sure to update the element when we do something with the images
+            //element?.images = ArrayList(imageData.map { it.first })
         }
-
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -170,9 +156,13 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
         when (item.itemId) {
             R.id.saveButton -> onSaveButtonPressed()
             R.id.deleteButton -> onDeleteButtonPressed()
-            else -> return super.onOptionsItemSelected(item)
+            android.R.id.home -> onBackButtonPressed()
         }
         return true
+    }
+
+    private fun onBackButtonPressed() {
+        cosplayController.navigateUp()
     }
 
     override fun onClick(v: View?) {
@@ -182,11 +172,13 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
     }
 
     private fun onDeleteButtonPressed() {
-        detailsViewModel.deleteElementFromDatabase(element)
+        detailsViewModel.deleteElement(element)
+        //  detailsViewModel.deleteAdapterFiles(adapter)
         cosplayController.navigateUp()
     }
 
     protected open fun onSaveButtonPressed() {
+        detailsViewModel.clearPendingBitmapCache()
         cosplayController.navigateUp()
     }
 
@@ -201,8 +193,14 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             requestCode == 0 &&
             intent != null
         ) {
+
+            requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
             // the result is observed through viewModel.loadedImagesAndPathsFromAndroidGallery
-            detailsViewModel.addImageData(intent)
+            detailsViewModel.addImageDataFromIntent(intent) {
+                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
         }
     }
 
@@ -214,6 +212,7 @@ abstract class ElementsDetailsFragment<T : ViewDataBinding> : CosplayActivityBas
             // this is telling the PictureGalleryFragment, the one we are about to navigate to,
             // on which item position it should move to.
             putInt(PictureGalleryFragment.Keys.IMAGE_INDEX, adapter.currentSelectedImagePosition)
+            putInt(PictureGalleryFragment.Keys.SOURCE_NAVIGATION_GRAPH_ID, sourceNavGraphId)
             putStringArrayList(PictureGalleryFragment.Keys.IMAGE_PATH,
                 ArrayList(adapter.getFilePaths()))
         }

@@ -68,7 +68,7 @@ class ElementsFragment : CosplayActivityBaseFragment<FragmentElementBinding>(),
 
         when (fragment) {
             is ElementsToBuyFragment -> fragment.navigateToBuyDetailsFragmentForNewItem()
-            is ElementsToMakeFragment -> fragment.navigateToMakeDetailsFragment()
+            is ElementsToMakeFragment -> fragment.navigateToMakeDetailsFragmentForNewItem()
         }
     }
 

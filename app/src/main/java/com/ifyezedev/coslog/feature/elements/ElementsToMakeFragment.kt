@@ -12,6 +12,8 @@ class ElementsToMakeFragment : ElementsBaseFragment<FragmentElementToMakeListBin
     override fun bindingLayoutId(): Int = R.layout.fragment_element_to_make_list
     private lateinit var adapter: ElementsToMakeAdapter
 
+    private val nextNavigationDestination = R.id.toMakeGraph
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -28,14 +30,13 @@ class ElementsToMakeFragment : ElementsBaseFragment<FragmentElementToMakeListBin
         adapter.setElements(elements.filter { element -> !element.isBuy })
     }
 
-    fun navigateToMakeDetailsFragment() {
-        cosplayController.navigate(R.id.toMakeFragmentDetails,
+    fun navigateToMakeDetailsFragmentForNewItem() {
+        cosplayController.navigate(nextNavigationDestination,
             ElementsDetailsFragment.getNewItemBundle(null))
     }
 
     override fun onEntireElementClickedListener(position: Int) {
-        cosplayController.navigate(R.id.toMakeFragmentDetails,
+        cosplayController.navigate(nextNavigationDestination,
             ElementsDetailsFragment.getNewItemBundle(adapter.elements[position]))
     }
-
 }

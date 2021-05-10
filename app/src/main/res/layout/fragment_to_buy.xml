@@ -63,6 +63,7 @@
                         android:id="@+id/costValue"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:text="@string/default_cost"
                         android:hint="Enter Cost"
                         android:inputType="numberSigned" />
                 </com.google.android.material.textfield.TextInputLayout>

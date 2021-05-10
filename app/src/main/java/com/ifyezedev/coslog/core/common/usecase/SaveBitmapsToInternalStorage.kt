@@ -27,9 +27,9 @@ class SaveBitmapsToInternalStorage(
                 val newFile = File(path)
                 paths.add(path)
 
-                if (newFile.exists()) {
-                    return@forEach
-                }
+//                if (newFile.exists()) {
+//                    return@forEach
+//                }
 
                 FileOutputStream(File(path)).use { stream ->
                     bitmapPathPair.second.compress(Bitmap.CompressFormat.PNG, 90, stream)

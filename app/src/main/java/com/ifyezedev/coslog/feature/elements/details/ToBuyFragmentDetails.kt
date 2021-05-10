@@ -18,6 +18,9 @@ import com.ifyezedev.coslog.databinding.FragmentToBuyBinding
 class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
     override fun bindingLayoutId(): Int = R.layout.fragment_to_buy
 
+    override val sourceNavGraphId: Int
+        get() = R.id.toBuyGraph
+
     private val nameInputIsEmpty get() = binding.nameValue.text.toString().isEmpty()
     private val costInputIsEmpty get() = binding.costValue.text.toString().isEmpty()
 
@@ -66,7 +69,6 @@ class ToBuyFragmentDetails : ElementsDetailsFragment<FragmentToBuyBinding>() {
 
         super.onSaveButtonPressed()
     }
-
 
     /**
      * This method would initialize all of the fragment`s UI input fields.

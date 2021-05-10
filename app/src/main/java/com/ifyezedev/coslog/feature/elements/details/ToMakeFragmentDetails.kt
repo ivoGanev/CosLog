@@ -24,6 +24,9 @@ class ToMakeFragmentDetails : ElementsDetailsFragment<FragmentToMakeBinding>() {
 
     private val nameInputIsEmpty get() = binding.nameValue.text.toString().isEmpty()
 
+    override val sourceNavGraphId: Int
+        get() = R.id.toMakeGraph
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // make sure that the title is set after the view has been created

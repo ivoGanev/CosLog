@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import java.lang.RuntimeException
+import java.util.*
 
 /**
  * This class helps with figuring out the file name and directory of the images that
@@ -36,11 +37,12 @@ class ImageFilePathProvider(private val context: Context) {
             MediaStore.Images.Media.DISPLAY_NAME,
         )
 
-         context.contentResolver
+        context.contentResolver
             .query(path, projection, null, null, null)?.use { cursor ->
                 cursor.moveToNext()
+                val uuid = UUID.randomUUID().toString()
                 val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                return cursor.getString(nameColumn)
+                return  uuid + cursor.getString(nameColumn)
             }
         throw RuntimeException("Cursor failed to load.")
     }

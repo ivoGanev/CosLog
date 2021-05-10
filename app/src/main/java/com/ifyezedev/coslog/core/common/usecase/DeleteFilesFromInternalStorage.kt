@@ -10,22 +10,21 @@ import java.io.File
  * This use case will delete any file from the internal storage with the provided
  * params path.
  *
- * params: the file to delete
+ * @param params list of internal storage full paths e.g. /data/data/image-gallery/file1.png.
  *
+ * If any of the files fails to open this method will return false, else true.
  * */
-// TODO: Clarify is it a path
-class DeleteFilesFromInternalStorage : UseCase<Boolean, String>() {
-    override suspend fun run(params: String): Either<Boolean, Failure> {
-        val file = File(params)
-        val fileIsDeleted: Boolean
-
-        try {
-            fileIsDeleted = file.delete()
+class DeleteFilesFromInternalStorage : UseCase<UseCase.None, List<String>>() {
+    override suspend fun run(params: List<String>): Either<None, Failure> {
+        println("here")
+        for(i in params.indices) {
+            val file = File(params[i])
+            try {
+                file.delete()
+            } catch (ex: SecurityException) {
+                return Either.Failure(IOError(ex.message!!))
+            }
         }
-        catch (ex: SecurityException) {
-            return Either.Failure(IOError(ex.message!!))
-        }
-
-        return Either.Success(fileIsDeleted)
+        return Either.Success(None())
     }
 }
